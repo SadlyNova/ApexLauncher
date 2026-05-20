@@ -12,20 +12,9 @@
         android:id="@+id/top_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_45sdp"
-        android:background="@color/menu_overlay"
+        android:background="#A61A1A1A"
         android:paddingHorizontal="@dimen/_12sdp"
         android:layout_alignParentTop="true">
-
-        <TextView
-            android:id="@+id/launcher_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nova Launcher"
-            android:textColor="@color/primary_text"
-            android:textSize="@dimen/_14sdp"
-            android:textStyle="bold"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true" />
 
         <LinearLayout
             android:id="@+id/centered_logos_container"
