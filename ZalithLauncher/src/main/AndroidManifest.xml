@@ -96,7 +96,7 @@
 
         <provider
             android:name="net.kdt.pojavlaunch.scoped.FolderProvider"
-            android:authorities="${storageProviderAuthorities}"
+            android:authorities="@string/storageProviderAuthorities"
             android:exported="true"
             android:grantUriPermissions="true"
             android:permission="android.permission.MANAGE_DOCUMENTS">
@@ -106,7 +106,7 @@
         </provider>
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.sadly.nova.provider"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
