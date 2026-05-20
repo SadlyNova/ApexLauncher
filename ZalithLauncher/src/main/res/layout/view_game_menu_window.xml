@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_game_menu">
+    android:background="@android:color/transparent">
 
     <ImageView
         android:id="@+id/settings_button"
         android:layout_width="@dimen/_28sdp"
         android:layout_height="@dimen/_28sdp"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_8sdp"
         android:src="@drawable/ic_menu_settings"
         android:clickable="false"
         tools:ignore="ContentDescription" />
@@ -19,9 +20,9 @@
         android:id="@+id/fps_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginHorizontal="@dimen/_8sdp"
-        android:layout_toEndOf="@id/settings_button"
+        android:layout_below="@id/settings_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_4sdp"
         android:visibility="gone"
         android:text="FPS: 114514"
         android:textColor="@android:color/white"
@@ -31,9 +32,9 @@
         android:id="@+id/memory_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginHorizontal="@dimen/_8sdp"
-        android:layout_toEndOf="@id/fps_text"
+        android:layout_below="@id/fps_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_2sdp"
         android:visibility="gone"
         android:text="M: 0MB/0MB"
         android:textColor="@android:color/white"
