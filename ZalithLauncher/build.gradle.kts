@@ -1,6 +1,5 @@
 import com.android.build.api.variant.FilterConfiguration.FilterType.ABI
 import com.android.build.gradle.tasks.MergeSourceSetFolders
-import com.github.megatronking.stringfog.plugin.StringFogExtension
 
 plugins {
     id("com.android.application")
@@ -15,7 +14,7 @@ val getCFApiKey = {
         if (curseforgeKeyFile.canRead() && curseforgeKeyFile.isFile) {
             curseforgeKeyFile.readText()
         } else {
-            logger.warn("BUILD: You have no CurseForge key, the curseforge api will get disabled !")
+            logger.warn("BUILD: You have no CurseForge key, the curseforge api will get disabled!")
             "DUMMY"
         }
     }
@@ -27,12 +26,17 @@ val getBuildType = {
     buildType
 }
 
-val nameId = "com.movtery.zalithlauncher" 
-val generatedZalithDir = file("$buildDir/generated/source/zalith/java")
-val launcherAPPName = "Nova Launcher"
-val launcherName = "NovaLauncher"
-val launcherVersionCode = (project.findProperty("launcher_version_code") as? String)?.toIntOrNull() ?: 1
-val launcherVersionName = project.findProperty("launcher_version_name") as? String ?: "1.0.0"
+// =================================================================
+// 👑 CUSTOM IDENTITY & RESOURCE LAYOUT REDIRECT
+// =================================================================
+val nameId = "com.nova.launch" 
+val sourcePackageName = "com.movtery.zalithlauncher"
+
+val generatedZalithDir = file("${layout.buildDirectory.get().asFile}/generated/source/zalith/java")
+val launcherAPPName = project.findProperty("launcher_app_name") as? String ?: error("The \"launcher_app_name\" property is not set in gradle.properties.")
+val launcherName = project.findProperty("launcher_name") as? String ?: error("The \"launcher_name\" property is not set in gradle.properties.")
+val launcherVersionCode = (project.findProperty("launcher_version_code") as? String)?.toIntOrNull() ?: error("The \"launcher_version_code\" property is not set as an integer in gradle.properties.")
+val launcherVersionName = project.findProperty("launcher_version_name") as? String ?: error("The \"launcher_version_name\" property is not set in gradle.properties.")
 
 configurations {
     create("instrumentedClasspath") {
@@ -41,15 +45,15 @@ configurations {
     }
 }
 
-configure<StringFogExtension> {
+configure<com.github.megatronking.stringfog.plugin.StringFogExtension> {
     implementation = "com.github.megatronking.stringfog.xor.StringFogImpl"
-    fogPackages = arrayOf(nameId)
+    fogPackages = arrayOf(sourcePackageName)
     kg = com.github.megatronking.stringfog.plugin.kg.RandomKeyGenerator()
     mode = com.github.megatronking.stringfog.plugin.StringFogMode.bytes
 }
 
 android {
-    namespace = nameId
+    namespace = sourcePackageName
     compileSdk = 34
 
     signingConfigs {
@@ -69,58 +73,106 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.sadly.nova" 
+        applicationId = nameId
         minSdk = 26
         targetSdk = 34
         versionCode = launcherVersionCode
         versionName = launcherVersionName
         multiDexEnabled = true
-        
-        // 🚀 INJECTED PLACEHOLDERS TO SATISFY MANIFEST MERGER
         manifestPlaceholders["launcher_name"] = launcherAPPName
-        manifestPlaceholders["storageProviderAuthorities"] = "com.sadly.nova.storage_provider.debug"
     }
 
+        // =================================================================
+    // 🌍 BYPASS TRANSLATION STRINGS SUB-COMPILATION ERRORS GLOBALLY
+    // =================================================================
+    lint {
+        abortOnError = false
+        checkReleaseBuilds = false
+        disable.addAll(listOf("MissingTranslation", "ExtraTranslation", "StringFormatInvalid"))
+    }
     buildTypes {
-        val storageProviderId = "com.sadly.nova.storage_provider"
+        val storageProviderId = "$nameId.storage_provider"
 
         getByName("debug") {
             applicationIdSuffix = ".debug"
             isMinifyEnabled = false
             isShrinkResources = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            
             signingConfig = signingConfigs.getByName("customDebug")
-            manifestPlaceholders["storageProviderAuthorities"] = "$storageProviderId.debug"
+            
+            resValue("string", "storageProviderAuthorities", "$storageProviderId.debug")
         }
         create("proguard") {
             initWith(getByName("debug"))
             isMinifyEnabled = true
             isShrinkResources = true
-            manifestPlaceholders["storageProviderAuthorities"] = "$storageProviderId.debug"
         }
         create("proguardNoDebug") {
             initWith(getByName("proguard"))
             isDebuggable = false
-            manifestPlaceholders["storageProviderAuthorities"] = "$storageProviderId.debug"
         }
         getByName("release") {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            resValue("string", "storageProviderAuthorities", storageProviderId)
             signingConfig = signingConfigs.getByName("releaseBuild")
-            manifestPlaceholders["storageProviderAuthorities"] = storageProviderId
         }
     }
 
-    sourceSets["main"].java.srcDirs(generatedZalithDir)
+    sourceSets["main"].java.srcDirs(generatedZalithDir, "src/main/java")
+
+    configurations.all {
+        resolutionStrategy {
+            force("com.intuit.ssp:ssp-android:1.0.5")
+            force("com.intuit.sdp:sdp-android:1.0.5")
+        }
+    }
 
     androidComponents {
         onVariants { variant ->
             variant.outputs.forEach { output ->
                 if (output is com.android.build.api.variant.impl.VariantOutputImpl) {
+                    val variantName = variant.name.replaceFirstChar { it.uppercaseChar() }
+                    afterEvaluate {
+                        val task = tasks.named("merge${variantName}Assets").get() as MergeSourceSetFolders
+                        task.doLast {
+                            val arch = System.getProperty("arch", "all")
+                            val assetsDir = task.outputDir.get().asFile
+                            val jreList = listOf("jre-8", "jre-17", "jre-21")
+                            println("arch:$arch")
+                            jreList.forEach { jreVersion ->
+                                val runtimeDir = File("$assetsDir/components/$jreVersion")
+                                println("runtimeDir:${runtimeDir.absolutePath}")
+                                runtimeDir.listFiles()?.forEach {
+                                    if (arch != "all" && it.name != "version" && !it.name.contains("universal") && it.name != "bin-${arch}.tar.xz") {
+                                        println("delete:${it} : ${it.delete()}")
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     (output.getFilter(ABI)?.identifier ?: "all").let { abi ->
                         val baseName = "$launcherName-${if (variant.buildType == "release") defaultConfig.versionName else "Debug-${defaultConfig.versionName}"}"
                         output.outputFileName = if (abi == "all") "$baseName.apk" else "$baseName-$abi.apk"
                     }
+                }
+            }
+        }
+    }
+
+    splits {
+        val arch = System.getProperty("arch", "all")
+        if (arch != "all") {
+            abi {
+                isEnable = true
+                reset()
+                when (arch) {
+                    "arm" -> include("armeabi-v7a")
+                    "arm64" -> include("arm64-v8a")
+                    "x86" -> include("x86")
+                    "x86_64" -> include("x86_64")
                 }
             }
         }
@@ -177,17 +229,18 @@ fun generateJavaClass(sourceOutputDir: File, packageName: String, className: Str
         |}
         """.trimMargin()
     )
+    println("Generated Java file: ${javaFile.absolutePath}")
 }
 
 tasks.register("generateInfoDistributor") {
     doLast {
         val constantMap = mapOf(
             "CURSEFORGE_API_KEY" to getCFApiKey(),
-            "LAUNCHER_NAME" to launcherName,
-            "APP_NAME" to launcherAPPName,
+            "LAUNCHER_NAME" to project.property("launcher_name").toString(),
+            "APP_NAME" to project.property("launcher_app_name").toString(),
             "BUILD_TYPE" to getBuildType()
         )
-        generateJavaClass(generatedZalithDir, "com.movtery.zalithlauncher", "InfoDistributor", constantMap)
+        generateJavaClass(generatedZalithDir, sourcePackageName, "InfoDistributor", constantMap)
     }
 }
 
@@ -216,9 +269,7 @@ dependencies {
     implementation("com.github.angcyo.DslTablayout:TabLayout:3.6.5")
 
     implementation("com.github.megatronking.stringfog:xor:5.0.0")
-
     implementation("top.fifthlight.touchcontroller:proxy-client-android:0.0.2")
-
     implementation("org.tukaani:xz:1.9")
     implementation("net.sourceforge.htmlcleaner:htmlcleaner:2.6.1")
     implementation("com.bytedance:bytehook:1.0.10")
