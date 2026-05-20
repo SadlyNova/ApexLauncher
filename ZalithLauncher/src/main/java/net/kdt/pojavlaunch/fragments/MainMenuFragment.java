@@ -62,8 +62,16 @@ public class MainMenuFragment extends FragmentWithAnim {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        binding.aboutText.setText(InfoCenter.replaceName(requireActivity(), R.string.about_tab));
-        binding.aboutButton.setOnClickListener(v -> ZHTools.swapFragmentWithAnim(this, AboutFragment.class, AboutFragment.TAG, null));
+        // Safe binding references for background items
+        if (binding.aboutText != null) {
+            binding.aboutText.setText(InfoCenter.replaceName(requireActivity(), R.string.about_tab));
+        }
+        if (binding.aboutButton != null) {
+            binding.aboutButton.setOnClickListener(v -> ZHTools.swapFragmentWithAnim(this, AboutFragment.class, AboutFragment.TAG, null));
+            binding.aboutButton.setVisibility(View.GONE); // Keeps it completely hidden
+        }
+
+        // Setting up the top layout centered buttons click handlers
         binding.customControlButton.setOnClickListener(v -> ZHTools.swapFragmentWithAnim(this, ControlButtonFragment.class, ControlButtonFragment.TAG, null));
         binding.openMainDirButton.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
@@ -77,6 +85,7 @@ public class MainMenuFragment extends FragmentWithAnim {
         });
         binding.shareLogsButton.setOnClickListener(v -> ZHTools.shareLogs(requireActivity()));
 
+        // Version manager profile controls
         binding.version.setOnClickListener(v -> {
             if (!isTaskRunning()) {
                 ZHTools.swapFragmentWithAnim(this, VersionsListFragment.class, VersionsListFragment.TAG, null);
@@ -101,11 +110,6 @@ public class MainMenuFragment extends FragmentWithAnim {
         binding.versionInfo.setSelected(true);
 
         refreshCurrentVersion();
-
-        // 🚀 SAFELY HIDES THE ABOUT BUTTON ONLY
-        if (binding.aboutButton != null) {
-            binding.aboutButton.setVisibility(View.GONE);
-        }
     }
 
     private void refreshCurrentVersion() {
@@ -163,15 +167,20 @@ public class MainMenuFragment extends FragmentWithAnim {
 
     @Override
     public void slideIn(AnimPlayer animPlayer) {
-        animPlayer.apply(new AnimPlayer.Entry(binding.launcherMenu, Animations.BounceInDown))
-                .apply(new AnimPlayer.Entry(binding.playLayout, Animations.BounceInLeft))
+        // Smoothly animates the centered row container at the top instead of the bulky side menu layout
+        if (binding.centeredLogosContainer != null) {
+            animPlayer.apply(new AnimPlayer.Entry(binding.centeredLogosContainer, Animations.BounceInDown));
+        }
+        animPlayer.apply(new AnimPlayer.Entry(binding.playLayout, Animations.BounceInLeft))
                 .apply(new AnimPlayer.Entry(binding.playButtonsLayout, Animations.BounceEnlarge));
     }
 
     @Override
     public void slideOut(AnimPlayer animPlayer) {
-        animPlayer.apply(new AnimPlayer.Entry(binding.launcherMenu, Animations.FadeOutUp))
-                .apply(new AnimPlayer.Entry(binding.playLayout, Animations.FadeOutRight))
+        if (binding.centeredLogosContainer != null) {
+            animPlayer.apply(new AnimPlayer.Entry(binding.centeredLogosContainer, Animations.FadeOutUp));
+        }
+        animPlayer.apply(new AnimPlayer.Entry(binding.playLayout, Animations.FadeOutRight))
                 .apply(new AnimPlayer.Entry(binding.playButtonsLayout, Animations.BounceShrink));
     }
 }
