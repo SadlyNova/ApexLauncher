@@ -40,6 +40,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
+
 public class MainMenuFragment extends FragmentWithAnim {
     public static final String TAG = "MainMenuFragment";
     private FragmentLauncherBinding binding;
@@ -102,9 +104,40 @@ public class MainMenuFragment extends FragmentWithAnim {
 
         refreshCurrentVersion();
 
-        // 🚀 THE ULTIMATE LAYOUT FIX: Dynamic override to collapse the about/logo section card container instantly
-        if (binding.launcherMenu != null && binding.launcherMenu.getChildCount() > 0) {
-            binding.launcherMenu.getChildAt(0).setVisibility(View.GONE);
+        // 🚀 SAFELY REMOVES ONLY THE ABOUT LOGO / TEXT SECTION
+        if (binding.launcherMenu instanceof ViewGroup) {
+            ViewGroup menuGroup = (ViewGroup) binding.launcherMenu;
+            ArrayList<View> viewsToRemove = new ArrayList<>();
+            
+            // Loop through and find the non-button decorative views at the top
+            for (int i = 0; i < menuGroup.getChildCount(); i++) {
+                View child = menuGroup.getChildAt(i);
+                if (child instanceof android.widget.ImageView || child instanceof android.widget.TextView) {
+                    viewsToRemove.add(child);
+                } else if (child instanceof ViewGroup) {
+                    // Check if it's a layout holding the header text/logo elements
+                    ViewGroup containerView = (ViewGroup) child;
+                    boolean hasButtons = false;
+                    for (int j = 0; j < containerView.getChildCount(); j++) {
+                        View innerChild = containerView.getChildAt(j);
+                        if (innerChild.getId() == binding.customControlButton.getId() || 
+                            innerChild.getId() == binding.openMainDirButton.getId() ||
+                            innerChild.getId() == binding.installJarButton.getId() ||
+                            innerChild.getId() == binding.shareLogsButton.getId()) {
+                            hasButtons = true;
+                            break;
+                        }
+                    }
+                    if (!hasButtons) {
+                        viewsToRemove.add(child);
+                    }
+                }
+            }
+            
+            // Hide only the matched "About" layout elements
+            for (View v : viewsToRemove) {
+                v.setVisibility(View.GONE);
+            }
         }
     }
 
