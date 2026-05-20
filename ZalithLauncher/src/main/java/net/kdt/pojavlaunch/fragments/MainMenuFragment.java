@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 
 import com.movtery.anim.AnimPlayer;
 import com.movtery.anim.animations.Animations;
+import com.movtery.zalithlauncher.InfoCenter;
 import com.movtery.zalithlauncher.R;
 import com.movtery.zalithlauncher.databinding.FragmentLauncherBinding;
 import com.movtery.zalithlauncher.event.single.AccountUpdateEvent;
@@ -23,6 +24,7 @@ import com.movtery.zalithlauncher.feature.version.utils.VersionIconUtils;
 import com.movtery.zalithlauncher.feature.version.VersionInfo;
 import com.movtery.zalithlauncher.feature.version.VersionsManager;
 import com.movtery.zalithlauncher.task.TaskExecutors;
+import com.movtery.zalithlauncher.ui.fragment.AboutFragment;
 import com.movtery.zalithlauncher.ui.fragment.ControlButtonFragment;
 import com.movtery.zalithlauncher.ui.fragment.FilesFragment;
 import com.movtery.zalithlauncher.ui.fragment.FragmentWithAnim;
@@ -39,8 +41,6 @@ import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.ArrayList;
 
 public class MainMenuFragment extends FragmentWithAnim {
     public static final String TAG = "MainMenuFragment";
@@ -62,20 +62,19 @@ public class MainMenuFragment extends FragmentWithAnim {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        // 1. Manage Control Layouts Action Link Mapping (Top Bar Logo Click Hook)
+        binding.aboutText.setText(InfoCenter.replaceName(requireActivity(), R.string.about_tab));
+        binding.aboutButton.setOnClickListener(v -> ZHTools.swapFragmentWithAnim(this, AboutFragment.class, AboutFragment.TAG, null));
         binding.customControlButton.setOnClickListener(v -> ZHTools.swapFragmentWithAnim(this, ControlButtonFragment.class, ControlButtonFragment.TAG, null));
-        
-        // 2. Open Main Folder Directory Layout Link (Top Bar Logo Click Hook)
         binding.openMainDirButton.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
             bundle.putString(FilesFragment.BUNDLE_LIST_PATH, PathManager.DIR_GAME_HOME);
             ZHTools.swapFragmentWithAnim(this, FilesFragment.class, FilesFragment.TAG, bundle);
         });
-        
-        // 3. Execute Run Installer Platform Trigger (Top Bar Logo Click Hook)
         binding.installJarButton.setOnClickListener(v -> runInstallerWithConfirmation(false));
-        
-        // 4. Share Crash and Activity Logs Hook (Top Bar Logo Click Hook)
+        binding.installJarButton.setOnLongClickListener(v -> {
+            runInstallerWithConfirmation(true);
+            return true;
+        });
         binding.shareLogsButton.setOnClickListener(v -> ZHTools.shareLogs(requireActivity()));
 
         binding.version.setOnClickListener(v -> {
@@ -86,7 +85,6 @@ public class MainMenuFragment extends FragmentWithAnim {
                 TaskExecutors.runInUIThread(() -> Toast.makeText(requireContext(), R.string.version_manager_task_in_progress, Toast.LENGTH_SHORT).show());
             }
         });
-        
         binding.managerProfileButton.setOnClickListener(v -> {
             if (!isTaskRunning()) {
                 ViewAnimUtils.setViewAnim(binding.managerProfileButton, Animations.Pulse);
@@ -104,40 +102,9 @@ public class MainMenuFragment extends FragmentWithAnim {
 
         refreshCurrentVersion();
 
-        // 🚀 SAFELY REMOVES ONLY THE ABOUT LOGO / TEXT SECTION
-        if (binding.launcherMenu instanceof ViewGroup) {
-            ViewGroup menuGroup = (ViewGroup) binding.launcherMenu;
-            ArrayList<View> viewsToRemove = new ArrayList<>();
-            
-            // Loop through and find the non-button decorative views at the top
-            for (int i = 0; i < menuGroup.getChildCount(); i++) {
-                View child = menuGroup.getChildAt(i);
-                if (child instanceof android.widget.ImageView || child instanceof android.widget.TextView) {
-                    viewsToRemove.add(child);
-                } else if (child instanceof ViewGroup) {
-                    // Check if it's a layout holding the header text/logo elements
-                    ViewGroup containerView = (ViewGroup) child;
-                    boolean hasButtons = false;
-                    for (int j = 0; j < containerView.getChildCount(); j++) {
-                        View innerChild = containerView.getChildAt(j);
-                        if (innerChild.getId() == binding.customControlButton.getId() || 
-                            innerChild.getId() == binding.openMainDirButton.getId() ||
-                            innerChild.getId() == binding.installJarButton.getId() ||
-                            innerChild.getId() == binding.shareLogsButton.getId()) {
-                            hasButtons = true;
-                            break;
-                        }
-                    }
-                    if (!hasButtons) {
-                        viewsToRemove.add(child);
-                    }
-                }
-            }
-            
-            // Hide only the matched "About" layout elements
-            for (View v : viewsToRemove) {
-                v.setVisibility(View.GONE);
-            }
+        // 🚀 SAFELY HIDES THE ABOUT BUTTON ONLY
+        if (binding.aboutButton != null) {
+            binding.aboutButton.setVisibility(View.GONE);
         }
     }
 
