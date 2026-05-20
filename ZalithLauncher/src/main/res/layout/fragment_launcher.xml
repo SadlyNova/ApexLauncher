@@ -5,7 +5,7 @@
     android:id="@+id/fragment_menu_main"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@android:color/transparent"
+    android:background="@drawable/launcher_bg"
     android:gravity="top"
     android:orientation="vertical"
     tools:ignore="ContentDescription">
