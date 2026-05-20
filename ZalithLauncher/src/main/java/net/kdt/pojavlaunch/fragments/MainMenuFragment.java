@@ -101,6 +101,11 @@ public class MainMenuFragment extends FragmentWithAnim {
         binding.versionInfo.setSelected(true);
 
         refreshCurrentVersion();
+
+        // 🚀 THE ULTIMATE LAYOUT FIX: Dynamic override to collapse the about/logo section card container instantly
+        if (binding.launcherMenu != null && binding.launcherMenu.getChildCount() > 0) {
+            binding.launcherMenu.getChildAt(0).setVisibility(View.GONE);
+        }
     }
 
     private void refreshCurrentVersion() {
