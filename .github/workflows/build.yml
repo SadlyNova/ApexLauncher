@@ -33,9 +33,11 @@ jobs:
       - name: Compile and Build APK
         run: ./gradlew assemble --no-daemon
 
-      - name: Upload Finished APK Artifact
+      - name: Upload Finished Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Nova Launcher APK
-          path: "**/*.apk"
-          
+          name: Nova Launcher Outputs
+          path: |
+            **/build/outputs/**/*.apk
+            **/build/outputs/**/*.aab
+            
