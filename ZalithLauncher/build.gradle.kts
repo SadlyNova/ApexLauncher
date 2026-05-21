@@ -30,7 +30,7 @@ val getBuildType = {
 // 👑 CUSTOM IDENTITY & RESOURCE LAYOUT REDIRECT
 // =================================================================
 val nameId = "com.nova.launch" 
-val sourcePackageName = "com.nova.launch"
+val sourcePackageName = "com.movtery.zalithlauncher"
 
 val generatedZalithDir = file("${layout.buildDirectory.get().asFile}/generated/source/zalith/java")
 val launcherAPPName = project.findProperty("launcher_app_name") as? String ?: error("The \"launcher_app_name\" property is not set in gradle.properties.")
