@@ -8,25 +8,6 @@
     android:background="@drawable/launcher_bg"
     tools:context="net.kdt.pojavlaunch.fragments.MainMenuFragment">
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone">
-        <ImageView android:id="@+id/versionIcon" android:layout_width="0dp" android:layout_height="0dp" android:contentDescription="" />
-        <View android:id="@+id/managerProfileButton" android:layout_width="0dp" android:layout_height="0dp"/>
-        <TextView android:id="@+id/versionName" android:layout_width="0dp" android:layout_height="0dp" android:text=""/>
-        <TextView android:id="@+id/versionInfo" android:layout_width="0dp" android:layout_height="0dp" android:text=""/>
-        <View android:id="@+id/playButtonsLayout" android:layout_width="0dp" android:layout_height="0dp"/>
-        <View android:id="@+id/playLayout" android:layout_width="0dp" android:layout_height="0dp"/>
-        
-        <include android:id="@+id/viewAccount" layout="@layout/view_account" />
-        
-        <TextView android:id="@+id/aboutText" android:layout_width="0dp" android:layout_height="0dp" android:text=""/>
-        <View android:id="@+id/aboutButton" android:layout_width="0dp" android:layout_height="0dp"/>
-        <View android:id="@+id/version" android:layout_width="0dp" android:layout_height="0dp"/>
-        <View android:id="@+id/playButton" android:layout_width="0dp" android:layout_height="0dp"/>
-    </LinearLayout>
-
     <RelativeLayout
         android:id="@+id/top_bar_layout"
         android:layout_width="match_parent"
@@ -51,7 +32,8 @@
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_menu_custom_controls"
                 android:clickable="true"
-                android:focusable="true"/>
+                android:focusable="true"
+                android:contentDescription="@string/setting_category_control"/>
 
             <ImageView
                 android:id="@+id/open_main_dir_button"
@@ -61,7 +43,8 @@
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_folder"
                 android:clickable="true"
-                android:focusable="true"/>
+                android:focusable="true"
+                android:contentDescription="@string/main_open_main_dir"/>
 
             <ImageView
                 android:id="@+id/install_jar_button"
@@ -71,7 +54,8 @@
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_java"
                 android:clickable="true"
-                android:focusable="true"/>
+                android:focusable="true"
+                android:contentDescription="@string/main_install_jar_file"/>
 
             <ImageView
                 android:id="@+id/share_logs_button"
@@ -81,10 +65,83 @@
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_share"
                 android:clickable="true"
-                android:focusable="true"/>
+                android:focusable="true"
+                android:contentDescription="@string/main_share_logs"/>
+        </LinearLayout>
+    </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/versionInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/playButtonsLayout"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:gravity="center">
+
+        <ImageView 
+            android:id="@+id/versionIcon" 
+            android:layout_width="@dimen/_32sdp" 
+            android:layout_height="@dimen/_32sdp"
+            android:contentDescription="@null" />
+            
+        <TextView 
+            android:id="@+id/versionName" 
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+            android:textColor="@color/black_or_white"
+            android:textSize="@dimen/_14ssp"/>
+            
+        <TextView 
+            android:id="@+id/aboutText" 
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/playLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="@dimen/_16sdp">
+
+        <include 
+            android:id="@+id/viewAccount" 
+            layout="@layout/view_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"/>
+
+        <LinearLayout
+            android:id="@+id/playButtonsLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true">
+
+            <Button
+                android:id="@+id/version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:text="@string/version_select_hint"
+                android:background="@drawable/button_background"/>
+
+            <Button
+                android:id="@+id/playButton"
+                android:layout_width="@dimen/_120sdp"
+                android:layout_height="wrap_content"
+                android:text="@string/main_launch"
+                android:background="@drawable/button_background"
+                android:textColor="@color/black_or_white"/>
         </LinearLayout>
 
+        <View android:id="@+id/managerProfileButton" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
+        <View android:id="@+id/aboutButton" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
     </RelativeLayout>
 
 </RelativeLayout>
