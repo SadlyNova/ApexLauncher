@@ -95,17 +95,38 @@ public class MainMenuFragment extends FragmentWithAnim {
             }
         });
         
-        // ⚙️ NEW: Independent Settings Gear button handler initialization
+        // ⚙️ Independent Settings Gear button handler initialization
         if (binding.editSettingsButton != null) {
             binding.editSettingsButton.setOnClickListener(v -> {
                 if (!isTaskRunning()) {
                     ViewAnimUtils.setViewAnim(binding.editSettingsButton, Animations.Pulse);
-                    // Swaps into the launcher customization parameters activity panel
                     ZHTools.swapFragmentWithAnim(this, VersionManagerFragment.class, VersionManagerFragment.TAG, null);
                 } else {
                     ViewAnimUtils.setViewAnim(binding.editSettingsButton, Animations.Shake);
                     TaskExecutors.runInUIThread(() -> Toast.makeText(requireContext(), R.string.version_manager_task_in_progress, Toast.LENGTH_SHORT).show());
                 }
+            });
+        }
+
+        // 🌐 NEW: About Nova Link Intent Bindings
+        if (binding.novaDiscord != null) {
+            binding.novaDiscord.setOnClickListener(v -> {
+                android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://discord.gg/xFpfUufXg3"));
+                startActivity(intent);
+            });
+        }
+
+        if (binding.novaWebsite != null) {
+            binding.novaWebsite.setOnClickListener(v -> {
+                android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://YOUR_WEBSITE.com"));
+                startActivity(intent);
+            });
+        }
+
+        if (binding.novaGithub != null) {
+            binding.novaGithub.setOnClickListener(v -> {
+                android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://github.com/SadlyNova"));
+                startActivity(intent);
             });
         }
 
@@ -188,7 +209,6 @@ public class MainMenuFragment extends FragmentWithAnim {
         animPlayer.apply(new AnimPlayer.Entry(binding.playLayout, Animations.BounceInLeft))
                 .apply(new AnimPlayer.Entry(binding.playButtonsLayout, Animations.BounceEnlarge));
                 
-        // Smoothly fades in the new settings button element
         if (binding.editSettingsButton != null) {
             animPlayer.apply(new AnimPlayer.Entry(binding.editSettingsButton, Animations.BounceInLeft));
         }
@@ -202,7 +222,6 @@ public class MainMenuFragment extends FragmentWithAnim {
         animPlayer.apply(new AnimPlayer.Entry(binding.playLayout, Animations.FadeOutRight))
                 .apply(new AnimPlayer.Entry(binding.playButtonsLayout, Animations.BounceShrink));
                 
-        // Smoothly fades out the settings button element on layout swap
         if (binding.editSettingsButton != null) {
             animPlayer.apply(new AnimPlayer.Entry(binding.editSettingsButton, Animations.FadeOutRight));
         }
