@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_menu_main"
@@ -8,147 +8,148 @@
     android:background="@drawable/launcher_bg"
     tools:context="net.kdt.pojavlaunch.fragments.MainMenuFragment">
 
-    <RelativeLayout
-        android:id="@+id/top_bar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_45sdp"
-        android:background="@android:color/transparent"
-        android:paddingHorizontal="@dimen/_12sdp"
-        android:layout_alignParentTop="true">
-
-        <LinearLayout
-            android:id="@+id/centered_logos_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_centerInParent="true">
-
-            <ImageView
-                android:id="@+id/custom_control_button"
-                android:layout_width="@dimen/_24sdp"
-                android:layout_height="@dimen/_24sdp"
-                android:layout_marginHorizontal="@dimen/_14sdp"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_menu_custom_controls"
-                android:clickable="true"
-                android:focusable="true"
-                android:contentDescription="@string/setting_category_control"/>
-
-            <ImageView
-                android:id="@+id/open_main_dir_button"
-                android:layout_width="@dimen/_24sdp"
-                android:layout_height="@dimen/_24sdp"
-                android:layout_marginHorizontal="@dimen/_14sdp"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_folder"
-                android:clickable="true"
-                android:focusable="true"
-                android:contentDescription="@string/main_open_main_dir"/>
-
-            <ImageView
-                android:id="@+id/install_jar_button"
-                android:layout_width="@dimen/_24sdp"
-                android:layout_height="@dimen/_24sdp"
-                android:layout_marginHorizontal="@dimen/_14sdp"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_java"
-                android:clickable="true"
-                android:focusable="true"
-                android:contentDescription="@string/main_install_jar_file"/>
-
-            <ImageView
-                android:id="@+id/share_logs_button"
-                android:layout_width="@dimen/_24sdp"
-                android:layout_height="@dimen/_24sdp"
-                android:layout_marginHorizontal="@dimen/_14sdp"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_share"
-                android:clickable="true"
-                android:focusable="true"
-                android:contentDescription="@string/main_share_logs"/>
-        </LinearLayout>
-    </RelativeLayout>
-
     <LinearLayout
-        android:id="@+id/versionInfoContainer"
+        android:id="@+id/top_bar_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@+id/playLayout"
-        android:layout_marginBottom="@dimen/_10sdp"
-        android:gravity="center">
+        android:layout_height="@dimen/_45sdp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView 
-            android:id="@+id/versionIcon" 
-            android:layout_width="@dimen/_32sdp" 
-            android:layout_height="@dimen/_32sdp"
-            android:contentDescription="@null" />
-            
-        <TextView 
-            android:id="@+id/versionName" 
-            android:layout_width="wrap_content" 
-            android:layout_height="wrap_content"
-            android:textColor="@color/black_or_white"
-            android:textSize="@dimen/_14ssp"/>
-            
-        <TextView 
-            android:id="@+id/versionInfo" 
-            android:layout_width="wrap_content" 
-            android:layout_height="wrap_content"
-            android:textColor="@color/black_or_white"
-            android:textSize="@dimen/_10ssp"/>
+        <ImageView
+            android:id="@+id/custom_control_button"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"
+            android:layout_marginHorizontal="@dimen/_14sdp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_menu_custom_controls"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="@string/setting_category_control"/>
 
-        <TextView 
-            android:id="@+id/aboutText" 
-            android:layout_width="wrap_content" 
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
+        <ImageView
+            android:id="@+id/open_main_dir_button"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"
+            android:layout_marginHorizontal="@dimen/_14sdp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_folder"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="@string/main_open_main_dir"/>
+
+        <ImageView
+            android:id="@+id/install_jar_button"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"
+            android:layout_marginHorizontal="@dimen/_14sdp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_java"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="@string/main_install_jar_file"/>
+
+        <ImageView
+            android:id="@+id/share_logs_button"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"
+            android:layout_marginHorizontal="@dimen/_14sdp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_share"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="@string/main_share_logs"/>
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/playLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:padding="@dimen/_16sdp">
+        android:layout_width="@dimen/_240sdp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/menu_overlay"
+        android:paddingHorizontal="@dimen/_16sdp"
+        android:paddingTop="@dimen/_50sdp"
+        android:paddingBottom="@dimen/_16sdp"
+        android:gravity="center_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <include 
-            android:id="@+id/viewAccount" 
+        <include
+            android:id="@+id/viewAccount"
             layout="@layout/view_account"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"/>
+            android:layout_marginBottom="@dimen/_20sdp"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
 
         <LinearLayout
-            android:id="@+id/playButtonsLayout"
-            android:layout_width="wrap_content"
+            android:id="@+id/versionInfoContainer"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true">
+            android:gravity="center_vertical"
+            android:layout_marginBottom="@dimen/_12sdp">
 
-            <Button
-                android:id="@+id/version"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageView
+                android:id="@+id/versionIcon"
+                android:layout_width="@dimen/_28sdp"
+                android:layout_height="@dimen/_28sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
-                android:text="@string/version_select_hint"
-                android:background="@drawable/button_background"/>
+                android:contentDescription="@null"/>
 
-            <Button
-                android:id="@+id/playButton"
-                android:layout_width="@dimen/_120sdp"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/main_launch"
-                android:background="@drawable/button_background"
-                android:textColor="@color/black_or_white"/>
+                android:orientation="vertical"
+                android:layout_weight="1">
+                
+                <TextView
+                    android:id="@+id/versionName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black_or_white"
+                    android:textSize="@dimen/_12ssp"
+                    android:textStyle="bold"/>
+                    
+                <TextView
+                    android:id="@+id/versionInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="@dimen/_10ssp"/>
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/version"
+                android:layout_width="@dimen/_28sdp"
+                android:layout_height="@dimen/_28sdp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_settings"
+                app:tint="@color/black_or_white"
+                android:contentDescription="@null"/>
         </LinearLayout>
 
+        <Button
+            android:id="@+id/playButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_36sdp"
+            android:text="@string/main_launch"
+            android:background="@drawable/button_background"
+            android:textColor="@color/black_or_white"
+            android:textAllCaps="false"
+            android:textSize="@dimen/_13ssp" />
+
+        <LinearLayout android:id="@+id/playButtonsLayout" android:layout_width="0dp" android:layout_height="0dp" android:orientation="horizontal" android:visibility="gone" tools:ignore="UselessLeaf"/>
         <View android:id="@+id/managerProfileButton" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
         <View android:id="@+id/aboutButton" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
-    </RelativeLayout>
+        <TextView android:id="@+id/aboutText" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
+    </LinearLayout>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
