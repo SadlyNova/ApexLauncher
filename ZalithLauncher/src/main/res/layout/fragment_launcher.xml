@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/launcher_bg"
-    tools:context="net.kdt.pojavlaunch.fragments.MainMenuFragment"
+    tools:context="net.kdt.pojavlaunch.fragments.MainMenuFragment">
 
     <RelativeLayout
         android:id="@+id/top_bar_layout"
@@ -63,128 +63,9 @@
                 android:src="@drawable/ic_share"
                 android:clickable="true"
                 android:focusable="true"/>
+
         </LinearLayout>
 
-        <View android:id="@+id/about_button" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
-        <TextView android:id="@+id/about_text" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
-
     </RelativeLayout>
 
-    <View
-        android:id="@+id/launcher_menu"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/top_bar_layout"
-        android:layout_toStartOf="@+id/play_layout" />
-
-    <RelativeLayout
-        android:id="@+id/play_layout"
-        android:layout_width="@dimen/_240sdp"
-        android:layout_height="match_parent"
-        android:layout_alignParentEnd="true">
-
-        <View
-            android:id="@+id/shadowView"
-            android:layout_width="@dimen/_4sdp"
-            android:layout_height="match_parent"
-            android:background="@drawable/shadow_gradient_right"
-            android:layout_alignParentStart="true" />
-
-        <RelativeLayout
-            android:id="@+id/play_main_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/menu_overlay"
-            android:layout_toEndOf="@id/shadowView">
-
-            <RelativeLayout
-                android:id="@+id/play_buttons_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
-                    android:id="@+id/version"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_38sdp"
-                    android:layout_marginBottom="@dimen/_8sdp"
-                    android:layout_toStartOf="@+id/manager_profile_button"
-                    android:layout_above="@+id/play_button"
-                    android:layout_alignParentStart="true">
-
-                    <ImageView
-                        android:id="@+id/version_icon"
-                        android:layout_width="@dimen/_36sdp"
-                        android:layout_height="@dimen/_36sdp"
-                        android:layout_marginStart="@dimen/_12sdp"
-                        android:layout_centerVertical="true"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/ic_minecraft"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_8sdp"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_toEndOf="@id/version_icon"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/version_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="start"
-                            android:singleLine="true"
-                            android:focusable="true"
-                            android:ellipsize="marquee"
-                            android:marqueeRepeatLimit="marquee_forever"
-                            android:text="@string/version_no_versions" />
-
-                        <TextView
-                            android:id="@+id/version_info"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="start"
-                            android:singleLine="true"
-                            android:focusable="true"
-                            android:ellipsize="marquee"
-                            android:marqueeRepeatLimit="marquee_forever"
-                            android:visibility="gone" />
-                    </LinearLayout>
-                </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
-
-                <ImageButton
-                    android:id="@+id/manager_profile_button"
-                    android:layout_width="@dimen/_38sdp"
-                    android:layout_height="@dimen/_38sdp"
-                    android:layout_marginEnd="@dimen/_8sdp"
-                    android:layout_marginBottom="@dimen/_8sdp"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_setting"
-                    android:layout_alignParentEnd="true"
-                    android:layout_above="@+id/play_button" />
-
-                <com.movtery.zalithlauncher.ui.view.AnimButton
-                    android:id="@+id/play_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_8sdp"
-                    android:layout_marginBottom="@dimen/_8sdp"
-                    android:text="@string/main_launch"
-                    android:textAllCaps="true"
-                    android:layout_alignParentBottom="true" />
-
-                <include
-                    android:id="@+id/view_account"
-                    layout="@layout/view_account"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_above="@id/version" />
-
-            </RelativeLayout>
-        </RelativeLayout>
-    </RelativeLayout>
 </RelativeLayout>
