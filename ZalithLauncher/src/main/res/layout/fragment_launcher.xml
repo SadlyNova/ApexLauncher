@@ -9,7 +9,7 @@
     tools:context="net.kdt.pojavlaunch.fragments.MainMenuFragment">
 
     <LinearLayout
-        android:id="@+id/top_bar_layout"
+        android:id="@+id/centeredLogosContainer"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/_45sdp"
         android:orientation="horizontal"
