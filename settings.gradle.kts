@@ -14,6 +14,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Nova Launcher"
+rootProject.name = "Zalith Launcher"
 include(":jre_lwjgl3glfw")
-include(":NovaLauncher")
+include(":ZailthLauncher")
