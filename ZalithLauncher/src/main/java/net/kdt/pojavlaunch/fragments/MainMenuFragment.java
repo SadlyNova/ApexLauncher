@@ -94,6 +94,21 @@ public class MainMenuFragment extends FragmentWithAnim {
                 TaskExecutors.runInUIThread(() -> Toast.makeText(requireContext(), R.string.version_manager_task_in_progress, Toast.LENGTH_SHORT).show());
             }
         });
+        
+        // ⚙️ NEW: Independent Settings Gear button handler initialization
+        if (binding.editSettingsButton != null) {
+            binding.editSettingsButton.setOnClickListener(v -> {
+                if (!isTaskRunning()) {
+                    ViewAnimUtils.setViewAnim(binding.editSettingsButton, Animations.Pulse);
+                    // Swaps into the launcher customization parameters activity panel
+                    ZHTools.swapFragmentWithAnim(this, VersionManagerFragment.class, VersionManagerFragment.TAG, null);
+                } else {
+                    ViewAnimUtils.setViewAnim(binding.editSettingsButton, Animations.Shake);
+                    TaskExecutors.runInUIThread(() -> Toast.makeText(requireContext(), R.string.version_manager_task_in_progress, Toast.LENGTH_SHORT).show());
+                }
+            });
+        }
+
         binding.managerProfileButton.setOnClickListener(v -> {
             if (!isTaskRunning()) {
                 ViewAnimUtils.setViewAnim(binding.managerProfileButton, Animations.Pulse);
@@ -167,12 +182,16 @@ public class MainMenuFragment extends FragmentWithAnim {
 
     @Override
     public void slideIn(AnimPlayer animPlayer) {
-        // Smoothly animates the centered row container at the top instead of the bulky side menu layout
         if (binding.centeredLogosContainer != null) {
             animPlayer.apply(new AnimPlayer.Entry(binding.centeredLogosContainer, Animations.BounceInDown));
         }
         animPlayer.apply(new AnimPlayer.Entry(binding.playLayout, Animations.BounceInLeft))
                 .apply(new AnimPlayer.Entry(binding.playButtonsLayout, Animations.BounceEnlarge));
+                
+        // Smoothly fades in the new settings button element
+        if (binding.editSettingsButton != null) {
+            animPlayer.apply(new AnimPlayer.Entry(binding.editSettingsButton, Animations.BounceInLeft));
+        }
     }
 
     @Override
@@ -182,5 +201,10 @@ public class MainMenuFragment extends FragmentWithAnim {
         }
         animPlayer.apply(new AnimPlayer.Entry(binding.playLayout, Animations.FadeOutRight))
                 .apply(new AnimPlayer.Entry(binding.playButtonsLayout, Animations.BounceShrink));
+                
+        // Smoothly fades out the settings button element on layout swap
+        if (binding.editSettingsButton != null) {
+            animPlayer.apply(new AnimPlayer.Entry(binding.editSettingsButton, Animations.FadeOutRight));
+        }
     }
 }
