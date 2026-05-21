@@ -131,7 +131,7 @@
                 android:layout_width="@dimen/_28sdp"
                 android:layout_height="@dimen/_28sdp"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_settings"
+                android:src="@drawable/ic_setting_launcher"
                 app:tint="@color/black_or_white"
                 android:contentDescription="@null"/>
         </LinearLayout>
