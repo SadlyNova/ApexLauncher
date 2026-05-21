@@ -68,7 +68,7 @@
         android:layout_width="@dimen/_240sdp"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/menu_overlay"
+        android:background="#CC2C1414"
         android:paddingHorizontal="@dimen/_16sdp"
         android:paddingTop="@dimen/_50sdp"
         android:paddingBottom="@dimen/_16sdp"
@@ -82,7 +82,70 @@
             layout="@layout/view_account"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_20sdp"/>
+            android:layout_marginBottom="@dimen/_10sdp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#251214"
+            android:padding="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="About Nova"
+                android:textColor="#9E2A2B"
+                android:textSize="@dimen/_12ssp"
+                android:textStyle="bold"
+                android:layout_marginBottom="@dimen/_6sdp"/>
+
+            <TextView
+                android:id="@+id/nova_discord"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="• Discord Community"
+                android:textColor="#F5EBE6"
+                android:textSize="@dimen/_11ssp"
+                android:paddingVertical="@dimen/_4sdp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?android:attr/selectableItemBackground"/>
+
+            <TextView
+                android:id="@+id/nova_website"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="• Official Website"
+                android:textColor="#F5EBE6"
+                android:textSize="@dimen/_11ssp"
+                android:paddingVertical="@dimen/_4sdp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?android:attr/selectableItemBackground"/>
+
+            <TextView
+                android:id="@+id/nova_github"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="• GitHub Repository"
+                android:textColor="#F5EBE6"
+                android:textSize="@dimen/_11ssp"
+                android:paddingVertical="@dimen/_4sdp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?android:attr/selectableItemBackground"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="• Upcoming Features..."
+                android:textColor="#B0A39C"
+                android:textSize="@dimen/_11ssp"
+                android:paddingVertical="@dimen/_4sdp"
+                android:textStyle="italic"/>
+        </LinearLayout>
 
         <Space
             android:layout_width="match_parent"
@@ -114,7 +177,7 @@
                     android:id="@+id/versionName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black_or_white"
+                    android:textColor="#F5EBE6"
                     android:textSize="@dimen/_12ssp"
                     android:textStyle="bold"/>
                     
@@ -122,7 +185,7 @@
                     android:id="@+id/versionInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/secondary_text"
+                    android:textColor="#B0A39C"
                     android:textSize="@dimen/_10ssp"/>
             </LinearLayout>
 
@@ -133,7 +196,7 @@
                 android:layout_marginEnd="@dimen/_4sdp"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_folder"
-                app:tint="@color/black_or_white"
+                app:tint="#F5EBE6"
                 android:contentDescription="@null"/>
 
             <ImageButton
@@ -142,7 +205,7 @@
                 android:layout_height="@dimen/_28sdp"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_setting_launcher"
-                app:tint="@color/black_or_white"
+                app:tint="#F5EBE6"
                 android:clickable="true"
                 android:focusable="true"
                 android:contentDescription="@null"/>
@@ -154,7 +217,7 @@
             android:layout_height="@dimen/_36sdp"
             android:text="@string/main_launch"
             android:background="@drawable/button_background"
-            android:textColor="@color/black_or_white"
+            android:textColor="#F5EBE6"
             android:textAllCaps="false"
             android:textSize="@dimen/_13ssp" />
 
