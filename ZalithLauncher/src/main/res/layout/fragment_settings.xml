@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_app"
     tools:context="com.movtery.zalithlauncher.ui.fragment.SettingsFragment">
 
     <androidx.viewpager2.widget.ViewPager2
@@ -11,6 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/_minus4sdp"
+        android:background="@color/background_app"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/settings_layout"
@@ -37,7 +39,7 @@
             android:id="@+id/settings_tab"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@color/menu_overlay"
+            android:background="@color/sidebar_background"
             app:layout_constraintEnd_toStartOf="@+id/shadowView"
             app:layout_constraintStart_toStartOf="parent"
             app:tab_draw_indicator="true"
@@ -99,7 +101,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
+                    android:layout_parentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/_8sdp"
                     android:layout_toEndOf="@+id/controls_image"
@@ -130,7 +132,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
+                    android:layout_parentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/_8sdp"
                     android:layout_toEndOf="@+id/game_image"
@@ -139,6 +141,7 @@
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
+                android:id="@+id/launcher_settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/_8sdp"
@@ -161,7 +164,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
+                    android:layout_parentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/_8sdp"
                     android:layout_toEndOf="@+id/launcher_image"
@@ -190,9 +193,10 @@
                     app:srcCompat="@drawable/ic_setting_experimental" />
 
                 <TextView
+                    android:id="@+id/experimental_image_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
+                    android:layout_parentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/_8sdp"
                     android:layout_toEndOf="@+id/experimental_image"
