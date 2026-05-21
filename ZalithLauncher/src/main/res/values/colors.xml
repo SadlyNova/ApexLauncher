@@ -17,7 +17,7 @@
     <color name="background_menu_top">#251214</color>
     <color name="background_menu_top_error">#4A0D0D</color>
     <color name="background_menu_element">#33191C</color>
-    <color name="background_ripple_effect">#4D9E2A2B</color>
+    <color name="background_ripple_effect">#4D9E2A2B</color> <color name="background_ripple_effect">#4D9E2A2B</color>
     <color name="sidebar_background">#170C0D</color>
 
     <color name="button_background">#2B1619</color>
