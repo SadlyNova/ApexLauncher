@@ -31,13 +31,10 @@ jobs:
           keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -keypass android -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
 
       - name: Compile and Build APK
-        run: ./gradlew assemble --no-daemon
+        run: ./gradlew clean :ZalithLauncher:assembleDebug --no-daemon
 
-      - name: Upload Finished Artifacts
+      - name: Upload Finished APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Nova Launcher Outputs
-          path: |
-            **/build/outputs/**/*.apk
-            **/build/outputs/**/*.aab
-            
+          name: Nova Launcher Debug APK
+          path: ZalithLauncher/build/outputs/apk/debug/*.apk
