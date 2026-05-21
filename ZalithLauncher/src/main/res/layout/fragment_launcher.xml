@@ -19,7 +19,8 @@
         <View android:id="@+id/playButtonsLayout" android:layout_width="0dp" android:layout_height="0dp"/>
         <View android:id="@+id/playLayout" android:layout_width="0dp" android:layout_height="0dp"/>
         
-        <FrameLayout android:id="@+id/viewAccount" android:layout_width="0dp" android:layout_height="0dp"/>
+        <include android:id="@+id/viewAccount" layout="@layout/view_account" />
+        
         <TextView android:id="@+id/aboutText" android:layout_width="0dp" android:layout_height="0dp" android:text=""/>
         <View android:id="@+id/aboutButton" android:layout_width="0dp" android:layout_height="0dp"/>
         <View android:id="@+id/version" android:layout_width="0dp" android:layout_height="0dp"/>
