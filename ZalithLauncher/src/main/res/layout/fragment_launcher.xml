@@ -71,12 +71,12 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/versionInfo"
+        android:id="@+id/versionInfoContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/playButtonsLayout"
+        android:layout_above="@+id/playLayout"
         android:layout_marginBottom="@dimen/_10sdp"
         android:gravity="center">
 
@@ -93,6 +93,13 @@
             android:textColor="@color/black_or_white"
             android:textSize="@dimen/_14ssp"/>
             
+        <TextView 
+            android:id="@+id/versionInfo" 
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+            android:textColor="@color/black_or_white"
+            android:textSize="@dimen/_10ssp"/>
+
         <TextView 
             android:id="@+id/aboutText" 
             android:layout_width="wrap_content" 
