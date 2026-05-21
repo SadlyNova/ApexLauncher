@@ -31,7 +31,7 @@ jobs:
           keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -keypass android -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
 
       - name: Compile and Build APK
-        run: ./gradlew clean :ZailthLauncher:assembleDebug --no-daemon
+        run: ./gradlew clean :ZailthLauncher:assemble --no-daemon
 
       - name: Upload Finished APK Artifact
         uses: actions/upload-artifact@v4
