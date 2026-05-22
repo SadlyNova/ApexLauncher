@@ -29,7 +29,8 @@ import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Toast;
-
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.Color;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -87,8 +88,10 @@ import net.kdt.pojavlaunch.customcontrols.mouse.GyroControl;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 import net.kdt.pojavlaunch.services.GameService;
 
-import org.greenrobot.eventbus.EventBus;
-import org.lwjgl.glfw.CallbackBridge;
+        if (AllSettings.getAlternateSurface().getValue()) {
+            window.setBackgroundDrawable(new ColorDrawable(0xFF1C1A1A));
+        } else {
+            window.setBackgroundDrawable(new ColorDrawable(
 
 import java.io.File;
 import java.io.IOException;
