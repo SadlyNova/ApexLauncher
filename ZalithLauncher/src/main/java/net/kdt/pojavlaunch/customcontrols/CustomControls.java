@@ -12,7 +12,7 @@ import java.util.List;
 
 @Keep
 public class CustomControls {
-	public int version = 8; // Force version 8 structural engine compliance
+	public int version = 8; 
     public float scaledAt;
 	public List<ControlData> mControlDataList;
 	public List<ControlDrawerData> mDrawerDataList;
@@ -64,15 +64,17 @@ public class CustomControls {
 		this.scaledAt = 100f;
 	}
 
-	// Dynamic building utility block to structure instances safely
 	private ControlData buildDefaultBtn(String name, int keycode, String dx, String dy, float w, float h, boolean dispInMenu) {
 		ControlData data = new ControlData();
 		data.name = name;
 		data.keycodes = new int[]{keycode, 0, 0, 0};
 		data.dynamicX = dx;
 		data.dynamicY = dy;
-		data.width = w;
-		data.height = h;
+		
+		// 🔥 FIXED: Using public setters instead of direct private access variable mutation
+		data.setWidth(w);
+		data.setHeight(h);
+		
 		data.opacity = 1.0f;
 		data.bgColor = 1291845632;
 		data.strokeColor = -1;
@@ -80,7 +82,7 @@ public class CustomControls {
 		data.cornerRadius = 0.0f;
 		data.displayInGame = true;
 		data.displayInMenu = dispInMenu;
-		data.isSwipeable = !dispInMenu; // Allow swiping for D-Pad items
+		data.isSwipeable = !dispInMenu; 
 		data.isToggle = false;
 		data.passThruEnabled = false;
 		return data;
