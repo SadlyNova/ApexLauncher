@@ -146,11 +146,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="• GitHub Repository"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#FFC107"
                     android:textSize="@dimen/_11ssp"
                     android:paddingVertical="@dimen/_4sdp"
                     android:clickable="true"
                     android:focusable="true"
+                    android:textStyle="bold"
                     android:background="?android:attr/selectableItemBackground"/>
 
                 <TextView
@@ -238,7 +239,11 @@
                 android:background="@drawable/button_background"
                 android:textColor="#FFFFFF"
                 android:textAllCaps="false"
-                android:textSize="@dimen/_13ssp" />
+                android:textSize="@dimen/_13ssp"
+                android:shadowColor="#000000"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="3"/>
         </LinearLayout>
 
         <View android:id="@+id/managerProfileButton" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
