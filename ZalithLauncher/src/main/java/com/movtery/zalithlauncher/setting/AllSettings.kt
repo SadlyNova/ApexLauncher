@@ -1,241 +1,250 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_menu_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/launcher_bg"
-    tools:context="net.kdt.pojavlaunch.fragments.MainMenuFragment">
+package com.movtery.zalithlauncher.setting
 
-    <LinearLayout
-        android:id="@+id/centeredLogosContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/_45sdp"
-        android:orientation="horizontal"
-        android:gravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+import com.movtery.zalithlauncher.InfoDistributor
+import com.movtery.zalithlauncher.context.ContextExecutor
+import com.movtery.zalithlauncher.setting.unit.BooleanSettingUnit
+import com.movtery.zalithlauncher.setting.unit.IntSettingUnit
+import com.movtery.zalithlauncher.setting.unit.LongSettingUnit
+import com.movtery.zalithlauncher.setting.unit.StringSettingUnit
+import com.movtery.zalithlauncher.utils.path.PathManager
+import net.kdt.pojavlaunch.Tools
+import net.kdt.pojavlaunch.prefs.LauncherPreferences
 
-        <ImageView
-            android:id="@+id/custom_control_button"
-            android:layout_width="@dimen/_24sdp"
-            android:layout_height="@dimen/_24sdp"
-            android:layout_marginHorizontal="@dimen/_14sdp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_menu_custom_controls"
-            android:clickable="true"
-            android:focusable="true"
-            android:contentDescription="@string/setting_category_control"/>
+class AllSettings {
+    companion object {
+        // Video
+        @JvmStatic
+        val renderer = StringSettingUnit("renderer", "opengles2")
 
-        <ImageView
-            android:id="@+id/open_main_dir_button"
-            android:layout_width="@dimen/_24sdp"
-            android:layout_height="@dimen/_24sdp"
-            android:layout_marginHorizontal="@dimen/_14sdp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_folder"
-            android:clickable="true"
-            android:focusable="true"
-            android:contentDescription="@string/main_open_main_dir"/>
+        @JvmStatic
+        val driver = StringSettingUnit("driver", "Turnip")
 
-        <ImageView
-            android:id="@+id/install_jar_button"
-            android:layout_width="@dimen/_24sdp"
-            android:layout_height="@dimen/_24sdp"
-            android:layout_marginHorizontal="@dimen/_14sdp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_java"
-            android:clickable="true"
-            android:focusable="true"
-            android:contentDescription="@string/main_install_jar_file"/>
+        @JvmStatic
+        val ignoreNotch = BooleanSettingUnit("ignoreNotch", true)
 
-        <ImageView
-            android:id="@+id/share_logs_button"
-            android:layout_width="@dimen/_24sdp"
-            android:layout_height="@dimen/_24sdp"
-            android:layout_marginHorizontal="@dimen/_14sdp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_share"
-            android:clickable="true"
-            android:focusable="true"
-            android:contentDescription="@string/main_share_logs"/>
-    </LinearLayout>
+        @JvmStatic
+        val ignoreNotchLauncher = BooleanSettingUnit("ignoreNotchLauncher", true)
 
-    <LinearLayout
-        android:id="@+id/playLayout"
-        android:layout_width="@dimen/_240sdp"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="#CC2C1414"
-        android:paddingHorizontal="@dimen/_16sdp"
-        android:paddingTop="@dimen/_50sdp"
-        android:paddingBottom="@dimen/_16sdp"
-        android:gravity="center_horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        @JvmStatic
+        val resolutionRatio = IntSettingUnit("resolutionRatio", 100)
 
-        <include
-            android:id="@+id/viewAccount"
-            layout="@layout/view_account"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:textColor="#FFFFFF"/>
+        @JvmStatic
+        val sustainedPerformance = BooleanSettingUnit("sustainedPerformance", false)
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:scrollbars="none"
-            android:layout_marginBottom="@dimen/_10sdp">
+        @JvmStatic
+        val alternateSurface = BooleanSettingUnit("alternate_surface", false)
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="#251214"
-                android:padding="@dimen/_10sdp">
+        @JvmStatic
+        val forceVsync = BooleanSettingUnit("force_vsync", false)
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="About Nova"
-                    android:textColor="#FF5252"
-                    android:textSize="@dimen/_12ssp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="@dimen/_6sdp"/>
+        @JvmStatic
+        val vsyncInZink = BooleanSettingUnit("vsync_in_zink", false)
 
-                <TextView
-                    android:id="@+id/nova_discord"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="• Discord Community"
-                    android:textColor="#FFFFFF"
-                    android:textSize="@dimen/_11ssp"
-                    android:paddingVertical="@dimen/_4sdp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground"/>
+        @JvmStatic
+        val zinkPreferSystemDriver = BooleanSettingUnit("zinkPreferSystemDriver", false)
 
-                <TextView
-                    android:id="@+id/nova_website"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="• Official Website"
-                    android:textColor="#FFFFFF"
-                    android:textSize="@dimen/_11ssp"
-                    android:paddingVertical="@dimen/_4sdp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground"/>
+        // Control
+        @JvmStatic
+        val disableGestures = BooleanSettingUnit("disableGestures", false)
 
-                <TextView
-                    android:id="@+id/nova_github"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="• GitHub Repository"
-                    android:textColor="#FFFFFF"
-                    android:textSize="@dimen/_11ssp"
-                    android:paddingVertical="@dimen/_4sdp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground"/>
+        @JvmStatic
+        val disableDoubleTap = BooleanSettingUnit("disableDoubleTap", false)
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="• Upcoming Features..."
-                    android:textColor="#E0DCDA"
-                    android:textSize="@dimen/_11ssp"
-                    android:paddingVertical="@dimen/_4sdp"
-                    android:textStyle="italic"/>
-            </LinearLayout>
-        </ScrollView>
+        @JvmStatic
+        val timeLongPressTrigger = IntSettingUnit("timeLongPressTrigger", 300)
 
-        <LinearLayout
-            android:id="@+id/versionInfoContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="@dimen/_12sdp">
+        @JvmStatic
+        val buttonScale = IntSettingUnit("buttonscale", 100)
 
-            <ImageView
-                android:id="@+id/versionIcon"
-                android:layout_width="@dimen/_28sdp"
-                android:layout_height="@dimen/_28sdp"
-                android:layout_marginEnd="@dimen/_8sdp"
-                android:contentDescription="@null"/>
+        @JvmStatic
+        val buttonAllCaps = BooleanSettingUnit("buttonAllCaps", false)
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1">
-                
-                <TextView
-                    android:id="@+id/versionName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#FFFFFF"
-                    android:textSize="@dimen/_12ssp"
-                    android:textStyle="bold"/>
-                    
-                <TextView
-                    android:id="@+id/versionInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#E0DCDA"
-                    android:textSize="@dimen/_10ssp"/>
-            </LinearLayout>
+        @JvmStatic
+        val mouseScale = IntSettingUnit("mousescale", 100)
 
-            <ImageButton
-                android:id="@+id/version"
-                android:layout_width="@dimen/_28sdp"
-                android:layout_height="@dimen/_28sdp"
-                android:layout_marginEnd="@dimen/_4sdp"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_folder"
-                app:tint="#FFFFFF"
-                android:contentDescription="@null"/>
+        @JvmStatic
+        val mouseSpeed = IntSettingUnit("mousespeed", 100)
 
-            <ImageButton
-                android:id="@+id/edit_settings_button"
-                android:layout_width="@dimen/_28sdp"
-                android:layout_height="@dimen/_28sdp"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_setting_launcher"
-                app:tint="#FFFFFF"
-                android:clickable="true"
-                android:focusable="true"
-                android:contentDescription="@null"/>
-        </LinearLayout>
+        @JvmStatic
+        val virtualMouseStart = BooleanSettingUnit("mouse_start", true)
 
-        <LinearLayout
-            android:id="@+id/playButtonsLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="visible">
+        @JvmStatic
+        val customMouse = StringSettingUnit("custom_mouse", "")
 
-            <Button
-                android:id="@+id/playButton"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_36sdp"
-                android:text="@string/main_launch"
-                android:background="@drawable/button_background"
-                android:textColor="#FFFFFF"
-                android:textAllCaps="false"
-                android:textSize="@dimen/_13ssp" />
-        </LinearLayout>
+        @JvmStatic
+        val enableGyro = BooleanSettingUnit("enableGyro", false)
 
-        <View android:id="@+id/managerProfileButton" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
-        <View android:id="@+id/aboutButton" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
-        <TextView android:id="@+id/aboutText" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
-    </LinearLayout>
+        @JvmStatic
+        val gyroSensitivity = IntSettingUnit("gyroSensitivity", 100)
 
-</androidx.constraintlayout.widget.ConstraintLayout>
-    
+        @JvmStatic
+        val gyroSampleRate = IntSettingUnit("gyroSampleRate", 16)
+
+        @JvmStatic
+        val gyroSmoothing = BooleanSettingUnit("gyroSmoothing", true)
+
+        @JvmStatic
+        val gyroInvertX = BooleanSettingUnit("gyroInvertX", false)
+
+        @JvmStatic
+        val gyroInvertY = BooleanSettingUnit("gyroInvertY", false)
+
+        @JvmStatic
+        val deadZoneScale = IntSettingUnit("gamepad_deadzone_scale", 100)
+
+        // Game
+        @JvmStatic
+        val versionIsolation = BooleanSettingUnit("versionIsolation", true)
+
+        @JvmStatic
+        val versionCustomInfo = StringSettingUnit("versionCustomInfo", "\${InfoDistributor.LAUNCHER_NAME}[zl_version]")
+
+        @JvmStatic
+        val autoSetGameLanguage = BooleanSettingUnit("autoSetGameLanguage", true)
+
+        @JvmStatic
+        val gameLanguageOverridden = BooleanSettingUnit("gameLanguageOverridden", false)
+
+        @JvmStatic
+        val setGameLanguage = StringSettingUnit("setGameLanguage", "system")
+
+        @JvmStatic
+        val selectRuntimeMode = StringSettingUnit("selectRuntimeMode", "auto")
+
+        @JvmStatic
+        val javaArgs = StringSettingUnit("javaArgs", "")
+
+        @JvmStatic
+        val ramAllocation = lazy {
+            IntSettingUnit("allocation", LauncherPreferences.findBestRAMAllocation(ContextExecutor.getApplication()))
+        }
+
+        @JvmStatic
+        val javaSandbox = BooleanSettingUnit("java_sandbox", true)
+
+        @JvmStatic
+        val gameMenuShowMemory = BooleanSettingUnit("gameMenuShowMemory", false)
+
+        @JvmStatic
+        val gameMenuShowFPS = BooleanSettingUnit("gameMenuShowFPS", false)
+
+        @JvmStatic
+        val gameMenuMemoryText = StringSettingUnit("gameMenuMemoryText", "M:")
+
+        @JvmStatic
+        val gameMenuLocation = StringSettingUnit("gameMenuLocation", "center")
+
+        @JvmStatic
+        val gameMenuInfoRefreshRate = IntSettingUnit("gameMenuInfoRefreshRate", 1000)
+
+        @JvmStatic
+        val gameMenuAlpha = IntSettingUnit("gameMenuAlpha", 100)
+
+        // Launcher
+        @JvmStatic
+        val checkLibraries = BooleanSettingUnit("checkLibraries", true)
+
+        @JvmStatic
+        val verifyManifest = BooleanSettingUnit("verifyManifest", true)
+
+        @JvmStatic
+        val resourceImageCache = BooleanSettingUnit("resourceImageCache", false)
+
+        @JvmStatic
+        val addFullResourceName = BooleanSettingUnit("addFullResourceName", true)
+
+        @JvmStatic
+        val downloadSource = StringSettingUnit("downloadSource", "default")
+
+        @JvmStatic
+        val maxDownloadThreads = IntSettingUnit("maxDownloadThreads", 64)
+
+        @JvmStatic
+        val launcherTheme = StringSettingUnit("launcherTheme", "system")
+
+        @JvmStatic
+        val animation = BooleanSettingUnit("animation", true)
+
+        @JvmStatic
+        val animationSpeed = IntSettingUnit("animationSpeed", 600)
+
+        @JvmStatic
+        val pageOpacity = IntSettingUnit("pageOpacity", 100)
+
+        @JvmStatic
+        val enableLogOutput = BooleanSettingUnit("enableLogOutput", false)
+
+        @JvmStatic
+        val quitLauncher = BooleanSettingUnit("quitLauncher", true)
+
+        @JvmStatic
+        val acceptPreReleaseUpdates = BooleanSettingUnit("acceptPreReleaseUpdates", false)
+
+        // Experimental
+        @JvmStatic
+        val dumpShaders = BooleanSettingUnit("dump_shaders", false)
+
+        @JvmStatic
+        val bigCoreAffinity = BooleanSettingUnit("bigCoreAffinity", false)
+
+        @JvmStatic
+        val tcVibrateDuration = IntSettingUnit("tcVibrateDuration", 100)
+
+        // Other
+        @JvmStatic
+        val currentAccount = StringSettingUnit("currentAccount", "")
+
+        @JvmStatic
+        val launcherProfile = StringSettingUnit("launcherProfile", "default")
+
+        // 🔥 Fixed Default Value Path To Force Asset Initializer
+        @JvmStatic
+        val defaultCtrl = StringSettingUnit("defaultCtrl", "default")
+
+        @JvmStatic
+        val defaultRuntime = StringSettingUnit("defaultRuntime", "")
+
+        @JvmStatic
+        val notificationPermissionRequest = BooleanSettingUnit("notification_permission_request", false)
+
+        @JvmStatic
+        val skipNotificationPermissionCheck = BooleanSettingUnit("skipNotificationPermissionCheck", false)
+
+        @JvmStatic
+        val localAccountReminders = BooleanSettingUnit("localAccountReminders", true)
+
+        @JvmStatic
+        val updateCheck = LongSettingUnit("updateCheck", 0L)
+
+        @JvmStatic
+        val ignoreUpdate = StringSettingUnit("ignoreUpdate", "")
+
+        @JvmStatic
+        val noticeCheck = LongSettingUnit("noticeCheck", 0L)
+
+        @JvmStatic
+        val noticeNumbering = IntSettingUnit("noticeNumbering", 0)
+
+        @JvmStatic
+        val noticeDefault = BooleanSettingUnit("noticeDefault", false)
+
+        @JvmStatic
+        val buttonSnapping = BooleanSettingUnit("buttonSnapping", true)
+
+        @JvmStatic
+        val buttonSnappingDistance = IntSettingUnit("buttonSnappingDistance", 8)
+
+        @JvmStatic
+        val hotbarType = StringSettingUnit("hotbarType", "auto")
+
+        @JvmStatic
+        val hotbarWidth = lazy {
+            IntSettingUnit("hotbarWidth", Tools.currentDisplayMetrics.widthPixels / 3)
+        }
+
+        @JvmStatic
+        val hotbarHeight = lazy {
+            IntSettingUnit("hotbarHeight", Tools.currentDisplayMetrics.heightPixels / 4)
+        }
+    }
+}
