@@ -31,13 +31,13 @@ public class CustomControls {
 		mControlInfoDataList.author = "NovaDev";
 		mControlInfoDataList.version = "1.0";
 
-		// --- 🛠️ TOP UTILITY BAR (Dynamic layout alignment across top margin) ---
-		mControlDataList.add(buildDefaultBtn("ESC", 256, "0.0 * ${screen_width} + (px(10.0) / 100 * ${preferred_scale})", "0.0 * ${screen_height} + (px(10.0) / 100 * ${preferred_scale})", 65, 35, true));
-		mControlDataList.add(buildDefaultBtn("DEBUG", 69, "0.0 * ${screen_width} + (px(10.0) / 100 * ${preferred_scale})", "0.0 * ${screen_height} + (px(50.0) / 100 * ${preferred_scale})", 65, 35, true));
-		mControlDataList.add(buildDefaultBtn("CHAT", 84, "0.0 * ${screen_width} + (px(80.0) / 100 * ${preferred_scale})", "0.0 * ${screen_height} + (px(10.0) / 100 * ${preferred_scale})", 65, 35, true));
-		mControlDataList.add(buildDefaultBtn("KEYBOARD", 0, "0.0 * ${screen_width} + (px(150.0) / 100 * ${preferred_scale})", "0.0 * ${screen_height} + (px(10.0) / 100 * ${preferred_scale})", 85, 35, true));
-		mControlDataList.add(buildDefaultBtn("TAB", 258, "0.0 * ${screen_width} + (px(240.0) / 100 * ${preferred_scale})", "0.0 * ${screen_height} + (px(10.0) / 100 * ${preferred_scale})", 65, 35, true));
-		mControlDataList.add(buildDefaultBtn("MOUSE", -5, "1.0 * ${screen_width} - (px(75.0) / 100 * ${preferred_scale})", "0.0 * ${screen_height} + (px(10.0) / 100 * ${preferred_scale})", 65, 35, true));
+		// --- 🛠️ TOP UTILITY BAR (Fixed dynamic scaling separation strings) ---
+		mControlDataList.add(buildDefaultBtn("ESC", 256, "0.0 * ${screen_width} + (0.01 * ${screen_width})", "0.0 * ${screen_height} + (0.02 * ${screen_height})", 65, 35, true));
+		mControlDataList.add(buildDefaultBtn("DEBUG", 69, "0.0 * ${screen_width} + (0.01 * ${screen_width})", "0.0 * ${screen_height} + (0.12 * ${screen_height})", 65, 35, true));
+		mControlDataList.add(buildDefaultBtn("CHAT", 84, "0.0 * ${screen_width} + (0.10 * ${screen_width})", "0.0 * ${screen_height} + (0.02 * ${screen_height})", 65, 35, true));
+		mControlDataList.add(buildDefaultBtn("KEYBOARD", 0, "0.0 * ${screen_width} + (0.19 * ${screen_width})", "0.0 * ${screen_height} + (0.02 * ${screen_height})", 85, 35, true));
+		mControlDataList.add(buildDefaultBtn("TAB", 258, "0.0 * ${screen_width} + (0.31 * ${screen_width})", "0.0 * ${screen_height} + (0.02 * ${screen_height})", 65, 35, true));
+		mControlDataList.add(buildDefaultBtn("MOUSE", -5, "1.0 * ${screen_width} - (0.10 * ${screen_width})", "0.0 * ${screen_height} + (0.02 * ${screen_height})", 65, 35, true));
 
 		// --- 🕹️ BOTTOM LEFT D-PAD (Anchored precisely relative to the screen height) ---
 		// Row 1 (PRI | ▲ | SEC)
@@ -71,7 +71,6 @@ public class CustomControls {
 		data.dynamicX = dx;
 		data.dynamicY = dy;
 		
-		// Set width and height via public setup setters
 		data.setWidth(w);
 		data.setHeight(h);
 		
@@ -82,7 +81,7 @@ public class CustomControls {
 		data.cornerRadius = 0.0f;
 		data.displayInGame = true;
 		data.displayInMenu = dispInMenu;
-		data.isSwipeable = !dispInMenu; // Enable fluid swiping paths specifically for D-Pad items
+		data.isSwipeable = !dispInMenu; 
 		data.isToggle = false;
 		data.passThruEnabled = false;
 		return data;
