@@ -197,7 +197,6 @@ class AllSettings {
         @JvmStatic
         val launcherProfile = StringSettingUnit("launcherProfile", "default")
 
-        // 🔥 Fixed Default Value Path To Force Asset Initializer
         @JvmStatic
         val defaultCtrl = StringSettingUnit("defaultCtrl", "default")
 
@@ -222,11 +221,13 @@ class AllSettings {
         @JvmStatic
         val noticeCheck = LongSettingUnit("noticeCheck", 0L)
 
+        // 🔥 FIXED: Forces notice checking logic to bypass warning dialogues completely
         @JvmStatic
-        val noticeNumbering = IntSettingUnit("noticeNumbering", 0)
+        val noticeNumbering = IntSettingUnit("noticeNumbering", 9999)
 
+        // 🔥 FIXED: Defaults notice system state to confirmed/dismissed
         @JvmStatic
-        val noticeDefault = BooleanSettingUnit("noticeDefault", false)
+        val noticeDefault = BooleanSettingUnit("noticeDefault", true)
 
         @JvmStatic
         val buttonSnapping = BooleanSettingUnit("buttonSnapping", true)
