@@ -15,7 +15,7 @@ import com.movtery.anim.AnimPlayer;
 import com.movtery.anim.animations.Animations;
 import com.movtery.zalithlauncher.InfoCenter;
 import com.movtery.zalithlauncher.R;
-import com.movtery.zalithlauncher.databinding.FragmentLauncherBinding;
+import com.movtery.zalithlauncher.databinding.FragmentMenuMainBinding; // 🔥 FIXED MATCHING BINDING
 import com.movtery.zalithlauncher.event.single.AccountUpdateEvent;
 import com.movtery.zalithlauncher.event.single.LaunchGameEvent;
 import com.movtery.zalithlauncher.event.single.RefreshVersionsEvent;
@@ -44,17 +44,17 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class MainMenuFragment extends FragmentWithAnim {
     public static final String TAG = "MainMenuFragment";
-    private FragmentLauncherBinding binding;
+    private FragmentMenuMainBinding binding; // 🔥 FIXED BINDING REFERENCE TYPE
     private AccountViewWrapper accountViewWrapper;
 
     public MainMenuFragment() {
-        super(R.layout.fragment_launcher);
+        super(R.layout.fragment_menu_main); // 🔥 FIXED TO TARGET RECONSTRUCTED LAYOUT
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentLauncherBinding.inflate(getLayoutInflater());
+        binding = FragmentMenuMainBinding.inflate(inflater, container, false); // 🔥 ACCURATE RUNTIME INFLATION
         accountViewWrapper = new AccountViewWrapper(this, binding.viewAccount);
         accountViewWrapper.refreshAccountInfo();
         return binding.getRoot();
@@ -68,7 +68,7 @@ public class MainMenuFragment extends FragmentWithAnim {
         }
         if (binding.aboutButton != null) {
             binding.aboutButton.setOnClickListener(v -> ZHTools.swapFragmentWithAnim(this, AboutFragment.class, AboutFragment.TAG, null));
-            binding.aboutButton.setVisibility(View.GONE); // Keeps it completely hidden
+            binding.aboutButton.setVisibility(View.GONE);
         }
 
         // Setting up the top layout centered buttons click handlers
@@ -95,7 +95,7 @@ public class MainMenuFragment extends FragmentWithAnim {
             }
         });
         
-        // ⚙️ Independent Settings Gear button handler initialization
+        // Settings Gear button handler initialization
         if (binding.editSettingsButton != null) {
             binding.editSettingsButton.setOnClickListener(v -> {
                 if (!isTaskRunning()) {
@@ -108,7 +108,7 @@ public class MainMenuFragment extends FragmentWithAnim {
             });
         }
 
-        // 🌐 NEW: About Nova Link Intent Bindings
+        // About Nova Link Intent Bindings
         if (binding.novaDiscord != null) {
             binding.novaDiscord.setOnClickListener(v -> {
                 android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://discord.gg/xFpfUufXg3"));
@@ -141,6 +141,11 @@ public class MainMenuFragment extends FragmentWithAnim {
         });
 
         binding.playButton.setOnClickListener(v -> EventBus.getDefault().post(new LaunchGameEvent()));
+
+        // Guaranteed visibility override to display play options container defaultly
+        if (binding.playButtonsLayout != null) {
+            binding.playButtonsLayout.setVisibility(View.VISIBLE);
+        }
 
         binding.versionName.setSelected(true);
         binding.versionInfo.setSelected(true);
@@ -206,9 +211,10 @@ public class MainMenuFragment extends FragmentWithAnim {
         if (binding.centeredLogosContainer != null) {
             animPlayer.apply(new AnimPlayer.Entry(binding.centeredLogosContainer, Animations.BounceInDown));
         }
-        animPlayer.apply(new AnimPlayer.Entry(binding.playLayout, Animations.BounceInLeft))
-                .apply(new AnimPlayer.Entry(binding.playButtonsLayout, Animations.BounceEnlarge));
-                
+        animPlayer.apply(new AnimPlayer.Entry(binding.playLayout, Animations.BounceInLeft));
+        if (binding.playButtonsLayout != null) {
+            animPlayer.apply(new AnimPlayer.Entry(binding.playButtonsLayout, Animations.BounceEnlarge));
+        }
         if (binding.editSettingsButton != null) {
             animPlayer.apply(new AnimPlayer.Entry(binding.editSettingsButton, Animations.BounceInLeft));
         }
@@ -219,11 +225,13 @@ public class MainMenuFragment extends FragmentWithAnim {
         if (binding.centeredLogosContainer != null) {
             animPlayer.apply(new AnimPlayer.Entry(binding.centeredLogosContainer, Animations.FadeOutUp));
         }
-        animPlayer.apply(new AnimPlayer.Entry(binding.playLayout, Animations.FadeOutRight))
-                .apply(new AnimPlayer.Entry(binding.playButtonsLayout, Animations.BounceShrink));
-                
+        animPlayer.apply(new AnimPlayer.Entry(binding.playLayout, Animations.FadeOutRight));
+        if (binding.playButtonsLayout != null) {
+            animPlayer.apply(new AnimPlayer.Entry(binding.playButtonsLayout, Animations.BounceShrink));
+        }
         if (binding.editSettingsButton != null) {
             animPlayer.apply(new AnimPlayer.Entry(binding.editSettingsButton, Animations.FadeOutRight));
         }
     }
 }
+
