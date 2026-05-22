@@ -12,7 +12,7 @@ import java.util.List;
 
 @Keep
 public class CustomControls {
-	public int version = 8; 
+	public int version = 8; // Force version 8 structural engine compliance
     public float scaledAt;
 	public List<ControlData> mControlDataList;
 	public List<ControlDrawerData> mDrawerDataList;
@@ -31,29 +31,29 @@ public class CustomControls {
 		mControlInfoDataList.author = "NovaDev";
 		mControlInfoDataList.version = "1.0";
 
-		// --- TOP UTILITY BAR BUTTONS ---
-		mControlDataList.add(buildDefaultBtn("ESC", 256, "0.0 * ${screen_width} + 10.0", "0.0 * ${screen_height} + 10.0", 60, 40, true));
-		mControlDataList.add(buildDefaultBtn("DEBUG", 69, "0.0 * ${screen_width} + 10.0", "0.0 * ${screen_height} + 55.0", 60, 40, true));
-		mControlDataList.add(buildDefaultBtn("CHAT", 84, "0.0 * ${screen_width} + 75.0", "0.0 * ${screen_height} + 10.0", 60, 40, true));
-		mControlDataList.add(buildDefaultBtn("KEYBOARD", 0, "0.0 * ${screen_width} + 140.0", "0.0 * ${screen_height} + 10.0", 85, 40, true));
-		mControlDataList.add(buildDefaultBtn("TAB", 258, "0.0 * ${screen_width} + 230.0", "0.0 * ${screen_height} + 10.0", 60, 40, true));
-		mControlDataList.add(buildDefaultBtn("MOUSE", -5, "1.0 * ${screen_width} - 70.0", "0.0 * ${screen_height} + 10.0", 60, 40, true));
+		// --- 🛠️ TOP UTILITY BAR (Dynamic layout alignment across top margin) ---
+		mControlDataList.add(buildDefaultBtn("ESC", 256, "0.0 * ${screen_width} + (px(10.0) / 100 * ${preferred_scale})", "0.0 * ${screen_height} + (px(10.0) / 100 * ${preferred_scale})", 65, 35, true));
+		mControlDataList.add(buildDefaultBtn("DEBUG", 69, "0.0 * ${screen_width} + (px(10.0) / 100 * ${preferred_scale})", "0.0 * ${screen_height} + (px(50.0) / 100 * ${preferred_scale})", 65, 35, true));
+		mControlDataList.add(buildDefaultBtn("CHAT", 84, "0.0 * ${screen_width} + (px(80.0) / 100 * ${preferred_scale})", "0.0 * ${screen_height} + (px(10.0) / 100 * ${preferred_scale})", 65, 35, true));
+		mControlDataList.add(buildDefaultBtn("KEYBOARD", 0, "0.0 * ${screen_width} + (px(150.0) / 100 * ${preferred_scale})", "0.0 * ${screen_height} + (px(10.0) / 100 * ${preferred_scale})", 85, 35, true));
+		mControlDataList.add(buildDefaultBtn("TAB", 258, "0.0 * ${screen_width} + (px(240.0) / 100 * ${preferred_scale})", "0.0 * ${screen_height} + (px(10.0) / 100 * ${preferred_scale})", 65, 35, true));
+		mControlDataList.add(buildDefaultBtn("MOUSE", -5, "1.0 * ${screen_width} - (px(75.0) / 100 * ${preferred_scale})", "0.0 * ${screen_height} + (px(10.0) / 100 * ${preferred_scale})", 65, 35, true));
 
-		// --- BOTTOM LEFT GRID BUTTONS (D-PAD GRID) ---
-		// Row 1
-		mControlDataList.add(buildDefaultBtn("PRI", -3, "0.0 * ${screen_width} + 15.0", "1.0 * ${screen_height} - 145.0", 55, 45, false));
-		mControlDataList.add(buildDefaultBtn("▲", 87, "0.0 * ${screen_width} + 75.0", "1.0 * ${screen_height} - 145.0", 55, 45, false));
-		mControlDataList.add(buildDefaultBtn("SEC", -4, "0.0 * ${screen_width} + 135.0", "1.0 * ${screen_height} - 145.0", 55, 45, false));
+		// --- 🕹️ BOTTOM LEFT D-PAD (Anchored precisely relative to the screen height) ---
+		// Row 1 (PRI | ▲ | SEC)
+		mControlDataList.add(buildDefaultBtn("PRI", -3, "0.02 * ${screen_width}", "1.0 * ${screen_height} - (px(150.0) / 100 * ${preferred_scale})", 55, 45, false));
+		mControlDataList.add(buildDefaultBtn("▲", 87, "0.02 * ${screen_width} + (px(60.0) / 100 * ${preferred_scale})", "1.0 * ${screen_height} - (px(150.0) / 100 * ${preferred_scale})", 55, 45, false));
+		mControlDataList.add(buildDefaultBtn("SEC", -4, "0.02 * ${screen_width} + (px(120.0) / 100 * ${preferred_scale})", "1.0 * ${screen_height} - (px(150.0) / 100 * ${preferred_scale})", 55, 45, false));
 		
-		// Row 2
-		mControlDataList.add(buildDefaultBtn("◀", 65, "0.0 * ${screen_width} + 15.0", "1.0 * ${screen_height} - 95.0", 55, 45, false));
-		mControlDataList.add(buildDefaultBtn("♢", 0, "0.0 * ${screen_width} + 75.0", "1.0 * ${screen_height} - 95.0", 55, 45, false));
-		mControlDataList.add(buildDefaultBtn("▶", 68, "0.0 * ${screen_width} + 135.0", "1.0 * ${screen_height} - 95.0", 55, 45, false));
+		// Row 2 (◀ | ♢ | ▶)
+		mControlDataList.add(buildDefaultBtn("◀", 65, "0.02 * ${screen_width}", "1.0 * ${screen_height} - (px(100.0) / 100 * ${preferred_scale})", 55, 45, false));
+		mControlDataList.add(buildDefaultBtn("♢", 0, "0.02 * ${screen_width} + (px(60.0) / 100 * ${preferred_scale})", "1.0 * ${screen_height} - (px(100.0) / 100 * ${preferred_scale})", 55, 45, false));
+		mControlDataList.add(buildDefaultBtn("▶", 68, "0.02 * ${screen_width} + (px(120.0) / 100 * ${preferred_scale})", "1.0 * ${screen_height} - (px(100.0) / 100 * ${preferred_scale})", 55, 45, false));
 		
-		// Row 3
-		mControlDataList.add(buildDefaultBtn("GUI", -2, "0.0 * ${screen_width} + 15.0", "1.0 * ${screen_height} - 45.0", 55, 45, false));
-		mControlDataList.add(buildDefaultBtn("▼", 83, "0.0 * ${screen_width} + 75.0", "1.0 * ${screen_height} - 45.0", 55, 45, false));
-		mControlDataList.add(buildDefaultBtn("INV", 69, "0.0 * ${screen_width} + 135.0", "1.0 * ${screen_height} - 45.0", 55, 45, false));
+		// Row 3 (GUI | ▼ | INV)
+		mControlDataList.add(buildDefaultBtn("GUI", -2, "0.02 * ${screen_width}", "1.0 * ${screen_height} - (px(50.0) / 100 * ${preferred_scale})", 55, 45, false));
+		mControlDataList.add(buildDefaultBtn("▼", 83, "0.02 * ${screen_width} + (px(60.0) / 100 * ${preferred_scale})", "1.0 * ${screen_height} - (px(50.0) / 100 * ${preferred_scale})", 55, 45, false));
+		mControlDataList.add(buildDefaultBtn("INV", 69, "0.02 * ${screen_width} + (px(120.0) / 100 * ${preferred_scale})", "1.0 * ${screen_height} - (px(50.0) / 100 * ${preferred_scale})", 55, 45, false));
 	}
 
 	public CustomControls(List<ControlData> mControlDataList, List<ControlDrawerData> mDrawerDataList, List<ControlJoystickData> mJoystickDataList, ControlInfoData mControlInfoDataList) {
@@ -71,7 +71,7 @@ public class CustomControls {
 		data.dynamicX = dx;
 		data.dynamicY = dy;
 		
-		// 🔥 FIXED: Using public setters instead of direct private access variable mutation
+		// Set width and height via public setup setters
 		data.setWidth(w);
 		data.setHeight(h);
 		
@@ -82,7 +82,7 @@ public class CustomControls {
 		data.cornerRadius = 0.0f;
 		data.displayInGame = true;
 		data.displayInMenu = dispInMenu;
-		data.isSwipeable = !dispInMenu; 
+		data.isSwipeable = !dispInMenu; // Enable fluid swiping paths specifically for D-Pad items
 		data.isToggle = false;
 		data.passThruEnabled = false;
 		return data;
