@@ -1,50 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black_or_white">#F5EBE6</color>
-    <color name="primary_text">#F5EBE6</color>
-    <color name="secondary_text">#B0A39C</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="transparent">#00000000</color>
 
-    <color name="background_app">#11090A</color>
-    <color name="background_app_error">#260505</color>
-    <color name="background_overlay">#8011090A</color>
-    <color name="background_status_bar">#11090A</color>
-    
-    <color name="windowBackground">#11090A</color>
-    <color name="colorBackground">#11090A</color>
-    <color name="colorSurface">#1D0F11</color>
-    <color name="cardBackground">#2B1619</color>
+    <color name="primary">#FF6200EE</color>
+    <color name="primary_variant">#FF3700B3</color>
+    <color name="secondary">#FF03DAC5</color>
+    <color name="secondary_variant">#FF018786</color>
+    <color name="background">#FFFFFFFF</color>
+    <color name="surface">#FFFFFFFF</color>
+    <color name="error">#B00020</color>
 
-    <color name="background_menu_top">#251214</color>
-    <color name="background_menu_top_error">#4A0D0D</color>
-    <color name="background_menu_element">#33191C</color>
-    <color name="background_ripple_effect">#4D9E2A2B</color>
-    <color name="sidebar_background">#170C0D</color>
-
-    <color name="button_background">#2B1619</color>
-    <color name="button_background_selected">#5C1E21</color>
-    <color name="dialog_background">#1A0D0F</color>
-
-    <color name="menu_bar">#1D0F11</color>
-    <color name="menu_bar_text">#F5EBE6</color>
-    <color name="menu_overlay">#CC2C1414</color>
-    <color name="menu_progress">#9E2A2B</color>
-
-    <color name="background_card">#2B1619</color>
-    <color name="background_item">#CC201012</color>
-    <color name="background_item_selected">#E63D1A1E</color>
-    <color name="background_item_disabled">#4D4A0D0D</color>
-    <color name="background_sponsor_intermediate">#CCFFCB8B</color>
-    <color name="background_sponsor_advanced">#CCFDA28A</color>
-
-    <color name="edit_box_fill">#180C0D</color>
-    <color name="edit_box_fill_selected">#2A1416</color>
-
-    <color name="mod_category_fill">#4D33191C</color>
-    <color name="text_background_fill">#33251214</color>
-
-    <color name="settings_category">#9E2A2B</color>
-
-    <color name="favorite_color">#E63946</color>
-
-    <color name="icon_color">#F5EBE6</color>
-</resources>
+    <color name="text_primary_title">#FFFFFF</color>      <color name="text_secondary_body">#E0DCDA</color>     <color name="text_accent_coral">#FF5252</color>       <color name="text_accent_gold">#FFC107</color>        </resources>
