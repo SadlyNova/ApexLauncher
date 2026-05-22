@@ -15,7 +15,7 @@ import com.movtery.anim.AnimPlayer;
 import com.movtery.anim.animations.Animations;
 import com.movtery.zalithlauncher.InfoCenter;
 import com.movtery.zalithlauncher.R;
-import com.movtery.zalithlauncher.databinding.FragmentMenuMainBinding; // 🔥 FIXED MATCHING BINDING
+import com.movtery.zalithlauncher.databinding.FragmentLauncherBinding; // Unified compiler binding
 import com.movtery.zalithlauncher.event.single.AccountUpdateEvent;
 import com.movtery.zalithlauncher.event.single.LaunchGameEvent;
 import com.movtery.zalithlauncher.event.single.RefreshVersionsEvent;
@@ -44,17 +44,17 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class MainMenuFragment extends FragmentWithAnim {
     public static final String TAG = "MainMenuFragment";
-    private FragmentMenuMainBinding binding; // 🔥 FIXED BINDING REFERENCE TYPE
+    private FragmentLauncherBinding binding;
     private AccountViewWrapper accountViewWrapper;
 
     public MainMenuFragment() {
-        super(R.layout.fragment_menu_main); // 🔥 FIXED TO TARGET RECONSTRUCTED LAYOUT
+        super(R.layout.fragment_launcher); // Fixed to standard compiler resource ID
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentMenuMainBinding.inflate(inflater, container, false); // 🔥 ACCURATE RUNTIME INFLATION
+        binding = FragmentLauncherBinding.inflate(inflater, container, false);
         accountViewWrapper = new AccountViewWrapper(this, binding.viewAccount);
         accountViewWrapper.refreshAccountInfo();
         return binding.getRoot();
@@ -68,7 +68,7 @@ public class MainMenuFragment extends FragmentWithAnim {
         }
         if (binding.aboutButton != null) {
             binding.aboutButton.setOnClickListener(v -> ZHTools.swapFragmentWithAnim(this, AboutFragment.class, AboutFragment.TAG, null));
-            binding.aboutButton.setVisibility(View.GONE);
+            binding.aboutButton.setVisibility(View.GONE); 
         }
 
         // Setting up the top layout centered buttons click handlers
@@ -142,9 +142,12 @@ public class MainMenuFragment extends FragmentWithAnim {
 
         binding.playButton.setOnClickListener(v -> EventBus.getDefault().post(new LaunchGameEvent()));
 
-        // Guaranteed visibility override to display play options container defaultly
+        // FORCED SYSTEM VISIBILITY OVERRIDES TO RESTORE THE LAYOUT DEFAULTLY
         if (binding.playButtonsLayout != null) {
             binding.playButtonsLayout.setVisibility(View.VISIBLE);
+        }
+        if (binding.playButton != null) {
+            binding.playButton.setVisibility(View.VISIBLE);
         }
 
         binding.versionName.setSelected(true);
@@ -234,4 +237,3 @@ public class MainMenuFragment extends FragmentWithAnim {
         }
     }
 }
-
