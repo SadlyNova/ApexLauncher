@@ -162,13 +162,23 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(this);
     }
 
-    protected void initLayout() {
+           protected void initLayout() {
         binding = ActivityGameBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         mGameMenuWrapper = new GameMenuViewWrapper(this, v -> onClickedMenu(), true);
-        touchCharInput = binding.mainTouchCharInput;
 
+        try {
+            int noticeId = getResources().getIdentifier("noticeContainer", "id", getPackageName());
+            if (noticeId != 0) {
+                View globalNoticeElement = findViewById(noticeId);
+                if (globalNoticeElement != null) {
+                    globalNoticeElement.setVisibility(View.GONE);
+                }
+            }
+        } catch (Throwable ignore) {}
+
+        touchCharInput = binding.mainTouchCharInput;
         BackgroundManager.setBackgroundImage(this, BackgroundType.IN_GAME, binding.backgroundView, null);
 
         keyboardDialog = new KeyboardDialog(this).setShowSpecialButtons(false);
@@ -177,8 +187,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         binding.mainDrawerOptions.setScrimColor(Color.TRANSPARENT);
         binding.mainDrawerOptions.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-
-        try {
+               
             File latestLogFile = new File(PathManager.DIR_GAME_HOME, "latestlog.txt");
             if(!latestLogFile.exists() && !latestLogFile.createNewFile())
                 throw new IOException("Failed to create a new log file");
