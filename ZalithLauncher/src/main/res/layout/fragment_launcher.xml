@@ -82,7 +82,8 @@
             layout="@layout/view_account"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_10sdp"/>
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:textColor="#FFFFFF"/>
 
         <ScrollView
             android:layout_width="match_parent"
@@ -102,7 +103,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="About Nova"
-                    android:textColor="#9E2A2B"
+                    android:textColor="#FF5252"
                     android:textSize="@dimen/_12ssp"
                     android:textStyle="bold"
                     android:layout_marginBottom="@dimen/_6sdp"/>
@@ -112,7 +113,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="• Discord Community"
-                    android:textColor="#F5EBE6"
+                    android:textColor="#FFFFFF"
                     android:textSize="@dimen/_11ssp"
                     android:paddingVertical="@dimen/_4sdp"
                     android:clickable="true"
@@ -124,7 +125,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="• Official Website"
-                    android:textColor="#F5EBE6"
+                    android:textColor="#FFFFFF"
                     android:textSize="@dimen/_11ssp"
                     android:paddingVertical="@dimen/_4sdp"
                     android:clickable="true"
@@ -136,7 +137,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="• GitHub Repository"
-                    android:textColor="#F5EBE6"
+                    android:textColor="#FFFFFF"
                     android:textSize="@dimen/_11ssp"
                     android:paddingVertical="@dimen/_4sdp"
                     android:clickable="true"
@@ -147,7 +148,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="• Upcoming Features..."
-                    android:textColor="#B0A39C"
+                    android:textColor="#E0DCDA"
                     android:textSize="@dimen/_11ssp"
                     android:paddingVertical="@dimen/_4sdp"
                     android:textStyle="italic"/>
@@ -179,7 +180,7 @@
                     android:id="@+id/versionName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#F5EBE6"
+                    android:textColor="#FFFFFF"
                     android:textSize="@dimen/_12ssp"
                     android:textStyle="bold"/>
                     
@@ -187,7 +188,7 @@
                     android:id="@+id/versionInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#B0A39C"
+                    android:textColor="#E0DCDA"
                     android:textSize="@dimen/_10ssp"/>
             </LinearLayout>
 
@@ -198,7 +199,7 @@
                 android:layout_marginEnd="@dimen/_4sdp"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_folder"
-                app:tint="#F5EBE6"
+                app:tint="#FFFFFF"
                 android:contentDescription="@null"/>
 
             <ImageButton
@@ -207,7 +208,7 @@
                 android:layout_height="@dimen/_28sdp"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_setting_launcher"
-                app:tint="#F5EBE6"
+                app:tint="#FFFFFF"
                 android:clickable="true"
                 android:focusable="true"
                 android:contentDescription="@null"/>
@@ -226,7 +227,7 @@
                 android:layout_height="@dimen/_36sdp"
                 android:text="@string/main_launch"
                 android:background="@drawable/button_background"
-                android:textColor="#F5EBE6"
+                android:textColor="#FFFFFF"
                 android:textAllCaps="false"
                 android:textSize="@dimen/_13ssp" />
         </LinearLayout>
