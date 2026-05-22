@@ -54,6 +54,11 @@ public class LayoutConverter {
     }
 
     private static CustomControls loadAndConvertIfNecessary(Context ctx, JSONObject layoutJobj, String jsonLayoutData, String jsonPath, boolean showError) throws Exception {
+        // 🔥 FIXED: Direct path execution for modern Version 8 structures to prevent layout corruption
+        if (layoutJobj.has("version") && layoutJobj.getInt("version") == 8) {
+            return Tools.GLOBAL_GSON.fromJson(jsonLayoutData, CustomControls.class);
+        }
+
         if (!layoutJobj.has("version")) { //v1 layout
             CustomControls layout = LayoutConverter.convertV1Layout(layoutJobj);
             if (jsonPath != null) layout.save(jsonPath);
@@ -156,7 +161,7 @@ public class LayoutConverter {
         return layout;
     }
 
-    private static CustomControls convertV1Layout(JSONObject oldLayoutJson) throws JSONException {
+    private static CustomControls convertV2Layout(JSONObject oldLayoutJson) throws JSONException {
         CustomControls empty = new CustomControls();
         JSONArray layoutMainArray = oldLayoutJson.getJSONArray("mControlDataList");
         for (int i = 0; i < layoutMainArray.length(); i++) {
