@@ -162,12 +162,13 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(this);
     }
 
-           protected void initLayout() {
+               protected void initLayout() {
         binding = ActivityGameBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         mGameMenuWrapper = new GameMenuViewWrapper(this, v -> onClickedMenu(), true);
 
+        // 🔥 GLOBAL OVERRIDE HACK: Forces the warning container to stay hidden
         try {
             int noticeId = getResources().getIdentifier("noticeContainer", "id", getPackageName());
             if (noticeId != 0) {
