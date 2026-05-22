@@ -54,7 +54,7 @@ public class LayoutConverter {
     }
 
     private static CustomControls loadAndConvertIfNecessary(Context ctx, JSONObject layoutJobj, String jsonLayoutData, String jsonPath, boolean showError) throws Exception {
-        // 🔥 FIXED: Direct path execution for modern Version 8 structures to prevent layout corruption
+        // Direct path execution for modern Version 8 structures to prevent layout corruption
         if (layoutJobj.has("version") && layoutJobj.getInt("version") == 8) {
             return Tools.GLOBAL_GSON.fromJson(jsonLayoutData, CustomControls.class);
         }
@@ -117,7 +117,6 @@ public class LayoutConverter {
         return layout;
     }
 
-
     private static CustomControls convertV2Layout(JSONObject oldLayoutJson) throws JSONException {
         CustomControls layout = Tools.GLOBAL_GSON.fromJson(oldLayoutJson.toString(), CustomControls.class);
         JSONArray layoutMainArray = oldLayoutJson.getJSONArray("mControlDataList");
@@ -161,7 +160,8 @@ public class LayoutConverter {
         return layout;
     }
 
-    private static CustomControls convertV2Layout(JSONObject oldLayoutJson) throws JSONException {
+    // 🔥 FIXED: Renamed correctly from convertV2Layout to convertV1Layout to resolve compiler symbol matching issues
+    private static CustomControls convertV1Layout(JSONObject oldLayoutJson) throws JSONException {
         CustomControls empty = new CustomControls();
         JSONArray layoutMainArray = oldLayoutJson.getJSONArray("mControlDataList");
         for (int i = 0; i < layoutMainArray.length(); i++) {
@@ -215,7 +215,6 @@ public class LayoutConverter {
         empty.version = 3;
         return empty;
     }
-
 
     /**
      * Convert the layout stroke width to the V5 form
