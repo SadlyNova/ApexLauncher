@@ -162,7 +162,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(this);
     }
 
-    protected void initLayout() {
+             protected void initLayout() {
         binding = ActivityGameBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -183,7 +183,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             if(!latestLogFile.exists() && !latestLogFile.createNewFile())
                 throw new IOException("Failed to create a new log file");
             Logger.begin(latestLogFile.getAbsolutePath());
-            // FIXME: is it safe for multi thread?
             GLOBAL_CLIPBOARD = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
             binding.mainTouchCharInput.setCharacterSender(new LwjglCharSender());
 
@@ -193,7 +192,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
             setTitle("Minecraft " + minecraftVersion.getVersionName());
 
-            // Minecraft 1.13+
             JMinecraftVersionList.Version mVersionInfo = Tools.getVersionInfo(minecraftVersion);
             isInputStackCall = mVersionInfo.arguments != null;
             CallbackBridge.nativeSetUseInputStackQueue(isInputStackCall);
@@ -202,7 +200,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             windowWidth = Tools.getDisplayFriendlyRes(currentDisplayMetrics.widthPixels, 1f);
             windowHeight = Tools.getDisplayFriendlyRes(currentDisplayMetrics.heightPixels, 1f);
 
-            // Menu
             mGameMenuBinding = ViewGameMenuBinding.inflate(getLayoutInflater());
             mMenuSettingsInitListener = new MenuSettingsInitListener(mGameMenuBinding);
 
@@ -212,9 +209,9 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             binding.mainDrawerOptions.addDrawerListener(mMenuSettingsInitListener);
             binding.mainDrawerOptions.closeDrawers();
 
+            // 🌟 Starts the surface engine and runs the game client execution thread
             binding.mainGameRenderView.setSurfaceReadyListener(() -> {
                 try {
-                    // Setup virtual mouse right before launching
                     if (AllSettings.getVirtualMouseStart().getValue()) {
                         binding.mainTouchpad.post(() -> binding.mainTouchpad.switchState());
                     }
@@ -225,10 +222,8 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             });
 
             binding.mainGameRenderView.setOnRenderingStartedListener(() -> {
-                //彻底清除背景图片，确保一些设备不再出现“半透明渲染”的问题
                 BackgroundManager.clearBackgroundImage(binding.backgroundView);
-                Logging.i("Rendering Game", "The game rendering has started, " +
-                        "and the background image has been cleared to prevent certain issues from occurring.");
+                Logging.i("Rendering Game", "The game rendering has started, and the background image has been cleared.");
             });
 
             if (AllSettings.getEnableLogOutput().getValue()) binding.mainLoggerView.setVisibilityWithAnim(true);
@@ -238,9 +233,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             if (versionInfo != null) {
                 mcInfo = versionInfo.getInfoString();
             }
-            String tipString = StringUtils.insertNewline(
-                    binding.gameTip.getText(),
-                    StringUtils.insertSpace(getString(R.string.game_tip_version), minecraftVersion.getVersionName())
+                
             );
             if (!mcInfo.isEmpty()) {
                 tipString = StringUtils.insertNewline(tipString, StringUtils.insertSpace(getString(R.string.game_tip_mc_info), mcInfo));
