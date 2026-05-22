@@ -20,4 +20,8 @@
     <color name="favorite_color">#FF5252</color>
     <color name="menu_bar_text">#FFFFFF</color>
 
-    <color name="text_primary_title">#FFFFFF</color>      <color name="text_secondary_body">#E0DCDA</color>     <color name="text_accent_coral">#FF5252</color>       <color name="text_accent_gold">#FFC107</color>        </resources>
+    <color name="text_primary_title">#FFFFFF</color>     
+    <color name="text_secondary_body">#E0DCDA</color>     
+    <color name="text_accent_coral">#FF5252</color>      
+    <color name="text_accent_gold">#FFC107</color>       
+</resources>
