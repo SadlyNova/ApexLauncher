@@ -69,25 +69,24 @@ public class ControlLayout extends FrameLayout {
 		super(ctx, attrs);
 	}
 
-
-	public void loadLayout(String jsonPath) throws IOException, JsonSyntaxException {
+		public void loadLayout(String jsonPath) throws IOException, JsonSyntaxException {
 		File jsonFile = jsonPath != null ? new File(jsonPath) : new File(AllSettings.getDefaultCtrl().getValue());
 
 		CustomControls layout;
-		if (jsonFile.exists()) {
+		if (jsonPath != null && jsonFile.exists()) {
 			layout = LayoutConverter.loadAndConvertIfNecessary(getContext(), jsonFile.getAbsolutePath());
 		} else {
 			layout = LayoutConverter.loadFromAssets(getContext(), "default.json");
 		}
 		if (layout != null) {
 			loadLayout(layout);
-			if (jsonFile.exists()) {
+			if (jsonPath != null && jsonFile.exists()) {
 				mLayoutFileName = StringUtilsKt.removeSuffix(jsonFile.getName(), ".json");
 			} else {
 				mLayoutFileName = "default";
 			}
 		}
-	}
+		}
 
 	public void loadLayout(CustomControls controlLayout) {
 		boolean sanitizedModified = false;
