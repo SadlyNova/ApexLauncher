@@ -25,4 +25,10 @@
     <color name="text_secondary_body">#E0DCDA</color>     
     <color name="text_accent_coral">#FF5252</color>      
     <color name="text_accent_gold">#FFC107</color>       
+
+    <color name="background_app">#FF1C1A1A</color>
+    <color name="background_menu_top">#FF121111</color>
+    <color name="menu_overlay">#2A1C1A1A</color>
+    <color name="background_menu_element">#FF2A2828</color>
+    <color name="background_status_bar">#FF121111</color>
 </resources>
