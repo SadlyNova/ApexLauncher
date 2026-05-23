@@ -3,8 +3,10 @@ package com.movtery.zalithlauncher.ui.activity
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.view.Window
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.movtery.zalithlauncher.InfoCenter
@@ -18,6 +20,7 @@ import com.movtery.zalithlauncher.feature.unpack.UnpackJreTask
 import com.movtery.zalithlauncher.feature.unpack.UnpackSingleFilesTask
 import com.movtery.zalithlauncher.task.Task
 import com.movtery.zalithlauncher.ui.dialog.TipDialog
+import com.movtery.zalithlauncher.ui.utils.ThemeUtils
 import com.movtery.zalithlauncher.utils.StoragePermissionsUtils
 import net.kdt.pojavlaunch.LauncherActivity
 import net.kdt.pojavlaunch.MissingStorageActivity
@@ -31,7 +34,18 @@ class SplashActivity : BaseActivity() {
     private val items: MutableList<InstallableItem> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // 🌟 Fix: Apply our central dark theme manager immediately to intercept the loading state
+        ThemeUtils.applyDarkTheme(this)
+
         super.onCreate(savedInstanceState)
+
+        // 🌟 Fix: Secure the window parameters directly to break Light Mode system background caching
+        val window: Window? = window
+        if (window != null) {
+            window.setBackgroundDrawable(ColorDrawable(0xFF181818.toInt()))
+            window.statusBarColor = 0xFF242424.toInt()
+            window.navigationBarColor = 0xFF181818.toInt()
+        }
 
         initItems()
 
