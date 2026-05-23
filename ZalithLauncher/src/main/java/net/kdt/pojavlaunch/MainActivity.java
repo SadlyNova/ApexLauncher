@@ -75,7 +75,6 @@ import com.movtery.zalithlauncher.utils.ZHTools;
 import com.movtery.zalithlauncher.utils.anim.AnimUtils;
 import com.movtery.zalithlauncher.utils.file.FileTools;
 import com.movtery.zalithlauncher.utils.stringutils.StringUtils;
-import com.movtery.zalithlauncher.ui.utils.ThemeUtils;
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener;
 
 import net.kdt.pojavlaunch.customcontrols.ControlButtonMenuListener;
@@ -120,9 +119,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        // 🌟 Fix: Intercept the Android lifecycle right away and apply our separate theme manager rules
-        ThemeUtils.applyDarkTheme(this);
-
         super.onCreate(savedInstanceState);
         minecraftVersion = getIntent().getParcelableExtra(INTENT_VERSION);
         if (minecraftVersion == null) throw new RuntimeException("The game version is not selected!");
@@ -141,24 +137,15 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         mGyroControl = new GyroControl(this);
 
         Window window = getWindow();
-        
-        // 🌟 Fix: Replace system overrides and enforce hardcoded dark colors to kill the white background layout mask
-        if (window != null) {
-            window.setStatusBarColor(0xFF242424);
-            window.setNavigationBarColor(0xFF181818);
-            if (AllSettings.getAlternateSurface().getValue()) {
-                window.setBackgroundDrawable(new ColorDrawable(0xFF1C1A1A));
-            } else {
-                window.setBackgroundDrawable(new ColorDrawable(0xFF181818));
-            }
-        }
+        // Enabling this on TextureView results in a broken white result
+        if(AllSettings.getAlternateSurface().getValue()) window.setBackgroundDrawable(null);
+        else window.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
 
         // Set the sustained performance mode for available APIs
-        if (window != null) {
-            window.setSustainedPerformanceMode(AllSettings.getSustainedPerformance().getValue());
-            // 防止系统息屏
-            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        }
+        window.setSustainedPerformanceMode(AllSettings.getSustainedPerformance().getValue());
+
+        // 防止系统息屏
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         ControlLayout controlLayout = binding.mainControlLayout;
         mControlSettingsBinding = ViewControlMenuBinding.inflate(getLayoutInflater());
@@ -183,6 +170,8 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         touchCharInput = binding.mainTouchCharInput;
 
         BackgroundManager.setBackgroundImage(this, BackgroundType.IN_GAME, binding.backgroundView, null);
+
+        keyboardDialog = new KeyboardDialog(this).setShowSpecialButtons(false);
 
         binding.mainControlLayout.setMenuListener(this);
 
@@ -385,6 +374,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         }
     }
 
+    //使用一个输入预览框来展示用户输入的内容
     private void setInputPreview(boolean show) {
         mInputPreviewAnim.clearEntries();
         mInputPreviewAnim.apply(new AnimPlayer.Entry(binding.inputPreviewLayout, show ? Animations.FadeIn : Animations.FadeOut))
@@ -461,6 +451,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
                 return;
             }
             ClipData.Item firstClipItem = clipData.getItemAt(0);
+            //TODO: coerce to HTML if the clip item is styled
             CharSequence clipItemText = firstClipItem.getText();
             if(clipItemText == null) {
                 AWTInputBridge.nativeClipboardReceived(null, null);
@@ -523,8 +514,16 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
     }
 
+    /*
+     * Android 14 (or some devices, at least) seems to dispatch the the captured mouse events as trackball events
+     * due to a bug(?) somewhere(????)
+     */
     private boolean checkCaptureDispatchConditions(MotionEvent event) {
         int eventSource = event.getSource();
+        // On my device, the mouse sends events as a relative mouse device.
+        // Not comparing with == here because apparently `eventSource` is a mask that can
+        // sometimes indicate multiple sources, like in the case of InputDevice.SOURCE_TOUCHPAD
+        // (which is *also* an InputDevice.SOURCE_MOUSE when controlling a cursor)
         return (eventSource & InputDevice.SOURCE_MOUSE_RELATIVE) != 0 ||
                 (eventSource & InputDevice.SOURCE_MOUSE) != 0;
     }
@@ -541,9 +540,11 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         public MenuSettingsInitListener(ViewGameMenuBinding binding) {
             this.binding = binding;
+            //初始化状态
             this.binding.hotbarWidth.setMax(currentDisplayMetrics.widthPixels / 2);
             this.binding.hotbarHeight.setMax(currentDisplayMetrics.heightPixels / 2);
 
+            //初始化Seekbar的值
             MenuUtils.initSeekBarValue(this.binding.resolutionScaler, AllSettings.getResolutionRatio().getValue(), this.binding.resolutionScalerValue, "%");
             binding.resolutionScalerPreview.setText(VideoSettingsFragment.getResolutionRatioPreview(getResources(), AllSettings.getResolutionRatio().getValue()));
             MenuUtils.initSeekBarValue(this.binding.timeLongPressTrigger, AllSettings.getTimeLongPressTrigger().getValue(), this.binding.timeLongPressTriggerValue, "ms");
@@ -552,6 +553,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             MenuUtils.initSeekBarValue(this.binding.hotbarHeight, AllSettings.getHotbarHeight().getValue().getValue(), this.binding.hotbarHeightValue, "px");
             MenuUtils.initSeekBarValue(this.binding.hotbarWidth, AllSettings.getHotbarWidth().getValue().getValue(), this.binding.hotbarWidthValue, "px");
 
+            //初始化Switch的状态
             this.binding.openMemoryInfo.setChecked(AllSettings.getGameMenuShowMemory().getValue());
             this.binding.openFpsInfo.setChecked(AllSettings.getGameMenuShowFPS().getValue());
             this.binding.disableGestures.setChecked(AllSettings.getDisableGestures().getValue());
@@ -563,6 +565,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             refreshLayoutVisible(this.binding.timeLongPressTriggerLayout, !AllSettings.getDisableGestures().getValue());
             refreshLayoutVisible(this.binding.gyroLayout, AllSettings.getEnableGyro().getValue());
 
+            //初始化点击事件
             this.binding.forceClose.setOnClickListener(this);
             this.binding.logOutput.setOnClickListener(this);
             this.binding.sendCustomKey.setOnClickListener(this);
@@ -626,11 +629,25 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         }
 
         private void dialogSendCustomKey() {
-            // Simulated method placeholder
+            keyboardDialog.setOnMultiKeycodeSelectListener(selectedKeycodes -> {
+                //模拟同时按下，同时松开按键
+                Task.runTask(() -> {
+                    selectedKeycodes.forEach(keycode -> sendKeyPress(keycode, true));
+                    return null;
+                }).ended(a -> {
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException ignore) {
+                    }
+                    selectedKeycodes.forEach(keycode -> sendKeyPress(keycode, false));
+                }).execute();
+            }).show();
         }
 
         private void sendKeyPress(int keycode, boolean isDown) {
+            System.out.println("Test keycode: " + keycode);
             int lwjglKeycode = EfficientAndroidLWJGLKeycode.getValueByIndex(keycode);
+            System.out.println("Test lwjglKeycode: " + lwjglKeycode);
             if (keycode >= LwjglGlfwKeycode.GLFW_KEY_UNKNOWN) {
                 CallbackBridge.sendKeyPress(lwjglKeycode, CallbackBridge.getCurrentMods(), isDown);
                 CallbackBridge.setModifiers(lwjglKeycode, isDown);
@@ -641,6 +658,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             SelectControlsDialog dialog = new SelectControlsDialog(MainActivity.this, file -> {
                 try {
                     MainActivity.binding.mainControlLayout.loadLayout(file.getAbsolutePath());
+                    //刷新：是否隐藏菜单按钮
                     mGameMenuWrapper.setVisibility(!MainActivity.binding.mainControlLayout.hasMenuButton());
                 } catch (IOException ignored) {}
             });
@@ -748,6 +766,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             } else if (v == binding.enableGyro) {
                 refreshLayoutVisible(binding.gyroLayout, isChecked);
                 AllSettings.getEnableGyro().put(isChecked).save();
+                //刷新陀螺仪的启用状态
                 AllStaticSettings.enableGyro = isChecked;
                 mGyroControl.updateOrientation();
                 if (isChecked) mGyroControl.enable();
@@ -761,6 +780,9 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             }
         }
 
+        /**
+         * 刷新View的可见状态
+         */
         private void refreshLayoutVisible(View view, boolean visible) {
             view.setVisibility(visible ? View.VISIBLE : View.GONE);
         }
@@ -783,6 +805,8 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         @Override public void onDrawerOpened(@NonNull View drawerView) {}
         @Override public void onDrawerClosed(@NonNull View drawerView) {}
         @Override public void onDrawerStateChanged(int newState) {
+            //需要在菜单状态改变的时候，关闭Hotbar类型的Spinner，这个库并没有自动关闭的功能，所以需要这么做
+            //关掉！关掉！一定要关掉！
             closeSpinner();
         }
 
