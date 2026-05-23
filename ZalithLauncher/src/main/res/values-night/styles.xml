@@ -5,22 +5,27 @@
         <item name="windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:statusBarColor">@color/background_status_bar</item>
-        <item name="android:navigationBarColor">@color/background_app</item>
-        <item name="android:scrollbarThumbHorizontal">@color/background_menu_element</item>
-        <item name="android:scrollbarThumbVertical">@color/background_menu_element</item>
+        
+        <item name="android:windowBackground">#181818</item>
+        <item name="android:colorBackground">#181818</item>
+        
+        <item name="android:statusBarColor">#242424</item>
+        <item name="android:navigationBarColor">#181818</item>
+        
+        <item name="android:scrollbarThumbHorizontal">#1F7281</item>
+        <item name="android:scrollbarThumbVertical">#1F7281</item>
         <item name="android:textSize">@dimen/_12ssp</item>
     </style>
 
     <style name="CustomDialogStyle" parent="Theme.AppCompat.Dialog">
         <item name="android:windowBackground">@drawable/dialog_background</item>
-        <item name="android:scrollbarThumbHorizontal">@color/background_menu_element</item>
-        <item name="android:scrollbarThumbVertical">@color/background_menu_element</item>
+        <item name="android:scrollbarThumbHorizontal">#1F7281</item>
+        <item name="android:scrollbarThumbVertical">#1F7281</item>
     </style>
 
     <style name="CustomAlertDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
         <item name="android:windowBackground">@drawable/dialog_background</item>
-        <item name="android:scrollbarThumbHorizontal">@color/background_menu_element</item>
-        <item name="android:scrollbarThumbVertical">@color/background_menu_element</item>
+        <item name="android:scrollbarThumbHorizontal">#1F7281</item>
+        <item name="android:scrollbarThumbVertical">#1F7281</item>
     </style>
 </resources>
