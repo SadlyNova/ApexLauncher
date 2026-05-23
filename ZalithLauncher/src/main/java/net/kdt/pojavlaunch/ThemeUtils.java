@@ -37,21 +37,26 @@ public class ThemeUtils {
 
             // 3. Force system icons and status text to remain white/light-colored
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                WindowInsetsController controller = window.getInsetsController();
-                if (controller != null) {
-                    // Clearing these flags means system bars do NOT adapt to Light Mode icons
-                    controller.setSystemBarsAppearance(0, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS);
-                    controller.setSystemBarsAppearance(0, WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS);
+                View decorView = window.getDecorView();
+                if (decorView != null) {
+                    WindowInsetsController controller = decorView.getWindowInsetsController();
+                    if (controller != null) {
+                        // Clearing these flags means system bars do NOT adapt to Light Mode icons
+                        controller.setSystemBarsAppearance(0, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS);
+                        controller.setSystemBarsAppearance(0, WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS);
+                    }
                 }
             } else {
                 // Legacy system fallback behavior for older Android versions
                 View decorView = window.getDecorView();
-                int flags = decorView.getSystemUiVisibility();
-                flags &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    flags &= ~View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+                if (decorView != null) {
+                    int flags = decorView.getSystemUiVisibility();
+                    flags &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        flags &= ~View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+                    }
+                    decorView.setSystemUiVisibility(flags);
                 }
-                decorView.setSystemUiVisibility(flags);
             }
         }
     }
