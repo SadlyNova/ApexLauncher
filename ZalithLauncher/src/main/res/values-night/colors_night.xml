@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black_or_white">#1C1A1A</color>
+    <color name="background">#181818</color>
+
+    <color name="black_or_white">#FFFFFF</color>
+    <color name="primary_text">#FFFFFF</color>
+    <color name="secondary_text">#B0B0B0</color>
 
     <color name="background_app">#181818</color>
     <color name="background_app_error">#431A1A</color>
@@ -16,6 +20,7 @@
     <color name="dialog_background">#232323</color>
 
     <color name="menu_bar">#555555</color>
+    <color name="menu_bar_text">#FFFFFF</color>
     <color name="menu_overlay">#BE232323</color>
     <color name="menu_progress">#888888</color>
 
@@ -32,8 +37,6 @@
     <color name="text_background_fill">#B3434343</color>
 
     <color name="settings_category">#31E2D4</color>
-
+    <color name="favorite_color">#E63946</color>
     <color name="icon_color">#FFFFFF</color>
-
-    <color name="primary_text">#FFFFFF</color>
 </resources>
