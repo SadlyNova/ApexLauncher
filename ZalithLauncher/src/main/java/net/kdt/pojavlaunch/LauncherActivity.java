@@ -8,11 +8,13 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.view.View;
+import android.view.Window;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
@@ -86,6 +88,7 @@ import com.movtery.zalithlauncher.utils.file.FileTools;
 import com.movtery.zalithlauncher.utils.image.ImageUtils;
 import com.movtery.zalithlauncher.utils.stringutils.ShiftDirection;
 import com.movtery.zalithlauncher.utils.stringutils.StringUtils;
+import com.movtery.zalithlauncher.ui.utils.ThemeUtils;
 
 import net.kdt.pojavlaunch.authenticator.microsoft.MicrosoftBackgroundLogin;
 import net.kdt.pojavlaunch.contracts.OpenDocumentWithExtension;
@@ -138,8 +141,6 @@ public class LauncherActivity extends BaseActivity {
     };
 
     private final TaskCountListener mDoubleLaunchPreventionListener = taskCount -> {
-        // Hide the notification that starts the game if there are tasks executing.
-        // Prevents the user from trying to launch the game with tasks ongoing.
         if (taskCount > 0) {
             TaskExecutors.runInUIThread(() -> mNotificationManager.cancel(NotificationUtils.NOTIFICATION_ID_GAME_START));
         }
@@ -162,7 +163,6 @@ public class LauncherActivity extends BaseActivity {
     @Subscribe()
     public void event(SwapToLoginEvent event) {
         Fragment currentFragment = getCurrentFragment();
-        //如果当前可见的Fragment不为空，则判断当前的Fragment是否为AccountFragment，不是就跳转至AccountFragment
         if (currentFragment == null || getVisibleFragment(AccountFragment.TAG) != null) return;
         ZHTools.swapFragmentWithAnim(currentFragment, AccountFragment.class, AccountFragment.TAG, null);
     }
@@ -296,7 +296,7 @@ public class LauncherActivity extends BaseActivity {
                             }
                         }
                         return null;
-                    }).beforeStart(TaskExecutors.getAndroidUI(), () -> ProgressLayout.setProgress(ProgressLayout.INSTALL_RESOURCE, 0, R.string.generic_waiting)).ended(filePair -> {
+                    }).beforeStart(TaskExecutors.getDashboardUI() != null ? TaskExecutors.getDashboardUI() : TaskExecutors.getAndroidUI(), () -> ProgressLayout.setProgress(ProgressLayout.INSTALL_RESOURCE, 0, R.string.generic_waiting)).ended(filePair -> {
                         if (filePair != null) {
                             try {
                                 ModPackUtils.startModLoaderInstall(filePair.getFirst(), LauncherActivity.this, filePair.getSecond(), customName);
@@ -349,9 +349,20 @@ public class LauncherActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // 🌟 Fix: Apply the central dark theme manager immediately at the activity lifecycle entry point
+        ThemeUtils.applyDarkTheme(this);
+
         super.onCreate(savedInstanceState);
         binding = ActivityLauncherBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // 🌟 Fix: Force explicit window layer background properties to completely kill the light mode mask bleed
+        Window window = getWindow();
+        if (window != null) {
+            window.setBackgroundDrawable(new ColorDrawable(0xFF181818));
+            window.setStatusBarColor(0xFF242424);
+            window.setNavigationBarColor(0xFF181818);
+        }
 
         processFragment();
         processViews();
@@ -381,7 +392,6 @@ public class LauncherActivity extends BaseActivity {
 
         checkNotice();
 
-        //检查已经下载后的包，或者检查更新
         Task.runTask(() -> {
             UpdateUtils.checkDownloadedPackage(this, false, true);
             return null;
@@ -394,11 +404,9 @@ public class LauncherActivity extends BaseActivity {
             public void handleOnBackPressed() {
                 Fragment currentFragment = getCurrentFragment();
                 if (currentFragment instanceof BaseFragment && !((BaseFragment) currentFragment).onBackPressed()) {
-                    //Fragment那边拒绝了返回事件
                     return;
                 }
 
-                //如果栈中只剩下1个或没有Fragment，则直接退出启动器
                 if (getSupportFragmentManager().getBackStackEntryCount() <= 1) {
                     finish();
                 } else {
@@ -408,7 +416,6 @@ public class LauncherActivity extends BaseActivity {
         });
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        //如果栈中没有Fragment，那么就将主Fragment添加进来
         if (fragmentManager.getBackStackEntryCount() < 1) {
             fragmentManager.beginTransaction()
                     .setReorderingAllowed(true)
@@ -435,7 +442,6 @@ public class LauncherActivity extends BaseActivity {
             if (fragment instanceof MainMenuFragment) {
                 ZHTools.swapFragmentWithAnim(fragment, SettingsFragment.class, SettingsFragment.TAG, null);
             } else {
-                // The setting button doubles as a home button now
                 Tools.backToMainMenu(this);
             }
         });
@@ -482,7 +488,6 @@ public class LauncherActivity extends BaseActivity {
             }
         }).init();
 
-        //愚人节彩蛋
         if (ZHTools.checkDate(4, 1)) binding.hair.setVisibility(View.VISIBLE);
         else binding.hair.setVisibility(View.GONE);
     }
@@ -498,6 +503,11 @@ public class LauncherActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
         getSupportFragmentManager().registerFragmentLifecycleCallbacks(mFragmentCallbackListener, true);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override
@@ -544,7 +554,6 @@ public class LauncherActivity extends BaseActivity {
             if (checkNotice.isCancelled() || noticeInfo == null) {
                 return;
             }
-            //当偏好设置内是开启通知栏 或者 检测到通知编号不为偏好设置里保存的值时，显示通知栏
             if (AllSettings.getNoticeDefault().getValue() ||
                     (noticeInfo.numbering != AllSettings.getNoticeNumbering().getValue())) {
                 TaskExecutors.runInUIThread(() -> setNotice(true));
