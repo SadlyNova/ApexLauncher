@@ -58,7 +58,7 @@ public class MainMenuFragment extends FragmentWithAnim {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentLauncherBinding.inflate(inflater, container, false);
         accountViewWrapper = new AccountViewWrapper(this, binding.viewAccount);
-        accountViewWrapper.refreshAccountInfo();
+       // accountViewWrapper.refreshAccountInfo();
         return binding.getRoot();
     }
 
