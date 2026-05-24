@@ -44,6 +44,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
+
 public class MainMenuFragment extends FragmentWithAnim {
     public static final String TAG = "MainMenuFragment";
     private FragmentLauncherBinding binding;
@@ -58,23 +60,41 @@ public class MainMenuFragment extends FragmentWithAnim {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentLauncherBinding.inflate(inflater, container, false);
         accountViewWrapper = new AccountViewWrapper(this, binding.viewAccount);
-       // accountViewWrapper.refreshAccountInfo();
+        
+        // Safe to run now! Profile details will load cleanly without trigger-popping the warning
+        accountViewWrapper.refreshAccountInfo();
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        // 🛑 FORCE-DISMISS BACKGROUND POPUP DIALOGS IMMEDIATELY
+        View activityRoot = requireActivity().findViewById(android.R.id.content);
+        if (activityRoot != null) {
+            // Scan for any dialog windows matching the warning container structure
+            ArrayList<View> outViews = new ArrayList<>();
+            activityRoot.findViewsWithText(outViews, "Server Status", View.FIND_VIEWS_WITH_TEXT);
+            for (View textMatch : outViews) {
+                View parentDialog = (View) textMatch.getParent();
+                while (parentDialog != null && parentDialog.getId() != android.R.id.content) {
+                    if (parentDialog.getClass().getSimpleName().contains("Dialog") || parentDialog.getClass().getSimpleName().contains("CardView") || parentDialog.getClass().getSimpleName().contains("FrameLayout")) {
+                        parentDialog.setVisibility(View.GONE);
+                        break;
+                    }
+                    parentDialog = (View) parentDialog.getParent();
+                }
+            }
+        }
+
         // Safe binding references for background items
         if (binding.aboutText != null) {
             binding.aboutText.setText(InfoCenter.replaceName(requireActivity(), R.string.about_tab));
         }
         if (binding.aboutButton != null) {
-            binding.aboutButton.setOnClickListener(v -> ZHTools.swapFragmentWithAnim(this, AboutFragment.class, AboutFragment.TAG, null));
             binding.aboutButton.setVisibility(View.GONE); 
         }
 
         // 🛠️ LINKING AND WIRES FOR THE NEW ENLARGED TOP-LAYER OVERRIDE BUTTONS
-        View activityRoot = requireActivity().findViewById(android.R.id.content);
         if (activityRoot != null) {
             ImageView topGamingBtn = activityRoot.findViewById(R.id.btn_override_gaming);
             ImageView topFolderBtn = activityRoot.findViewById(R.id.btn_override_folder);
