@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import android.widget.TextView;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,7 +17,7 @@ import com.movtery.anim.AnimPlayer;
 import com.movtery.anim.animations.Animations;
 import com.movtery.zalithlauncher.InfoCenter;
 import com.movtery.zalithlauncher.R;
-import com.movtery.zalithlauncher.databinding.FragmentLauncherBinding; // Unified compiler binding
+import com.movtery.zalithlauncher.databinding.FragmentLauncherBinding;
 import com.movtery.zalithlauncher.event.single.AccountUpdateEvent;
 import com.movtery.zalithlauncher.event.single.LaunchGameEvent;
 import com.movtery.zalithlauncher.event.single.RefreshVersionsEvent;
@@ -48,7 +50,7 @@ public class MainMenuFragment extends FragmentWithAnim {
     private AccountViewWrapper accountViewWrapper;
 
     public MainMenuFragment() {
-        super(R.layout.fragment_launcher); // Fixed to standard compiler resource ID
+        super(R.layout.fragment_launcher);
     }
 
     @Nullable
@@ -71,19 +73,78 @@ public class MainMenuFragment extends FragmentWithAnim {
             binding.aboutButton.setVisibility(View.GONE); 
         }
 
-        // Setting up the top layout centered buttons click handlers
-        binding.customControlButton.setOnClickListener(v -> ZHTools.swapFragmentWithAnim(this, ControlButtonFragment.class, ControlButtonFragment.TAG, null));
-        binding.openMainDirButton.setOnClickListener(v -> {
-            Bundle bundle = new Bundle();
-            bundle.putString(FilesFragment.BUNDLE_LIST_PATH, PathManager.DIR_GAME_HOME);
-            ZHTools.swapFragmentWithAnim(this, FilesFragment.class, FilesFragment.TAG, bundle);
-        });
-        binding.installJarButton.setOnClickListener(v -> runInstallerWithConfirmation(false));
-        binding.installJarButton.setOnLongClickListener(v -> {
-            runInstallerWithConfirmation(true);
-            return true;
-        });
-        binding.shareLogsButton.setOnClickListener(v -> ZHTools.shareLogs(requireActivity()));
+        // 🛠️ LINKING AND WIRES FOR THE NEW ENLARGED TOP-LAYER OVERRIDE BUTTONS
+        View activityRoot = requireActivity().findViewById(android.R.id.content);
+        if (activityRoot != null) {
+            ImageView topGamingBtn = activityRoot.findViewById(R.id.btn_override_gaming);
+            ImageView topFolderBtn = activityRoot.findViewById(R.id.btn_override_folder);
+            ImageView topJavaBtn = activityRoot.findViewById(R.id.btn_override_java);
+            ImageView topShareBtn = activityRoot.findViewById(R.id.btn_override_share);
+            TextView topTitleView = activityRoot.findViewById(R.id.txt_override_title);
+
+            // Make sure the title remains flawlessly white on top of the sidebar panel
+            if (topTitleView != null) {
+                topTitleView.setText("Nova Launcher");
+                topTitleView.setVisibility(View.VISIBLE);
+            }
+
+            // Route touch events safely from the top layer back into the framework functions
+            if (topGamingBtn != null) {
+                topGamingBtn.setOnClickListener(v -> {
+                    ViewAnimUtils.setViewAnim(topGamingBtn, Animations.Pulse);
+                    ZHTools.swapFragmentWithAnim(this, ControlButtonFragment.class, ControlButtonFragment.TAG, null);
+                });
+            }
+
+            if (topFolderBtn != null) {
+                topFolderBtn.setOnClickListener(v -> {
+                    ViewAnimUtils.setViewAnim(topFolderBtn, Animations.Pulse);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(FilesFragment.BUNDLE_LIST_PATH, PathManager.DIR_GAME_HOME);
+                    ZHTools.swapFragmentWithAnim(this, FilesFragment.class, FilesFragment.TAG, bundle);
+                });
+            }
+
+            if (topJavaBtn != null) {
+                topJavaBtn.setOnClickListener(v -> {
+                    ViewAnimUtils.setViewAnim(topJavaBtn, Animations.Pulse);
+                    runInstallerWithConfirmation(false);
+                });
+                topJavaBtn.setOnLongClickListener(v -> {
+                    runInstallerWithConfirmation(true);
+                    return true;
+                });
+            }
+
+            if (topShareBtn != null) {
+                topShareBtn.setOnClickListener(v -> {
+                    ViewAnimUtils.setViewAnim(topShareBtn, Animations.Pulse);
+                    ZHTools.shareLogs(requireActivity());
+                });
+            }
+        }
+
+        // Keep local fallback click bindings initialized safely
+        if (binding.customControlButton != null) {
+            binding.customControlButton.setOnClickListener(v -> ZHTools.swapFragmentWithAnim(this, ControlButtonFragment.class, ControlButtonFragment.TAG, null));
+        }
+        if (binding.openMainDirButton != null) {
+            binding.openMainDirButton.setOnClickListener(v -> {
+                Bundle bundle = new Bundle();
+                bundle.putString(FilesFragment.BUNDLE_LIST_PATH, PathManager.DIR_GAME_HOME);
+                ZHTools.swapFragmentWithAnim(this, FilesFragment.class, FilesFragment.TAG, bundle);
+            });
+        }
+        if (binding.installJarButton != null) {
+            binding.installJarButton.setOnClickListener(v -> runInstallerWithConfirmation(false));
+            binding.installJarButton.setOnLongClickListener(v -> {
+                runInstallerWithConfirmation(true);
+                return true;
+            });
+        }
+        if (binding.shareLogsButton != null) {
+            binding.shareLogsButton.setOnClickListener(v -> ZHTools.shareLogs(requireActivity()));
+        }
 
         // Version manager profile controls
         binding.version.setOnClickListener(v -> {
@@ -211,6 +272,18 @@ public class MainMenuFragment extends FragmentWithAnim {
 
     @Override
     public void slideIn(AnimPlayer animPlayer) {
+        View activityRoot = requireActivity().findViewById(android.R.id.content);
+        if (activityRoot != null) {
+            View topContainer = activityRoot.findViewById(R.id.btn_override_gaming);
+            if (topContainer != null && topContainer.getParent() instanceof View) {
+                animPlayer.apply(new AnimPlayer.Entry((View) topContainer.getParent(), Animations.BounceInDown));
+            }
+            View topTitle = activityRoot.findViewById(R.id.txt_override_title);
+            if (topTitle != null) {
+                animPlayer.apply(new AnimPlayer.Entry(topTitle, Animations.BounceInDown));
+            }
+        }
+        
         if (binding.centeredLogosContainer != null) {
             animPlayer.apply(new AnimPlayer.Entry(binding.centeredLogosContainer, Animations.BounceInDown));
         }
@@ -225,6 +298,18 @@ public class MainMenuFragment extends FragmentWithAnim {
 
     @Override
     public void slideOut(AnimPlayer animPlayer) {
+        View activityRoot = requireActivity().findViewById(android.R.id.content);
+        if (activityRoot != null) {
+            View topContainer = activityRoot.findViewById(R.id.btn_override_gaming);
+            if (topContainer != null && topContainer.getParent() instanceof View) {
+                animPlayer.apply(new AnimPlayer.Entry((View) topContainer.getParent(), Animations.FadeOutUp));
+            }
+            View topTitle = activityRoot.findViewById(R.id.txt_override_title);
+            if (topTitle != null) {
+                animPlayer.apply(new AnimPlayer.Entry(topTitle, Animations.FadeOutUp));
+            }
+        }
+
         if (binding.centeredLogosContainer != null) {
             animPlayer.apply(new AnimPlayer.Entry(binding.centeredLogosContainer, Animations.FadeOutUp));
         }
