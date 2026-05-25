@@ -172,11 +172,12 @@
         android:translationZ="4dp"
         android:fitsSystemWindows="false" />
 
-    <include
-        layout="@android:layout/alert_dialog_material"
+    <View
+        android:id="@+id/dialog_layout_blocker"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"
-        tools:ignore="IncludeLayout" />
+        tools:ignore="MissingConstraints" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
+
