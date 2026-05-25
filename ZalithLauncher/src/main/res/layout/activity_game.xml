@@ -172,4 +172,11 @@
         android:translationZ="4dp"
         android:fitsSystemWindows="false" />
 
+    <include
+        layout="@android:layout/alert_dialog_material"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        tools:ignore="IncludeLayout" />
+
 </androidx.drawerlayout.widget.DrawerLayout>
