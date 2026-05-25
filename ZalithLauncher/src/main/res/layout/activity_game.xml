@@ -156,19 +156,37 @@
                 android:contentDescription="Share" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/txt_override_title"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="@dimen/_145sdp"
-            android:gravity="center_horizontal"
-            android:paddingHorizontal="@dimen/_4sdp"
-            android:text="Nova Launcher"
-            android:textColor="#FFFFFF"
-            android:textSize="@dimen/_22ssp"
-            android:textStyle="bold"
-            android:translationZ="12dp" />
+            android:layout_marginBottom="@dimen/_130sdp"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:translationZ="12dp">
+
+            <TextView
+                android:id="@+id/txt_override_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:paddingHorizontal="@dimen/_4sdp"
+                android:text="Nova Launcher"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/_22ssp"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/cape_selector_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@android:drawable/btn_dropdown"
+                android:padding="@dimen/_4sdp"
+                android:entries="@array/cape_options" />
+                
+        </LinearLayout>
 
     </FrameLayout>
 
