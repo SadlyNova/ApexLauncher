@@ -727,6 +727,7 @@ public final class Tools {
      */
     public static void launchModInstaller(Activity activity, @NonNull Uri uri){
         Intent intent = new Intent(activity, JavaGUILauncherActivity.class);
+        prepareDefaultCape(activity);
         intent.putExtra("modUri", uri);
         SelectRuntimeUtils.selectRuntime(activity, null, jreName -> {
             LauncherProfiles.generateLauncherProfiles();
@@ -771,5 +772,26 @@ public final class Tools {
     public static <T> T getWeakReference(WeakReference<T> weakReference) {
         if(weakReference == null) return null;
         return weakReference.get();
+    }    // 🎨 CUSTOM CAPE LIFTER: Extracts default_cape.png from assets to internal storage
+    public static void prepareDefaultCape(android.app.Activity activity) {
+        try {
+            android.content.Context context = activity.getApplicationContext();
+            File cosmeticDir = new File(context.getFilesDir(), "custom_cosmetics");
+            if (!cosmeticDir.exists()) cosmeticDir.mkdirs();
+            
+            File capeFile = new File(cosmeticDir, "default_cape.png");
+            java.io.InputStream is = context.getAssets().open("custom_cosmetics/default_cape.png");
+            java.io.FileOutputStream os = new java.io.FileOutputStream(capeFile);
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = is.read(buffer)) != -1) {
+                os.write(buffer, 0, bytesRead);
+            }
+            is.close();
+            os.close();
+            
+            System.setProperty("minecraft.client.customCape", capeFile.getAbsolutePath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-}
