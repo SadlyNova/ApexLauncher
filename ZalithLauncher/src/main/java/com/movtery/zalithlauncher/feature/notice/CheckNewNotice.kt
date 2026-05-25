@@ -26,6 +26,10 @@ class CheckNewNotice {
 
         @JvmStatic
         fun checkNewNotice(listener: CheckNoticeListener) {
+            // 🛑 PERMANENT POPUP KILLER BLOCK
+            // Returning instantly blocks the network sequence from firing, keeping the main menu clean!
+            return
+
             if (isChecking) {
                 return
             }
@@ -59,12 +63,10 @@ class CheckNewNotice {
 
                             val originJson = JSONObject(responseBody)
                             val rawBase64 = originJson.getString("content")
-                            //base64解码，因为这里读取的是一个经过Base64加密后的文本
                             val rawJson = StringUtils.decodeBase64(rawBase64)
 
                             val noticeJson = Tools.GLOBAL_GSON.fromJson(rawJson, NoticeJsonObject::class.java)
 
-                            //获取通知消息
                             val language = ZHTools.getSystemLanguage()
                             val title = getLanguageText(language, noticeJson.title)
                             val content = getLanguageText(language, noticeJson.content)
