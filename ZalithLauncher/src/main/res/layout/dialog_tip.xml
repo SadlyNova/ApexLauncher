@@ -31,9 +31,7 @@
             android:singleLine="true"
             android:text="@string/generic_tip"
             android:textSize="@dimen/_14ssp"
-            android:textStyle="bold" >
-
-        </TextView>
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -55,6 +53,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_4sdp"
                 android:textSize="@dimen/_13ssp"
+                android:maxWidth="500dp"
+                android:maxHeight="400dp"
                 tools:text="test some message"/>
 
             <CheckBox
@@ -94,5 +94,11 @@
         </LinearLayout>
 
     </ScrollView>
+
+    <View 
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:contentDescription="server_status_blocker_override" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
