@@ -105,63 +105,6 @@
 
     </FrameLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|center_horizontal"
-        android:layout_marginTop="@dimen/_16sdp"
-        android:orientation="horizontal"
-        android:elevation="@dimen/_24sdp"
-        android:translationZ="12dp">
-
-        <ImageView
-            android:id="@+id/btn_override_gaming"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_marginHorizontal="@dimen/_12sdp"
-            android:src="@android:drawable/button_onoff_indicator_on"
-            android:contentDescription="Gaming" />
-
-        <ImageView
-            android:id="@+id/btn_override_folder"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_marginHorizontal="@dimen/_12sdp"
-            android:src="@android:drawable/ic_menu_gallery"
-            android:contentDescription="Folder" />
-
-        <ImageView
-            android:id="@+id/btn_override_java"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_marginHorizontal="@dimen/_12sdp"
-            android:src="@android:drawable/ic_menu_preferences"
-            android:contentDescription="Java" />
-
-        <ImageView
-            android:id="@+id/btn_override_share"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_marginHorizontal="@dimen/_12sdp"
-            android:src="@android:drawable/ic_menu_send"
-            android:contentDescription="Share" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/txt_override_title"
-        android:layout_width="@dimen/_260sdp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="@dimen/_150sdp"
-        android:layout_marginEnd="@dimen/_12sdp"
-        android:paddingHorizontal="@dimen/_4sdp"
-        android:text="Nova Launcher"
-        android:textColor="#FFFFFF"
-        android:textSize="@dimen/_20ssp"
-        android:textStyle="bold"
-        android:elevation="@dimen/_24sdp"
-        android:translationZ="12dp" />
-
     <FrameLayout
         android:id="@+id/main_navigation_view"
         android:layout_width="@dimen/_260sdp"
@@ -170,7 +113,64 @@
         android:layout_gravity="end"
         android:elevation="@dimen/_8sdp"
         android:translationZ="4dp"
-        android:fitsSystemWindows="false" />
+        android:fitsSystemWindows="false">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:orientation="horizontal"
+            android:translationZ="12dp">
+
+            <ImageView
+                android:id="@+id/btn_override_gaming"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginHorizontal="@dimen/_6sdp"
+                android:src="@android:drawable/button_onoff_indicator_on"
+                android:contentDescription="Gaming" />
+
+            <ImageView
+                android:id="@+id/btn_override_folder"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginHorizontal="@dimen/_6sdp"
+                android:src="@android:drawable/ic_menu_gallery"
+                android:contentDescription="Folder" />
+
+            <ImageView
+                android:id="@+id/btn_override_java"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginHorizontal="@dimen/_6sdp"
+                android:src="@android:drawable/ic_menu_preferences"
+                android:contentDescription="Java" />
+
+            <ImageView
+                android:id="@+id/btn_override_share"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginHorizontal="@dimen/_6sdp"
+                android:src="@android:drawable/ic_menu_send"
+                android:contentDescription="Share" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txt_override_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="@dimen/_145sdp"
+            android:gravity="center_horizontal"
+            android:paddingHorizontal="@dimen/_4sdp"
+            android:text="Nova Launcher"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/_22ssp"
+            android:textStyle="bold"
+            android:translationZ="12dp" />
+
+    </FrameLayout>
 
     <View
         android:id="@+id/dialog_layout_blocker"
