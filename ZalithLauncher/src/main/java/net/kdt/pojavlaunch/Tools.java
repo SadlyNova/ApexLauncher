@@ -772,15 +772,25 @@ public final class Tools {
     public static <T> T getWeakReference(WeakReference<T> weakReference) {
         if(weakReference == null) return null;
         return weakReference.get();
-    }    // 🎨 CUSTOM CAPE LIFTER: Extracts default_cape.png from assets to internal storage
+    }    // 🎨 DYNAMIC CAPE LIFTER: Extracts the chosen cape from assets to internal storage
     public static void prepareDefaultCape(android.app.Activity activity) {
         try {
             android.content.Context context = activity.getApplicationContext();
+            
+            int spinnerId = context.getResources().getIdentifier("cape_selector_spinner", "id", context.getPackageName());
+            android.widget.Spinner spinner = activity.findViewById(spinnerId);
+            String chosenCapeName = "default_cape";
+            
+            if (spinner != null && spinner.getSelectedItem() != null) {
+                chosenCapeName = spinner.getSelectedItem().toString();
+            }
+                
             File cosmeticDir = new File(context.getFilesDir(), "custom_cosmetics");
             if (!cosmeticDir.exists()) cosmeticDir.mkdirs();
             
             File capeFile = new File(cosmeticDir, "default_cape.png");
-            java.io.InputStream is = context.getAssets().open("custom_cosmetics/default_cape.png");
+            
+            java.io.InputStream is = context.getAssets().open("custom_cosmetics/" + chosenCapeName + ".png");
             java.io.FileOutputStream os = new java.io.FileOutputStream(capeFile);
             byte[] buffer = new byte[1024];
             int bytesRead;
