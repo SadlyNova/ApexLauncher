@@ -772,7 +772,7 @@ public final class Tools {
     public static <T> T getWeakReference(WeakReference<T> weakReference) {
         if(weakReference == null) return null;
         return weakReference.get();
-    }    // 🎨 DYNAMIC CAPE LIFTER: Extracts the chosen cape from assets to internal storage
+    }        // 🎨 DYNAMIC CAPE LIFTER: Extracts the chosen cape from assets to internal storage
     public static void prepareDefaultCape(android.app.Activity activity) {
         try {
             android.content.Context context = activity.getApplicationContext();
@@ -805,3 +805,4 @@ public final class Tools {
             e.printStackTrace();
         }
     }
+}
