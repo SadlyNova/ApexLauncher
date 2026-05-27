@@ -1,66 +1,40 @@
-<div align="center">
-    <img width="256" src="ZalithLauncher/src/main/res/drawable/app_name_title.png"></img>
-</div>
+# 🌌 Nova Launcher
 
-<div align="center">
+Nova Launcher is a high-performance Minecraft: Java Edition launcher for Android devices, built as a specialized fork of PojavLauncher. 
 
-[![Android CI](https://github.com/ZalithLauncher/ZalithLauncher/actions/workflows/android.yml/badge.svg)](https://github.com/ZalithLauncher/ZalithLauncher/actions/workflows/android.yml)
-![Downloads](https://img.shields.io/github/downloads/ZalithLauncher/ZalithLauncher/total)
-[![Sponsor](https://img.shields.io/badge/sponsor-30363D?logo=GitHub-Sponsors)](https://afdian.com/a/MovTery)
+This project completely revamps the user interface, optimizes mobile execution, and delivers a fully customized experience tailored around our custom End-Phase design theme.
 
-</div>
+---
 
-- <a href="/README_ZH_CN.md">简体中文</a>丨<a href="/README-ZH_TW.md">繁體中文</a>
-- Zalith Launcher is a Minecraft launcher based on [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher) that runs [Minecraft: Java Edition](https://www.minecraft.net/) on Android devices.
-- Zalith Launcher aims to enhance user experience by redesigning the app interface, adding more practical features, and lowering the barrier to entry, making it easier for more people to enjoy Minecraft.
+## 🛠️ New Features
 
-> [!WARNING]
-> Attention! This project is only a **community remake**, just like PojavLauncher is developed based on [Boardwalk](https://github.com/zhuowei/Boardwalk).  
-> We are planning to build the official website [zalithlauncher.cn](https://zalithlauncher.cn). Please note, our website domain ends with `.cn`, not `.com`! **That is not our site!** We do not participate in, accept, or trust that site! Please be careful to distinguish it and protect your personal privacy!
+- **Refactored UI Theme:** A gorgeous dark user interface featuring a customized End/Nether portal aesthetic.
+- **Built-In Mobile File Manager:** Easily manage your game directories without fighting strict Android storage permission blocks.
+- **Advanced Version Control:** Dynamic version management with support for custom game directories and isolated game paths.
+- **Plugin Renderer Support:** Add extra renderers easily with dedicated support for custom rendering plugins.
+- **Direct Resource Downloads:** Download Mods, Modpacks, Resource Packs, Saves, and Shaders directly within the launcher application interface.
+- **Custom Input Tools:** Features a fully customizable virtual mouse icon alongside custom background selection support.
+- **Optimized Performance Layouts:** Supports light/dark themes and built-in thread management adjustments.
 
-<h2 align="center">New Features</h2>
+---
 
-- [x] Refactored app layout for improved aesthetics and usability.
-- [x] Built-in simple file manager to eliminate worries about Android permission restrictions!
-- [x] Better version management, customizable game directory location, allowing settings in external storage directories.
-- [x] Add more renderers, with support for renderer plugins!
-- [x] Download Mods, ModPacks, resource packs, saves, and shader packs directly within the launcher!
-- [x] Customizable virtual mouse icon and launcher background image.
-- [x] Light and dark themes available.
-- [x] And more features!
+## 🛑 Warning & Disclaimer
 
-<h2 align="center">Screenshots</h2>
+> **Attention!** This project is a community-driven remake and is developed independently based on Boardwalk. We are not associated with Mojang Studios or the official PojavLauncher team. Always protect your personal data and premium account tokens; do not trust unofficial mirrors or untrusted site links!
 
-![Screenshot1](/.github/images/Screenshot_Launcher_Light_EN_US.jpg)
-![Screenshot2](/.github/images/Screenshot_Launcher_Dark_EN_US.jpg)
-![Screenshot3](/.github/images/Screenshot_Game_EN_US.jpg)
+---
 
-<h2 align="center">License</h2>
+## 📜 License
 
-- Zalith Launcher is open source under the GPL v3 license.
+Nova Launcher is open-source software distributed under the terms of the **GNU GPL v3 License**. 
 
-<h2 align="center">Special Thanks</h2>
+---
 
-This project uses several useful code libraries. Special thanks to them!
+## 🌌 Special Thanks & Credits
 
-#### Code Libraries Used by PojavLauncher
-
->- [Boardwalk](https://github.com/zhuowei/Boardwalk) (JVM Launcher): Unknown license / [Apache License 2.0](https://github.com/zhuowei/Boardwalk/blob/master/LICENSE) or GNU GPLv2.
->- Android Support Library: [Apache License 2.0](https://android.googlesource.com/platform/prebuilts/maven_repo/android/+/master/NOTICE.txt).
->- [GL4ES](https://github.com/PojavLauncherTeam/gl4es): [MIT License](https://github.com/ptitSeb/gl4es/blob/master/LICENSE).
->- [OpenJDK](https://github.com/PojavLauncherTeam/openjdk-multiarch-jdk8u): [GNU GPLv2 License](https://openjdk.java.net/legal/gplv2+ce.html).
->- [LWJGL3](https://github.com/PojavLauncherTeam/lwjgl3): [BSD-3 License](https://github.com/LWJGL/lwjgl3/blob/master/LICENSE.md).
->- [LWJGLX](https://github.com/PojavLauncherTeam/lwjglx) (LWJGL2 API compatibility layer for LWJGL3): Unknown license.
->- [Mesa 3D Graphics Library](https://gitlab.freedesktop.org/mesa/mesa): [MIT License](https://docs.mesa3d.org/license.html).
->- [pro-grade](https://github.com/pro-grade/pro-grade) (Java Sandbox Security Manager): [Apache License 2.0](https://github.com/pro-grade/pro-grade/blob/master/LICENSE.txt).
->- [bhook](https://github.com/bytedance/bhook) (For exit code capture): [MIT License](https://github.com/bytedance/bhook/blob/main/LICENSE).
->- [libepoxy](https://github.com/anholt/libepoxy): [MIT License](https://github.com/anholt/libepoxy/blob/master/COPYING).
->- [virglrenderer](https://github.com/PojavLauncherTeam/virglrenderer): [MIT License](https://gitlab.freedesktop.org/virgl/virglrenderer/-/blob/master/COPYING).
-
-#### Additional Code Libraries Used by Zalith Launcher
-
->- [HMCL](https://github.com/HMCL-dev/HMCL) (uses some source code): [GPL-3.0 License](https://github.com/HMCL-dev/HMCL/blob/main/LICENSE)
->- [CommonMark](https://github.com/thephpleague/commonmark) (for rendering Markdown text): [BSD-3-Clause License](https://github.com/thephpleague/commonmark/blob/2.5/LICENSE)
->- [AndroidViewAnimations](https://github.com/daimajia/AndroidViewAnimations) (uses part of the animation source code): [MIT License](https://github.com/daimajia/AndroidViewAnimations/blob/master/License)
->- [TapTargetView](https://github.com/KeepSafe/TapTargetView) (for creating onboarding guides): [Apache License 2.0](https://github.com/KeepSafe/TapTargetView/blob/master/LICENSE)
->- 
+This fork is built using incredible components and code structures from the community. Huge thanks to:
+- **PojavLauncher Team:** For open-sourcing the base framework.
+- **HMCL:** For providing underlying source elements (GPL-3.0 License).
+- **CommonMark:** For parsing and rendering Markdown texts.
+- **AndroidViewAnimations:** For fueling UI movement transitions.
+- **TapTargetView:** For powering onboarding user guide mechanics.
