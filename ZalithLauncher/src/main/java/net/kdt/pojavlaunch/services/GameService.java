@@ -60,7 +60,7 @@ public class GameService extends Service {
                 .setContentText(getString(R.string.notification_game_runs))
                 .setContentIntent(contentIntent)
                 .addAction(android.R.drawable.ic_menu_close_clear_cancel,  getString(R.string.notification_terminate), pendingKillIntent)
-                .setSmallIcon(R.mipmap.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.ic_status) // Changed from R.mipmap to target your crisp new white silhouette asset directly
                 .setSilent(true);
 
         Notification notification = notificationBuilder.build();
