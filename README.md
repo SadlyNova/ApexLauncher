@@ -1,40 +1,69 @@
-# 🌌 Nova Launcher
+<div align="center">
+    <img width="256" src=".github/images/nova_banner.png"></img>
+</div>
 
-Nova Launcher is a high-performance Minecraft: Java Edition launcher for Android devices, built as a specialized fork of PojavLauncher. 
+<div align="center">
 
-This project completely revamps the user interface, optimizes mobile execution, and delivers a fully customized experience tailored around our custom End-Phase design theme.
+[![Android CI](https://github.com/ZalithLauncher/ZalithLauncher/actions/workflows/android.yml/badge.svg)](https://github.com/ZalithLauncher/ZalithLauncher/actions/workflows/android.yml)
+![Downloads](https://img.shields.io/github/downloads/ZalithLauncher/ZalithLauncher/total)
 
----
+</div>
 
-## 🛠️ New Features
+- Nova Launcher is a high-performance Minecraft launcher based on [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher) that runs [Minecraft: Java Edition](https://www.minecraft.net/) on Android devices.
+- Nova Launcher aims to enhance user experience by redesigning the app interface with a custom End-Phase portal aesthetic, adding practical performance tweaks, and making it easier for everyone to jump straight into premium or offline gameplay modes.
 
-- **Refactored UI Theme:** A gorgeous dark user interface featuring a customized End/Nether portal aesthetic.
-- **Built-In Mobile File Manager:** Easily manage your game directories without fighting strict Android storage permission blocks.
-- **Advanced Version Control:** Dynamic version management with support for custom game directories and isolated game paths.
-- **Plugin Renderer Support:** Add extra renderers easily with dedicated support for custom rendering plugins.
-- **Direct Resource Downloads:** Download Mods, Modpacks, Resource Packs, Saves, and Shaders directly within the launcher application interface.
-- **Custom Input Tools:** Features a fully customizable virtual mouse icon alongside custom background selection support.
-- **Optimized Performance Layouts:** Supports light/dark themes and built-in thread management adjustments.
+> [!WARNING]
+> Attention! This project is a custom community-driven remake and is developed independently based on [Boardwalk](https://github.com/zhuowei/Boardwalk). Always protect your personal login tokens and premium data; do not download or trust unofficial installation package mirrors outside of this verified repository branch!
 
----
+<h2 align="center">New Features</h2>
 
-## 🛑 Warning & Disclaimer
+- [x] Completely refactored app layout for an optimized End/Nether portal design theme.
+- [x] Integrated built-in simple file manager to completely bypass modern Android scoped storage permission restrictions!
+- [x] Advanced version management engine featuring isolated custom game runtime directories.
+- [x] Extended graphics engine capabilities with direct support for custom renderer plugins.
+- [x] Native downloading tools to grab Mods, ModPacks, resource packs, world saves, and shader packs directly within the client launcher interface.
+- [x] Customizable cursor virtual mouse pointer styles and launcher canvas background graphic selectors.
+- [x] Complete system UI integration for Light and Dark theme configurations.
+- [x] Clean thread-management routines for a smoother gameplay frame rate layout.
 
-> **Attention!** This project is a community-driven remake and is developed independently based on Boardwalk. We are not associated with Mojang Studios or the official PojavLauncher team. Always protect your personal data and premium account tokens; do not trust unofficial mirrors or untrusted site links!
+<h2 align="center">Screenshots</h2>
 
----
+<div align="center">
+    <h3>☀️ Light Interface Theme Layout</h3>
+    <img src=".github/images/nova_light.png" width="80%" alt="Nova Launcher Light Interface"></img>
+    
+    <h3>🌙 Custom Dark Portal Theme Layout</h3>
+    <img src=".github/images/nova_dark.png" width="80%" alt="Nova Launcher Dark Interface"></img>
+    
+    <h3>🎮 In-Game Optimized Touch Control Map</h3>
+    <img src=".github/images/nova_game.png" width="80%" alt="Nova Launcher Touch Control Mapping"></img>
+</div>
 
-## 📜 License
+<h2 align="center">License</h2>
 
-Nova Launcher is open-source software distributed under the terms of the **GNU GPL v3 License**. 
+- Nova Launcher is open source and managed under the terms of the GNU GPL v3 license framework.
 
----
+<h2 align="center">Special Thanks</h2>
 
-## 🌌 Special Thanks & Credits
+This project relies on several incredibly powerful source components and runtime code structures. Huge thanks to the developers behind them:
 
-This fork is built using incredible components and code structures from the community. Huge thanks to:
-- **PojavLauncher Team:** For open-sourcing the base framework.
-- **HMCL:** For providing underlying source elements (GPL-3.0 License).
-- **CommonMark:** For parsing and rendering Markdown texts.
-- **AndroidViewAnimations:** For fueling UI movement transitions.
-- **TapTargetView:** For powering onboarding user guide mechanics.
+#### Base Libraries Inherited from PojavLauncher Framework
+
+>- [Boardwalk](https://github.com/zhuowei/Boardwalk) (JVM Launcher): Unknown license / [Apache License 2.0](https://github.com/zhuowei/Boardwalk/blob/master/LICENSE) or GNU GPLv2.
+>- Android Support Library: [Apache License 2.0](https://android.googlesource.com/platform/prebuilts/maven_repo/android/+/master/NOTICE.txt).
+>- [GL4ES](https://github.com/PojavLauncherTeam/gl4es): [MIT License](https://github.com/ptitSeb/gl4es/blob/master/LICENSE).
+>- [OpenJDK](https://github.com/PojavLauncherTeam/openjdk-multiarch-jdk8u): [GNU GPLv2 License](https://openjdk.java.net/legal/gplv2+ce.html).
+>- [LWJGL3](https://github.com/PojavLauncherTeam/lwjgl3): [BSD-3 License](https://github.com/LWJGL/lwjgl3/blob/master/LICENSE.md).
+>- [LWJGLX](https://github.com/PojavLauncherTeam/lwjglx): Unknown API layer license.
+>- [Mesa 3D Graphics Library](https://gitlab.freedesktop.org/mesa/mesa): [MIT License](https://docs.mesa3d.org/license.html).
+>- [pro-grade](https://github.com/pro-grade/pro-grade): [Apache License 2.0](https://github.com/pro-grade/pro-grade/blob/master/LICENSE.txt).
+>- [bhook](https://github.com/bytedance/bhook): [MIT License](https://github.com/bytedance/bhook/blob/main/LICENSE).
+>- [libepoxy](https://github.com/anholt/libepoxy): [MIT License](https://github.com/anholt/libepoxy/blob/master/COPYING).
+>- [virglrenderer](https://github.com/PojavLauncherTeam/virglrenderer): [MIT License](https://gitlab.freedesktop.org/virgl/virglrenderer/-/blob/master/COPYING).
+
+#### Extra Structural Packages Applied
+
+>- [HMCL](https://github.com/HMCL-dev/HMCL): [GPL-3.0 License](https://github.com/HMCL-dev/HMCL/blob/main/LICENSE)
+>- [CommonMark](https://github.com/thephpleague/commonmark): [BSD-3-Clause License](https://github.com/thephpleague/commonmark/blob/2.5/LICENSE)
+>- [AndroidViewAnimations](https://github.com/daimajia/AndroidViewAnimations): [MIT License](https://github.com/daimajia/AndroidViewAnimations/blob/master/License)
+>- [TapTargetView](https://github.com/KeepSafe/TapTargetView): [Apache License 2.0](https://github.com/KeepSafe/TapTargetView/blob/master/LICENSE)
