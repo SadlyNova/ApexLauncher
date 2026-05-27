@@ -1,4 +1,4 @@
-name: Build Nova Launcher APK
+name: Build Apex Launcher APK
 
 on:
   workflow_dispatch:
@@ -36,5 +36,5 @@ jobs:
       - name: Upload Finished APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Nova Launcher Debug APK
+          name: Apex Launcher APK
           path: ZalithLauncher/build/outputs/apk/debug/*.apk
