@@ -29,7 +29,7 @@ val getBuildType = {
 // =================================================================
 // 👑 CUSTOM IDENTITY & RESOURCE LAYOUT REDIRECT
 // =================================================================
-val nameId = "com.nova.launch" 
+val nameId = "com.sadly.apex" 
 val sourcePackageName = "com.movtery.zalithlauncher"
 
 val generatedZalithDir = file("${layout.buildDirectory.get().asFile}/generated/source/zalith/java")
