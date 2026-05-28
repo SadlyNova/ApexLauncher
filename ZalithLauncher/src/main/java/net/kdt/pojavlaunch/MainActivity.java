@@ -26,6 +26,8 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Toast;
@@ -162,6 +164,39 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(this);
     }
 
+    /**
+     * Executes the custom native transition animations between launcher screens
+     */
+    private void playSmoothTransition() {
+        // Find your layout containers dynamically from the binding instance
+        final View loadingLayout = binding.backgroundView; 
+        final View dashboardLayout = binding.mainControlLayout; 
+
+        // Load custom XML animations compiled from the res/anim folder
+        Animation exitAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.loading_exit);
+        final Animation entryAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.dashboard_entry);
+
+        exitAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                loadingLayout.setVisibility(View.GONE);
+                
+                // Triggers the dashboard presentation with the fluid spring bounce scaling action
+                dashboardLayout.setVisibility(View.VISIBLE);
+                dashboardLayout.startAnimation(entryAnim);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+
+        // Fire the sequence
+        loadingLayout.startAnimation(exitAnim);
+    }
+
     protected void initLayout() {
         binding = ActivityGameBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -225,6 +260,9 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             });
 
             binding.mainGameRenderView.setOnRenderingStartedListener(() -> {
+                // Smoothly trigger layout window shifts using our cinematic animations framework
+                runOnUiThread(this::playSmoothTransition);
+                
                 //彻底清除背景图片，确保一些设备不再出现“半透明渲染”的问题
                 BackgroundManager.clearBackgroundImage(binding.backgroundView);
                 Logging.i("Rendering Game", "The game rendering has started, " +
