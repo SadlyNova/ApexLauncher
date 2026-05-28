@@ -140,9 +140,8 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         Window window = getWindow();
         
-        // 🌟 FIX 1: Frame layers ko intact rakhne ke liye base window ko black choda hai,
-        // is se dynamic color engine crash nahi hoga aur canvas rendering smoothly work karegi.
-        window.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+        // 🌟 FIX 1: Custom Apex background ko primary activity layer window par map kiya taaki initial black mask humesha block rahe.
+        window.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.apex_loading_bg));
 
         // Set the sustained performance mode for available APIs
         window.setSustainedPerformanceMode(AllSettings.getSustainedPerformance().getValue());
@@ -155,7 +154,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         new ControlMenu(this, this, mControlSettingsBinding, controlLayout, false);
         mControlSettingsBinding.saveAndExport.setVisibility(View.GONE);
 
-        // Hide layout controls initially
+        // Controls control layouts deck initial visibility set to invisible
         binding.mainControlLayout.setVisibility(View.INVISIBLE);
         binding.mainControlLayout.setModifiable(false);
 
@@ -204,10 +203,10 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         mGameMenuWrapper = new GameMenuViewWrapper(this, v -> onClickedMenu(), true);
         touchCharInput = binding.mainTouchCharInput;
 
-        // 🌟 FIX 2: Hum native system stack ko break nahi karenge. backgroundView par seedhe 
-        // aapka custom apex loading banner set karenge bina layout rules ko block kiye.
-        // Is se launcher base textured rahega aur Minecraft engine ka real RED progress screen indicator chalega!
-        binding.backgroundView.setImageResource(R.drawable.apex_loading_bg);
+        // 🌟 FIX 2: backgroundView par forced alpha override hataya gaya hai. Hum native layout layers ko
+        // handle karenge aur launcher system properties check karenge taaki dynamic loading parameters directly active rahein, 
+        // aur native engine ka RED loading indicator status seamlessly custom background wallpaper ke upar layering pass complete kare!
+        BackgroundManager.setBackgroundImage(this, BackgroundType.IN_GAME, binding.backgroundView, null);
         
         if (binding.mainGameRenderView != null) {
             binding.mainGameRenderView.invalidate();
@@ -831,4 +830,4 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             binding.hotbarType.dismiss();
         }
     }
-}
+    }
