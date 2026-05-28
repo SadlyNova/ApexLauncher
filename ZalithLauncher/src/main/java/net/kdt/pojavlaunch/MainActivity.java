@@ -140,8 +140,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         Window window = getWindow();
         
-        // 🌟 FIX 1: Custom Apex Launcher canvas ko windows manager base group par completely secure kiya hai.
-        // Isse background container clean texture process karega aur black artifacts override ho jayenge.
+        // 🌟 FIX 1: Secure spatial backdrop surface to eliminate default empty screen configurations completely
         window.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.apex_loading_bg));
 
         // Set the sustained performance mode for available APIs
@@ -155,7 +154,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         new ControlMenu(this, this, mControlSettingsBinding, controlLayout, false);
         mControlSettingsBinding.saveAndExport.setVisibility(View.GONE);
 
-        // Buttons controls overlay initialization state invisible
+        // Hide overlay controls during startup context shifts
         binding.mainControlLayout.setVisibility(View.INVISIBLE);
         binding.mainControlLayout.setModifiable(false);
 
@@ -173,6 +172,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
     private void playSmoothTransition() {
         final View loadingViewContainer = binding.getRoot(); 
 
+        // Load custom layout transition configs from res/anim/ folder
         Animation exitAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.loading_exit);
         final Animation entryAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.dashboard_entry);
 
@@ -203,17 +203,17 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         mGameMenuWrapper = new GameMenuViewWrapper(this, v -> onClickedMenu(), true);
         touchCharInput = binding.mainTouchCharInput;
 
-        // 🌟 FIX 2: backgroundView par force elements run karne ke bajay hum launcher background system ko
-        // instructions de rahe hain ki framework default alpha layers active rakhe. Isse interface block nahi hoga
-        // aur native engine ka RED splash progress bar framework directly window layer ke upar visible hokar flash karega!
-        binding.backgroundView.setBackgroundColor(Color.TRANSPARENT);
-        binding.backgroundView.setImageResource(android.R.color.transparent);
+        // 🌟 FIX 2: Instead of raw resource overrides, we feed our custom template directly into the native 
+        // BackgroundManager rendering stack. This satisfies internal verification structures, completely preventing 
+        // early clearing bugs, and lets the Mojang Red Splash screen load smoothly right on top of our image asset!
+        BackgroundManager.setBackgroundImage(this, BackgroundType.IN_GAME, binding.backgroundView, null);
+        binding.backgroundView.setImageResource(R.drawable.apex_loading_bg);
         
-        // Render views cache logic context sync loop refresh
-        if (binding.mainGameRenderView != null) {
-            binding.mainGameRenderView.setAlpha(1.0f);
-            binding.mainGameRenderView.invalidate();
-        }
+        binding.backgroundView.post(() -> {
+            if (binding.mainGameRenderView != null) {
+                binding.mainGameRenderView.invalidate();
+            }
+        });
 
         keyboardDialog = new KeyboardDialog(this).setShowSpecialButtons(false);
 
@@ -833,4 +833,4 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             binding.hotbarType.dismiss();
         }
     }
-}
+             }
