@@ -140,7 +140,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         Window window = getWindow();
         
-        // 🌟 FIX: Purani plain black background screen hatakar humara custom Apex Launcher loading graphics set kar rahe hain
+        // 🌟 FIX: Purani plain black background screen hatakar humara custom Apex Launcher loading graphics set kar rahe hain[span_1](start_span)[span_1](end_span)
         window.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.apex_loading_bg));
 
         // Set the sustained performance mode for available APIs
@@ -154,7 +154,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         new ControlMenu(this, this, mControlSettingsBinding, controlLayout, false);
         mControlSettingsBinding.saveAndExport.setVisibility(View.GONE);
 
-        // 🌟 FIX: Jab tak game load na ho jaye button control templates ko initial state par hide rakhein
+        // 🌟 FIX: Jab tak game load na ho jaye button control templates ko initial state par hide rakhein[span_2](start_span)[span_2](end_span)
         binding.mainControlLayout.setVisibility(View.INVISIBLE);
         binding.mainControlLayout.setModifiable(false);
 
@@ -170,10 +170,10 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
      * Executes the custom native transition animations between launcher screens
      */
     private void playSmoothTransition() {
-        // Targets the main parent layouts group to dynamically scale everything down cleanly
+        // Targets the main parent layouts group to dynamically scale everything down cleanly[span_3](start_span)[span_3](end_span)
         final View loadingViewContainer = binding.getRoot(); 
 
-        // Load custom layout transition configs from res/anim/ folder
+        // Load custom layout transition configs from res/anim/ folder[span_4](start_span)[span_4](end_span)
         Animation exitAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.loading_exit);
         final Animation entryAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.dashboard_entry);
 
@@ -183,11 +183,11 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                // Ensure touch matrices and canvas renders swap safely sequential
+                // Ensure touch matrices and canvas renders swap safely sequential[span_5](start_span)[span_5](end_span)
                 binding.mainTouchpad.setVisibility(View.VISIBLE);
                 binding.mainGameRenderView.setVisibility(View.VISIBLE);
                 
-                // Triggers the cinematic bounce scale-up effect onto the button control decks
+                // Triggers the cinematic bounce scale-up effect onto the button control decks[span_6](start_span)[span_6](end_span)
                 binding.mainControlLayout.setVisibility(View.VISIBLE);
                 binding.mainControlLayout.startAnimation(entryAnim);
             }
@@ -196,7 +196,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             public void onAnimationRepeat(Animation animation) {}
         });
 
-        // Fire the scale-down rotation loop sequence onto the viewport canvas group
+        // Fire the scale-down rotation loop sequence onto the viewport canvas group[span_7](start_span)[span_7](end_span)
         loadingViewContainer.startAnimation(exitAnim);
     }
 
@@ -207,7 +207,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         mGameMenuWrapper = new GameMenuViewWrapper(this, v -> onClickedMenu(), true);
         touchCharInput = binding.mainTouchCharInput;
 
-        // 🌟 FIX: Yahan default layout background set karne ki bajay apex texture inject kar rahe hain
+        // 🌟 FIX: Yahan default layout background set karne ki bajay apex texture inject kar rahe hain[span_8](start_span)[span_8](end_span)
         binding.backgroundView.setImageResource(R.drawable.apex_loading_bg);
 
         keyboardDialog = new KeyboardDialog(this).setShowSpecialButtons(false);
@@ -264,7 +264,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             });
 
             binding.mainGameRenderView.setOnRenderingStartedListener(() -> {
-                // Smoothly trigger layout window shifts using our cinematic animations framework
+                // Smoothly trigger layout window shifts using our cinematic animations framework[span_9](start_span)[span_9](end_span)
                 runOnUiThread(this::playSmoothTransition);
                 
                 //彻底清除背景图片，确保一些设备不再出现“半透明渲染”的问题
@@ -856,3 +856,4 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             binding.hotbarType.dismiss();
         }
     }
+}
