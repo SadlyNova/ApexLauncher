@@ -140,8 +140,8 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         Window window = getWindow();
         
-        // 🌟 FIX 1: Custom Apex Launcher graphic background ko direct base activity Window layer par bind kar diya hai.
-        // Isse background hamesha lock rahega aur hardware transparent parameters cleanly compile ho jayenge.
+        // 🌟 FIX 1: Hum hamare custom Apex Launcher graphic backdrop ko directly base Window component par attach kar rahe hain.
+        // Isse black screen block ho jayegi aur native layout manager hardware components cleanly surface upar fetch kar payenge.
         window.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.apex_loading_bg));
 
         // Set the sustained performance mode for available APIs
@@ -155,7 +155,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         new ControlMenu(this, this, mControlSettingsBinding, controlLayout, false);
         mControlSettingsBinding.saveAndExport.setVisibility(View.GONE);
 
-        // Hide overlay controls during structural verification
+        // Hide overlay controls during startup context shifts
         binding.mainControlLayout.setVisibility(View.INVISIBLE);
         binding.mainControlLayout.setModifiable(false);
 
@@ -204,9 +204,9 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         mGameMenuWrapper = new GameMenuViewWrapper(this, v -> onClickedMenu(), true);
         touchCharInput = binding.mainTouchCharInput;
 
-        // 🌟 FIX 2: backgroundView par forced parameters hataye gaye hain aur use poora transparent choda hai.
-        // Kyunki hamara main background niche Window par secure hai, isliye launcher jab background clear karega,
-        // toh koi texture damage nahi hoga aur Minecraft engine ka real RED progress overlay safely base background ke upar layer karega!
+        // 🌟 FIX 2: Kyunki hamari main image peeche Window level par safely locked hai, isliye hum layout ke 
+        // backgroundView ko transparent chhod denge taaki launcher jab isko clear kare, toh hamara background texture ud na sake.
+        // Is se display engine transparent channels smoothly open rakhega aur Minecraft ka genuine RED color loading view iske exact upar layered render ho jayega!
         binding.backgroundView.setBackgroundColor(Color.TRANSPARENT);
         binding.backgroundView.setImageDrawable(null);
         
@@ -268,7 +268,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
             binding.mainGameRenderView.setOnRenderingStartedListener(() -> {
                 runOnUiThread(this::playSmoothTransition);
-                // Engine native clear configuration callback
+                // System default cache clean callback ko pass hone dete hain bina custom layer kharab kiye
                 BackgroundManager.clearBackgroundImage(binding.backgroundView);
                 Logging.i("Rendering Game", "The game rendering has started, " +
                         "and the background image has been cleared to prevent certain issues from occurring.");
@@ -833,4 +833,4 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             binding.hotbarType.dismiss();
         }
     }
-            }
+}
