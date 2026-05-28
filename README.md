@@ -1,6 +1,6 @@
-# 🌌 Nova Launcher
+# 🌌 Apex Launcher
 
-Nova Launcher is a high-performance Minecraft: Java Edition launcher for Android devices, built as a specialized fork of PojavLauncher. 
+Apex Launcher is a high-performance Minecraft: Java Edition launcher for Android devices, built as a specialized fork of PojavLauncher. 
 
 This project completely revamps the user interface, optimizes mobile execution, and delivers a fully customized experience tailored around our custom End-Phase design theme.
 
@@ -21,12 +21,6 @@ This project completely revamps the user interface, optimizes mobile execution, 
 ## 🛑 Warning & Disclaimer
 
 > **Attention!** This project is a community-driven remake and is developed independently based on Boardwalk. We are not associated with Mojang Studios or the official PojavLauncher team. Always protect your personal data and premium account tokens; do not trust unofficial mirrors or untrusted site links!
-
----
-
-## 📜 License
-
-Nova Launcher is open-source software distributed under the terms of the **GNU GPL v3 License**. 
 
 ---
 
