@@ -140,8 +140,8 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         Window window = getWindow();
         
-        // 🌟 FIX 1: Custom Apex Launcher canvas background ko Window group resource par lock kiya gaya hai[span_2](start_span)[span_2](end_span)
-        window.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.apex_loading_bg));
+        // 🌟 FIX 1: Default black surface window background ko bilkul safe rakha hai taaki canvas corrupt na ho.
+        window.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
 
         // Set the sustained performance mode for available APIs
         window.setSustainedPerformanceMode(AllSettings.getSustainedPerformance().getValue());
@@ -154,7 +154,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         new ControlMenu(this, this, mControlSettingsBinding, controlLayout, false);
         mControlSettingsBinding.saveAndExport.setVisibility(View.GONE);
 
-        // Controls button panels initialization visibility set to hidden[span_3](start_span)[span_3](end_span)
+        // Hide overlays initially during setup loops
         binding.mainControlLayout.setVisibility(View.INVISIBLE);
         binding.mainControlLayout.setModifiable(false);
 
@@ -172,7 +172,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
     private void playSmoothTransition() {
         final View loadingViewContainer = binding.getRoot(); 
 
-        // Load custom layout transition configs from res/anim/ folder
         Animation exitAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.loading_exit);
         final Animation entryAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.dashboard_entry);
 
@@ -203,17 +202,17 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         mGameMenuWrapper = new GameMenuViewWrapper(this, v -> onClickedMenu(), true);
         touchCharInput = binding.mainTouchCharInput;
 
-        // 🌟 FIX 2: backgroundView par direct custom asset force karne ke bajay hum pure structure layout channels ko
-        // alpha metrics par transparent layer par map kar rahe hain. Is se native module verification block nahi hoga,
-        // aur Minecraft core engine ka genuine RED loading progress bar setup bina kisi hide glitch ke seedhe aage chal sakega[span_4](start_span)[span_4](end_span)!
-        binding.backgroundView.setBackgroundColor(Color.TRANSPARENT);
-        binding.backgroundView.setImageResource(android.R.color.transparent);
+        // 🌟 FIX 2: Hum manually resources override nahi karenge, balki launcher ke native BackgroundManager ke stack 
+        // ko call karenge. Phir backgroundView par direct aapki custom 'apex_loading_bg' set kar denge!
+        // Isse core layers perfectly intact rahengi aur native RED progress layer bina kisi rukawat ke background ke upar load hogi!
+        BackgroundManager.setBackgroundImage(this, BackgroundType.IN_GAME, binding.backgroundView, null);
+        binding.backgroundView.setImageResource(R.drawable.apex_loading_bg);
         
-        // Refresh loops invalidation sequence triggers smoothly
-        if (binding.mainGameRenderView != null) {
-            binding.mainGameRenderView.setAlpha(1.0f);
-            binding.mainGameRenderView.invalidate();
-        }
+        binding.backgroundView.post(() -> {
+            if (binding.mainGameRenderView != null) {
+                binding.mainGameRenderView.invalidate();
+            }
+        });
 
         keyboardDialog = new KeyboardDialog(this).setShowSpecialButtons(false);
 
