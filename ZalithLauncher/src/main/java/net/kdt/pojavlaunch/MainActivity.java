@@ -140,9 +140,9 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         Window window = getWindow();
         
-        // 🌟 FIX 1: Custom Apex Launcher graphic background backdrop ko directly native Window structural property par bind kiya gaya hai[span_3](start_span)[span_3](end_span).
-        // Isse background loop internally secure ho jayega aur hardware transparent scaling parameters seamlessly bypass ho jayenge[span_4](start_span)[span_4](end_span).
-        window.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.apex_loading_bg));
+        // 🌟 FIX 1: Frame layers ko intact rakhne ke liye base window ko black choda hai,
+        // is se dynamic color engine crash nahi hoga aur canvas rendering smoothly work karegi.
+        window.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
 
         // Set the sustained performance mode for available APIs
         window.setSustainedPerformanceMode(AllSettings.getSustainedPerformance().getValue());
@@ -155,7 +155,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         new ControlMenu(this, this, mControlSettingsBinding, controlLayout, false);
         mControlSettingsBinding.saveAndExport.setVisibility(View.GONE);
 
-        // Hide layout structures overlay interfaces early[span_5](start_span)[span_5](end_span)
+        // Hide layout controls initially
         binding.mainControlLayout.setVisibility(View.INVISIBLE);
         binding.mainControlLayout.setModifiable(false);
 
@@ -173,7 +173,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
     private void playSmoothTransition() {
         final View loadingViewContainer = binding.getRoot(); 
 
-        // Load custom layout transition configs from res/anim/ folder[span_6](start_span)[span_6](end_span)
+        // Load custom layout transition configs from res/anim/ folder
         Animation exitAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.loading_exit);
         final Animation entryAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.dashboard_entry);
 
@@ -204,14 +204,12 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         mGameMenuWrapper = new GameMenuViewWrapper(this, v -> onClickedMenu(), true);
         touchCharInput = binding.mainTouchCharInput;
 
-        // 🌟 FIX 2: backgroundView par raw transparent force hataya gaya hai[span_7](start_span)[span_7](end_span). Hum native BackgroundManager core setup 
-        // ko instructions flush karenge taaki internal window structures intact rahein, OpenGL hardware buffers cleanly sync hon, 
-        // aur dynamic Mojang RED loading engine process progress indicators bina kisi texture delay ke base custom banner ke upar show ho sakein[span_8](start_span)[span_8](end_span)!
-        BackgroundManager.setBackgroundImage(this, BackgroundType.IN_GAME, binding.backgroundView, null);
+        // 🌟 FIX 2: Hum native system stack ko break nahi karenge. backgroundView par seedhe 
+        // aapka custom apex loading banner set karenge bina layout rules ko block kiye.
+        // Is se launcher base textured rahega aur Minecraft engine ka real RED progress screen indicator chalega!
+        binding.backgroundView.setImageResource(R.drawable.apex_loading_bg);
         
-        // Dynamic viewport graphics canvas loops invalidation update
         if (binding.mainGameRenderView != null) {
-            binding.mainGameRenderView.setAlpha(1.0f);
             binding.mainGameRenderView.invalidate();
         }
 
