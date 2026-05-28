@@ -140,8 +140,8 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         Window window = getWindow();
         
-        // 🌟 FIX: Custom Apex Launcher graphic background ko directly primary Window component par set kiya hai.
-        // Isse black screen block ho jayegi aur native launcher content controls layers ko render space smoothly mil sakega.
+        // 🌟 FIX 1: Custom Apex Launcher canvas ko windows manager base group par completely secure kiya hai.
+        // Isse background container clean texture process karega aur black artifacts override ho jayenge.
         window.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.apex_loading_bg));
 
         // Set the sustained performance mode for available APIs
@@ -155,7 +155,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         new ControlMenu(this, this, mControlSettingsBinding, controlLayout, false);
         mControlSettingsBinding.saveAndExport.setVisibility(View.GONE);
 
-        // 🌟 FIX: Control buttons panel sheet initial state par invisible rahegi taaki background engine refresh glitch na kare.
+        // Buttons controls overlay initialization state invisible
         binding.mainControlLayout.setVisibility(View.INVISIBLE);
         binding.mainControlLayout.setModifiable(false);
 
@@ -171,10 +171,8 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
      * Executes the custom native transition animations between launcher screens
      */
     private void playSmoothTransition() {
-        // Targets the main parent layouts group to dynamically scale everything down cleanly
         final View loadingViewContainer = binding.getRoot(); 
 
-        // Load custom layout transition configs from res/anim/ folder
         Animation exitAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.loading_exit);
         final Animation entryAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.dashboard_entry);
 
@@ -184,11 +182,9 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                // Ensure touch matrices and canvas renders swap safely sequential
                 binding.mainTouchpad.setVisibility(View.VISIBLE);
                 binding.mainGameRenderView.setVisibility(View.VISIBLE);
                 
-                // Triggers the cinematic bounce scale-up effect onto the button control decks
                 binding.mainControlLayout.setVisibility(View.VISIBLE);
                 binding.mainControlLayout.startAnimation(entryAnim);
             }
@@ -197,7 +193,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             public void onAnimationRepeat(Animation animation) {}
         });
 
-        // Fire the scale-down rotation loop sequence onto the viewport canvas group
         loadingViewContainer.startAnimation(exitAnim);
     }
 
@@ -208,17 +203,17 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         mGameMenuWrapper = new GameMenuViewWrapper(this, v -> onClickedMenu(), true);
         touchCharInput = binding.mainTouchCharInput;
 
-        // 🌟 FIX: backgroundView par direct resource force karne ke bajay hum is structural wrapper view layer ko completely
-        // transparent (null) background denge aur iski visibility handle karenge. Isse transparent rendering surface pipeline block nahi hogi, 
-        // aur native engine ka RED color loading text progress overlay sidhe humare base custom background ke upar layered ho kar visible ho jayega!
-        binding.backgroundView.setBackground(null);
+        // 🌟 FIX 2: backgroundView par force elements run karne ke bajay hum launcher background system ko
+        // instructions de rahe hain ki framework default alpha layers active rakhe. Isse interface block nahi hoga
+        // aur native engine ka RED splash progress bar framework directly window layer ke upar visible hokar flash karega!
+        binding.backgroundView.setBackgroundColor(Color.TRANSPARENT);
         binding.backgroundView.setImageResource(android.R.color.transparent);
         
-        binding.backgroundView.post(() -> {
-            if (binding.mainGameRenderView != null) {
-                binding.mainGameRenderView.invalidate();
-            }
-        });
+        // Render views cache logic context sync loop refresh
+        if (binding.mainGameRenderView != null) {
+            binding.mainGameRenderView.setAlpha(1.0f);
+            binding.mainGameRenderView.invalidate();
+        }
 
         keyboardDialog = new KeyboardDialog(this).setShowSpecialButtons(false);
 
@@ -263,7 +258,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
             binding.mainGameRenderView.setSurfaceReadyListener(() -> {
                 try {
-                    // Setup virtual mouse right before launching
                     if (AllSettings.getVirtualMouseStart().getValue()) {
                         binding.mainTouchpad.post(() -> binding.mainTouchpad.switchState());
                     }
@@ -274,10 +268,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             });
 
             binding.mainGameRenderView.setOnRenderingStartedListener(() -> {
-                // Smoothly trigger layout window shifts using our cinematic animations framework
                 runOnUiThread(this::playSmoothTransition);
-                
-                //彻底清除背景图片，确保一些设备不再出现“半透明渲染”的问题
                 BackgroundManager.clearBackgroundImage(binding.backgroundView);
                 Logging.i("Rendering Game", "The game rendering has started, " +
                         "and the background image has been cleared to prevent certain issues from occurring.");
@@ -311,7 +302,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
     private void loadControls() {
         try {
-            // Load keys
             binding.mainControlLayout.loadLayout(minecraftVersion.getControl());
         } catch(IOException e) {
             try {
@@ -426,7 +416,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         }
     }
 
-    //使用一个输入预览框来展示用户输入的内容
     private void setInputPreview(boolean show) {
         mInputPreviewAnim.clearEntries();
         mInputPreviewAnim.apply(new AnimPlayer.Entry(binding.inputPreviewLayout, show ? Animations.FadeIn : Animations.FadeOut))
@@ -457,7 +446,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         boolean handleEvent;
         if(!(handleEvent = binding.mainGameRenderView.processKeyEvent(event))) {
             if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && !binding.mainTouchCharInput.isEnabled()) {
-                if(event.getAction() != KeyEvent.ACTION_UP) return true; // We eat it anyway
+                if(event.getAction() != KeyEvent.ACTION_UP) return true; 
                 sendKeyPress(LwjglGlfwKeycode.GLFW_KEY_ESCAPE);
                 return true;
             }
@@ -485,7 +474,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
     }
 
     public static void openLink(String link) {
-        Context ctx = binding.mainTouchpad.getContext(); // no more better way to obtain a context statically
+        Context ctx = binding.mainTouchpad.getContext(); 
         ((Activity)ctx).runOnUiThread(() -> {
             try {
                 setUri(ctx, link);
@@ -503,7 +492,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
                 return;
             }
             ClipData.Item firstClipItem = clipData.getItemAt(0);
-            //TODO: coerce to HTML if the clip item is styled
             CharSequence clipItemText = firstClipItem.getText();
             if(clipItemText == null) {
                 AWTInputBridge.nativeClipboardReceived(null, null);
@@ -566,16 +554,8 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
     }
 
-    /*
-     * Android 14 (or some devices, at least) seems to dispatch the the captured mouse events as trackball events
-     * due to a bug(?) somewhere(????)
-     */
     private boolean checkCaptureDispatchConditions(MotionEvent event) {
         int eventSource = event.getSource();
-        // On my device, the mouse sends events as a relative mouse device.
-        // Not comparing with == here because apparently `eventSource` is a mask that can
-        // sometimes indicate multiple sources, like in the case of InputDevice.SOURCE_TOUCHPAD
-        // (which is *also* an InputDevice.SOURCE_MOUSE when controlling a cursor)
         return (eventSource & InputDevice.SOURCE_MOUSE_RELATIVE) != 0 ||
                 (eventSource & InputDevice.SOURCE_MOUSE) != 0;
     }
@@ -592,11 +572,9 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         public MenuSettingsInitListener(ViewGameMenuBinding binding) {
             this.binding = binding;
-            //初始化状态
             this.binding.hotbarWidth.setMax(currentDisplayMetrics.widthPixels / 2);
-            this.binding.hotbarHeight.setMax(currentDisplayMetrics.heightPixels / 2);
+            this.binding.hotbarHeight.setMax(currentDisplayMetrics.heightMetrics / 2);
 
-            //初始化Seekbar的值
             MenuUtils.initSeekBarValue(this.binding.resolutionScaler, AllSettings.getResolutionRatio().getValue(), this.binding.resolutionScalerValue, "%");
             binding.resolutionScalerPreview.setText(VideoSettingsFragment.getResolutionRatioPreview(getResources(), AllSettings.getResolutionRatio().getValue()));
             MenuUtils.initSeekBarValue(this.binding.timeLongPressTrigger, AllSettings.getTimeLongPressTrigger().getValue(), this.binding.timeLongPressTriggerValue, "ms");
@@ -605,7 +583,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             MenuUtils.initSeekBarValue(this.binding.hotbarHeight, AllSettings.getHotbarHeight().getValue().getValue(), this.binding.hotbarHeightValue, "px");
             MenuUtils.initSeekBarValue(this.binding.hotbarWidth, AllSettings.getHotbarWidth().getValue().getValue(), this.binding.hotbarWidthValue, "px");
 
-            //初始化Switch的状态
             this.binding.openMemoryInfo.setChecked(AllSettings.getGameMenuShowMemory().getValue());
             this.binding.openFpsInfo.setChecked(AllSettings.getGameMenuShowFPS().getValue());
             this.binding.disableGestures.setChecked(AllSettings.getDisableGestures().getValue());
@@ -617,7 +594,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             refreshLayoutVisible(this.binding.timeLongPressTriggerLayout, !AllSettings.getDisableGestures().getValue());
             refreshLayoutVisible(this.binding.gyroLayout, AllSettings.getEnableGyro().getValue());
 
-            //初始化点击事件
             this.binding.forceClose.setOnClickListener(this);
             this.binding.logOutput.setOnClickListener(this);
             this.binding.sendCustomKey.setOnClickListener(this);
@@ -682,15 +658,13 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         private void dialogSendCustomKey() {
             keyboardDialog.setOnMultiKeycodeSelectListener(selectedKeycodes -> {
-                //模拟同时按下，同时松开按键
                 Task.runTask(() -> {
                     selectedKeycodes.forEach(keycode -> sendKeyPress(keycode, true));
                     return null;
                 }).ended(a -> {
                     try {
                         Thread.sleep(50);
-                    } catch (InterruptedException ignore) {
-                    }
+                    } catch (InterruptedException ignore) {}
                     selectedKeycodes.forEach(keycode -> sendKeyPress(keycode, false));
                 }).execute();
             }).show();
@@ -710,7 +684,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             SelectControlsDialog dialog = new SelectControlsDialog(MainActivity.this, file -> {
                 try {
                     MainActivity.binding.mainControlLayout.loadLayout(file.getAbsolutePath());
-                    //刷新：是否隐藏菜单按钮
                     mGameMenuWrapper.setVisibility(!MainActivity.binding.mainControlLayout.hasMenuButton());
                 } catch (IOException ignored) {}
             });
@@ -818,7 +791,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             } else if (v == binding.enableGyro) {
                 refreshLayoutVisible(binding.gyroLayout, isChecked);
                 AllSettings.getEnableGyro().put(isChecked).save();
-                //刷新陀螺仪的启用状态
                 AllStaticSettings.enableGyro = isChecked;
                 mGyroControl.updateOrientation();
                 if (isChecked) mGyroControl.enable();
@@ -832,9 +804,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             }
         }
 
-        /**
-         * 刷新View的可见状态
-         */
         private void refreshLayoutVisible(View view, boolean visible) {
             view.setVisibility(visible ? View.VISIBLE : View.GONE);
         }
@@ -857,8 +826,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         @Override public void onDrawerOpened(@NonNull View drawerView) {}
         @Override public void onDrawerClosed(@NonNull View drawerView) {}
         @Override public void onDrawerStateChanged(int newState) {
-            //需要在菜单状态改变的时候，关闭Hotbar类型的Spinner，这个库并没有自动关闭的功能，所以需要这么做
-            //关掉！关掉！一定要关掉！
             closeSpinner();
         }
 
@@ -866,4 +833,4 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             binding.hotbarType.dismiss();
         }
     }
-        }
+}
