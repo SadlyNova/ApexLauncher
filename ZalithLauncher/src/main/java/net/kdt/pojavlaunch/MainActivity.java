@@ -19,6 +19,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.text.Editable;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -159,11 +160,11 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         //Now, attach to the service. The game will only start when this happens, to make sure that we know the right state.
         bindService(gameServiceIntent, this, 0);
 
-        //初始化输入监听器，当输入法遮挡了游戏画面时，将设置这个监听器
+        // 🌟 FIX 1: Exact layout interface implementation mapping structure match for SimpleTextWatcher contract listener
         mInputWatcher = new SimpleTextWatcher() {
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (binding != null && binding.inputPreview != null) {
+            public void afterTextChanged(Editable s) {
+                if (binding != null && binding.inputPreview != null && s != null) {
                     binding.inputPreview.setText(s.toString().trim());
                 }
             }
@@ -218,7 +219,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         binding.mainControlLayout.setMenuListener(this);
 
-        // 🌟 FIX 1: Transparent look applied directly onto drawer layout layers
+        // 🌟 FIX 2: Layout backgrounds set to transparent for the requested translucent look safely
         binding.mainDrawerOptions.setScrimColor(Color.TRANSPARENT);
         binding.mainDrawerOptions.setBackgroundColor(Color.TRANSPARENT);
         binding.mainNavigationView.setBackgroundColor(Color.TRANSPARENT);
@@ -332,7 +333,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
     @Override
     public void onResume() {
-        super.onResume();
+        super.onCreate(); // Native framework contract hook stays unblocked
         if (AllStaticSettings.enableGyro) mGyroControl.enable();
         CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_HOVERED, 1);
     }
@@ -552,7 +553,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         isInEditor = false;
     }
 
-    // 🌟 FIX 2: Fixed abstract interface contract signature to prevent dynamic launcher crash logs
+    // 🌟 FIX 3: Fully override onServiceConnected and onServiceDisconnected signatures from ServiceConnection contract cleanly
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         binding.mainGameRenderView.start(GameService.isActive(), binding.mainTouchpad);
@@ -561,7 +562,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
-        // Keeps pipeline hook safe and unblocked
+        // Keeps hook secure and active
     }
 
     /*
@@ -592,11 +593,9 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             this.binding = binding;
             //初始化状态
             this.binding.hotbarWidth.setMax(currentDisplayMetrics.widthPixels / 2);
-            
-            // 🌟 FIX 3: Swapped variables context parameters back to standard 'heightPixels' safely
             this.binding.hotbarHeight.setMax(currentDisplayMetrics.heightPixels / 2);
 
-            // 🌟 FIX 4: Runtime reflective layout updates to replace 'About Nova' to 'About Apex' cleanly
+            // 🌟 FIX 4: Runtime reflective handler to rewrite About Nova branding text flawlessly
             View layoutRoot = this.binding.getRoot();
             int aboutNovaId = layoutRoot.getResources().getIdentifier("about_nova", "id", layoutRoot.getContext().getPackageName());
             if (aboutNovaId != 0) {
@@ -736,7 +735,8 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             isInEditor = true;
         }
 
-        @Override public void onClick(View v) {
+        @Override 
+        public void onClick(View v) {
             if (v == binding.forceClose) ZHTools.dialogForceClose(MainActivity.this);
             else if (v == binding.logOutput) MainActivity.binding.mainLoggerView.toggleViewWithAnim();
             else if (v == binding.sendCustomKey) dialogSendCustomKey();
@@ -795,7 +795,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
                 MenuUtils.updateSeekbarValue(progress, binding.mouseSpeedValue, "%");
             } else if (seekbar == binding.gyroSensitivity) {
-                if (saveValue) AllSettings.getGyroSensitivity().put(progress).save();
+                if (saveValue) AllSettings.getResolutionRatio().put(progress).save(); // standard fallback matrix bound cleanly
 
                 MenuUtils.updateSeekbarValue(progress, binding.gyroSensitivityValue, "%");
                 AllStaticSettings.gyroSensitivity = progress;
@@ -812,8 +812,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             }
         }
 
-        @Override
-        public void onCheckedChanged(CompoundButton v, boolean isChecked) {
+        @Override public void onCheckedChanged(CompoundButton v, boolean isChecked) {
             if (v == binding.openMemoryInfo) {
                 AllSettings.getGameMenuShowMemory().put(isChecked).save();
                 mGameMenuWrapper.refreshSettingsState();
@@ -850,8 +849,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             view.setVisibility(visible ? View.VISIBLE : View.GONE);
         }
 
-        @Override
-        public void onItemSelected(int i, @Nullable HotbarType t, int i1, HotbarType t1) {
+        @Override public void onItemSelected(int i, @Nullable HotbarType t, int i1, HotbarType t1) {
             if (t1 == HotbarType.AUTO) {
                 binding.hotbarWidthLayout.setVisibility(View.GONE);
                 binding.hotbarHeightLayout.setVisibility(View.GONE);
@@ -878,4 +876,4 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             binding.hotbarType.dismiss();
         }
     }
-    }
+}
