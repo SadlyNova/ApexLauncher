@@ -140,8 +140,9 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         Window window = getWindow();
         
-        // 🌟 FIX 1: Default black surface window background ko bilkul safe rakha hai taaki canvas corrupt na ho.
-        window.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+        // 🌟 FIX 1: Pure surface layer base setup. Yahan hum strictly window standard par aapka 
+        // custom Apex launcher canvas resource lock kar rahe hain taaki background hamesha textured rahe.
+        window.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.apex_loading_bg));
 
         // Set the sustained performance mode for available APIs
         window.setSustainedPerformanceMode(AllSettings.getSustainedPerformance().getValue());
@@ -154,7 +155,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         new ControlMenu(this, this, mControlSettingsBinding, controlLayout, false);
         mControlSettingsBinding.saveAndExport.setVisibility(View.GONE);
 
-        // Hide overlays initially during setup loops
+        // Hide layout structures overlay interfaces early
         binding.mainControlLayout.setVisibility(View.INVISIBLE);
         binding.mainControlLayout.setModifiable(false);
 
@@ -202,17 +203,16 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         mGameMenuWrapper = new GameMenuViewWrapper(this, v -> onClickedMenu(), true);
         touchCharInput = binding.mainTouchCharInput;
 
-        // 🌟 FIX 2: Hum manually resources override nahi karenge, balki launcher ke native BackgroundManager ke stack 
-        // ko call karenge. Phir backgroundView par direct aapki custom 'apex_loading_bg' set kar denge!
-        // Isse core layers perfectly intact rahengi aur native RED progress layer bina kisi rukawat ke background ke upar load hogi!
-        BackgroundManager.setBackgroundImage(this, BackgroundType.IN_GAME, binding.backgroundView, null);
-        binding.backgroundView.setImageResource(R.drawable.apex_loading_bg);
+        // 🌟 FIX 2: Hum native BackgroundManager controller layers ko bypass kar rahe hain[span_1](start_span)[span_1](end_span).
+        // backgroundView ko transparent karke chhod denge aur is par koi image resource forcefully bind nahi karenge[span_2](start_span)[span_2](end_span).
+        // Is se OpenGL rendering surface channels directly active rahenge aur Minecraft ka native RED splash loader matrix smoothly top par render ho jayega!
+        binding.backgroundView.setBackgroundColor(Color.TRANSPARENT);
         
-        binding.backgroundView.post(() -> {
-            if (binding.mainGameRenderView != null) {
-                binding.mainGameRenderView.invalidate();
-            }
-        });
+        // Refresh spatial drawing cache buffers sequentially
+        if (binding.mainGameRenderView != null) {
+            binding.mainGameRenderView.setAlpha(1.0f);
+            binding.mainGameRenderView.invalidate();
+        }
 
         keyboardDialog = new KeyboardDialog(this).setShowSpecialButtons(false);
 
