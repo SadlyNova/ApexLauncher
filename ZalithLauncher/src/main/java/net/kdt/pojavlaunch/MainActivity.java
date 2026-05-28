@@ -168,9 +168,8 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
      * Executes the custom native transition animations between launcher screens
      */
     private void playSmoothTransition() {
-        // Find your layout containers dynamically from the binding instance
-        final View loadingLayout = binding.backgroundView; 
-        final View dashboardLayout = binding.mainControlLayout; 
+        // Targets the root binding elements to safely scale the parent layout down
+        final View loadingViewContainer = binding.getRoot(); 
 
         // Load custom XML animations compiled from the res/anim folder
         Animation exitAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.loading_exit);
@@ -182,19 +181,21 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                loadingLayout.setVisibility(View.GONE);
+                // Instantly swap view matrix scales for the main touch panels smoothly
+                binding.mainTouchpad.setVisibility(View.VISIBLE);
+                binding.mainGameRenderView.setVisibility(View.VISIBLE);
                 
-                // Triggers the dashboard presentation with the fluid spring bounce scaling action
-                dashboardLayout.setVisibility(View.VISIBLE);
-                dashboardLayout.startAnimation(entryAnim);
+                // Triggers the fluid custom bounce pop animation on the control deck view container
+                binding.mainControlLayout.setVisibility(View.VISIBLE);
+                binding.mainControlLayout.startAnimation(entryAnim);
             }
 
             @Override
             public void onAnimationRepeat(Animation animation) {}
         });
 
-        // Fire the sequence
-        loadingLayout.startAnimation(exitAnim);
+        // Fire the sequence on the loading container view group canvas
+        loadingViewContainer.startAnimation(exitAnim);
     }
 
     protected void initLayout() {
