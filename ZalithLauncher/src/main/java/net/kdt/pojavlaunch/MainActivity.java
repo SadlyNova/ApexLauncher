@@ -140,8 +140,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         Window window = getWindow();
         
-        // 🌟 FIX 1: Pure surface layer base setup. Yahan hum strictly window standard par aapka 
-        // custom Apex launcher canvas resource lock kar rahe hain taaki background hamesha textured rahe.
+        // 🌟 FIX 1: Custom Apex Launcher graphic background ko directly primary Window component par set kiya hai[span_3](start_span)[span_3](end_span).
         window.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.apex_loading_bg));
 
         // Set the sustained performance mode for available APIs
@@ -155,7 +154,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         new ControlMenu(this, this, mControlSettingsBinding, controlLayout, false);
         mControlSettingsBinding.saveAndExport.setVisibility(View.GONE);
 
-        // Hide layout structures overlay interfaces early
+        // Controls button panels initialization visibility set to hidden[span_4](start_span)[span_4](end_span)
         binding.mainControlLayout.setVisibility(View.INVISIBLE);
         binding.mainControlLayout.setModifiable(false);
 
@@ -173,6 +172,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
     private void playSmoothTransition() {
         final View loadingViewContainer = binding.getRoot(); 
 
+        // Load custom layout transition configs from res/anim/ folder
         Animation exitAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.loading_exit);
         final Animation entryAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.dashboard_entry);
 
@@ -203,12 +203,13 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         mGameMenuWrapper = new GameMenuViewWrapper(this, v -> onClickedMenu(), true);
         touchCharInput = binding.mainTouchCharInput;
 
-        // 🌟 FIX 2: Hum native BackgroundManager controller layers ko bypass kar rahe hain[span_1](start_span)[span_1](end_span).
-        // backgroundView ko transparent karke chhod denge aur is par koi image resource forcefully bind nahi karenge[span_2](start_span)[span_2](end_span).
-        // Is se OpenGL rendering surface channels directly active rahenge aur Minecraft ka native RED splash loader matrix smoothly top par render ho jayega!
-        binding.backgroundView.setBackgroundColor(Color.TRANSPARENT);
+        // 🌟 FIX 2: backgroundView par transparent force karne ki jagah launcher ke internal 
+        // asset configurations system ko strictly baseline map de rahe hain. Isse window container 
+        // parameters active rahenge aur native RED loading engine screen aapke lagaye hue 
+        // Apex custom background texture ke exact upar layered render ho payegi[span_5](start_span)[span_5](end_span)!
+        BackgroundManager.setBackgroundImage(this, BackgroundType.IN_GAME, binding.backgroundView, null);
         
-        // Refresh spatial drawing cache buffers sequentially
+        // Dynamic surface structure refresh loop triggers smoothly[span_6](start_span)[span_6](end_span)
         if (binding.mainGameRenderView != null) {
             binding.mainGameRenderView.setAlpha(1.0f);
             binding.mainGameRenderView.invalidate();
@@ -572,7 +573,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         public MenuSettingsInitListener(ViewGameMenuBinding binding) {
             this.binding = binding;
             this.binding.hotbarWidth.setMax(currentDisplayMetrics.widthPixels / 2);
-            this.binding.hotbarHeight.setMax(currentDisplayMetrics.heightPixels / 2);
+            this.binding.hotbarHeight.setMax(currentDisplayMetrics.heightMetrics / 2);
 
             MenuUtils.initSeekBarValue(this.binding.resolutionScaler, AllSettings.getResolutionRatio().getValue(), this.binding.resolutionScalerValue, "%");
             binding.resolutionScalerPreview.setText(VideoSettingsFragment.getResolutionRatioPreview(getResources(), AllSettings.getResolutionRatio().getValue()));
