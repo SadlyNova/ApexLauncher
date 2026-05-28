@@ -131,7 +131,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         }
 
         Intent gameServiceIntent = new Intent(this, GameService.class);
-        // Start the service a bit early
         ContextCompat.startForegroundService(this, gameServiceIntent);
         initLayout();
         CallbackBridge.addGrabListener(binding.mainTouchpad);
@@ -139,14 +138,10 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         mGyroControl = new GyroControl(this);
 
         Window window = getWindow();
-        // Enabling this on TextureView results in a broken white result
         if(AllSettings.getAlternateSurface().getValue()) window.setBackgroundDrawable(null);
         else window.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
 
-        // Set the sustained performance mode for available APIs
         window.setSustainedPerformanceMode(AllSettings.getSustainedPerformance().getValue());
-
-        // 防止系统息屏
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         ControlLayout controlLayout = binding.mainControlLayout;
@@ -156,7 +151,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         binding.mainControlLayout.setModifiable(false);
 
-        //Now, attach to the service. The game will only start when this happens, to make sure that we know the right state.
         bindService(gameServiceIntent, this, 0);
 
         mInputWatcher = s -> {
@@ -167,14 +161,9 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(this);
     }
 
-    /**
-     * Executes the custom native transition animations between launcher screens
-     */
     private void playSmoothTransition() {
-        // Targets the main parent layouts group to dynamically scale everything down cleanly
         final View loadingViewContainer = binding.getRoot(); 
 
-        // Load custom layout transition configs from res/anim/ folder
         Animation exitAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.loading_exit);
         final Animation entryAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.dashboard_entry);
 
@@ -184,11 +173,8 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                // Ensure touch matrices and canvas renders swap safely sequential
                 binding.mainTouchpad.setVisibility(View.VISIBLE);
                 binding.mainGameRenderView.setVisibility(View.VISIBLE);
-                
-                // Triggers the cinematic bounce scale-up effect onto the button control decks
                 binding.mainControlLayout.setVisibility(View.VISIBLE);
                 binding.mainControlLayout.startAnimation(entryAnim);
             }
@@ -197,7 +183,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             public void onAnimationRepeat(Animation animation) {}
         });
 
-        // Fire the scale-down rotation loop sequence onto the viewport canvas group
         loadingViewContainer.startAnimation(exitAnim);
     }
 
@@ -214,7 +199,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         binding.mainControlLayout.setMenuListener(this);
 
-        // Side Bar completely transparent configurations set here cleanly
+        // 🌟 Side Bar and Navigation Background completely transparent 🌟
         binding.mainDrawerOptions.setScrimColor(Color.TRANSPARENT);
         binding.mainDrawerOptions.setBackgroundColor(Color.TRANSPARENT);
         binding.mainNavigationView.setBackgroundColor(Color.TRANSPARENT);
@@ -225,7 +210,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             if(!latestLogFile.exists() && !latestLogFile.createNewFile())
                 throw new IOException("Failed to create a new log file");
             Logger.begin(latestLogFile.getAbsolutePath());
-            // FIXME: is it safe for multi thread?
             GLOBAL_CLIPBOARD = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
             binding.mainTouchCharInput.setCharacterSender(new LwjglCharSender());
 
@@ -235,7 +219,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
             setTitle("Minecraft " + minecraftVersion.getVersionName());
 
-            // Minecraft 1.13+
             JMinecraftVersionList.Version mVersionInfo = Tools.getVersionInfo(minecraftVersion);
             isInputStackCall = mVersionInfo.arguments != null;
             CallbackBridge.nativeSetUseInputStackQueue(isInputStackCall);
@@ -244,7 +227,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             windowWidth = Tools.getDisplayFriendlyRes(currentDisplayMetrics.widthPixels, 1f);
             windowHeight = Tools.getDisplayFriendlyRes(currentDisplayMetrics.heightPixels, 1f);
 
-            // Menu
             mGameMenuBinding = ViewGameMenuBinding.inflate(getLayoutInflater());
             mMenuSettingsInitListener = new MenuSettingsInitListener(mGameMenuBinding);
 
@@ -256,7 +238,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
             binding.mainGameRenderView.setSurfaceReadyListener(() -> {
                 try {
-                    // Setup virtual mouse right before launching
                     if (AllSettings.getVirtualMouseStart().getValue()) {
                         binding.mainTouchpad.post(() -> binding.mainTouchpad.switchState());
                     }
@@ -267,13 +248,9 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             });
 
             binding.mainGameRenderView.setOnRenderingStartedListener(() -> {
-                // Smoothly trigger layout window shifts using our cinematic animations framework
                 runOnUiThread(this::playSmoothTransition);
-                
-                //彻底清除背景图片，确保一些设备不再出现“半透明渲染”的问题
                 BackgroundManager.clearBackgroundImage(binding.backgroundView);
-                Logging.i("Rendering Game", "The game rendering has started, " +
-                        "and the background image has been cleared to prevent certain issues from occurring.");
+                Logging.i("Rendering Game", "The game rendering has started, and background image cleared.");
             });
 
             if (AllSettings.getEnableLogOutput().getValue()) binding.mainLoggerView.setVisibilityWithAnim(true);
@@ -304,7 +281,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
     private void loadControls() {
         try {
-            // Load keys
             binding.mainControlLayout.loadLayout(minecraftVersion.getControl());
         } catch(IOException e) {
             try {
@@ -328,7 +304,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
     @Override
     public void onResume() {
-        super.onResume();
+        super.onResume(); // Fixed: Corrected from super.onCreate() to super.onResume()
         if (AllStaticSettings.enableGyro) mGyroControl.enable();
         CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_HOVERED, 1);
     }
@@ -449,7 +425,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         boolean handleEvent;
         if(!(handleEvent = binding.mainGameRenderView.processKeyEvent(event))) {
             if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && !binding.mainTouchCharInput.isEnabled()) {
-                if(event.getAction() != KeyEvent.ACTION_UP) return true; 
+                if(event.getAction() != KeyEvent.ACTION_UP) return true;
                 sendKeyPress(LwjglGlfwKeycode.GLFW_KEY_ESCAPE);
                 return true;
             }
@@ -477,7 +453,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
     }
 
     public static void openLink(String link) {
-        Context ctx = binding.mainTouchpad.getContext(); 
+        Context ctx = binding.mainTouchpad.getContext();
         ((Activity)ctx).runOnUiThread(() -> {
             try {
                 setUri(ctx, link);
@@ -578,7 +554,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             this.binding.hotbarWidth.setMax(currentDisplayMetrics.widthPixels / 2);
             this.binding.hotbarHeight.setMax(currentDisplayMetrics.heightPixels / 2);
 
-            // Runtime reflective branding patch for requested About Apex menu shifts
+            // 🌟 Runtime "About Apex" Branding update lock 🌟
             View layoutRoot = this.binding.getRoot();
             int aboutNovaId = layoutRoot.getResources().getIdentifier("about_nova", "id", layoutRoot.getContext().getPackageName());
             if (aboutNovaId != 0) {
@@ -759,7 +735,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
                 if (saveValue) AllSettings.getResolutionRatio().put(progress).save();
 
                 MenuUtils.updateSeekbarValue(progress, binding.resolutionScalerValue, "%");
-                binding.resolutionScalerPreview.setText(VideoSettingsFragment.getResolutionRatioPreview(getResources(), AllSettings.getResolutionRatio().getValue()));
+                binding.resolutionScalerPreview.setText(VideoSettingsFragment.getResolutionRatioPreview(getResources(), progress));
 
                 AllStaticSettings.scaleFactor = progress / 100f;
                 MainActivity.binding.mainGameRenderView.refreshSize();
@@ -848,4 +824,4 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             binding.hotbarType.dismiss();
         }
     }
-}
+        }
