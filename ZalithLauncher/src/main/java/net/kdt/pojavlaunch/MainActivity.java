@@ -303,11 +303,11 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
     }
 
     @Override
-    public void onResume() {
-        super.onResume(); // Fixed: Corrected from super.onCreate() to super.onResume()
-        if (AllStaticSettings.enableGyro) mGyroControl.enable();
-        CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_HOVERED, 1);
-    }
+public void onResume() {
+    super.onResume(); // ✅ Ise 'super.onResume();' kar do!
+    if (AllStaticSettings.enableGyro) mGyroControl.enable();
+    CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_HOVERED, 1);
+}
 
     @Override
     protected void onPause() {
