@@ -140,7 +140,8 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         Window window = getWindow();
         
-        // 🌟 FIX: Custom Apex Launcher loading drawable graphic window container par bind kar diya gaya hai[span_3](start_span)[span_3](end_span)
+        // 🌟 FIX: Custom Apex Launcher graphic background ko directly primary Window component par set kiya hai.
+        // Isse black screen block ho jayegi aur native launcher content controls layers ko render space smoothly mil sakega.
         window.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.apex_loading_bg));
 
         // Set the sustained performance mode for available APIs
@@ -154,7 +155,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         new ControlMenu(this, this, mControlSettingsBinding, controlLayout, false);
         mControlSettingsBinding.saveAndExport.setVisibility(View.GONE);
 
-        // 🌟 FIX: Buttons control overlays ko game processing ready hone tak hide kiya gaya hai[span_4](start_span)[span_4](end_span)
+        // 🌟 FIX: Control buttons panel sheet initial state par invisible rahegi taaki background engine refresh glitch na kare.
         binding.mainControlLayout.setVisibility(View.INVISIBLE);
         binding.mainControlLayout.setModifiable(false);
 
@@ -170,10 +171,10 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
      * Executes the custom native transition animations between launcher screens
      */
     private void playSmoothTransition() {
-        // Targets the main parent layouts group to dynamically scale everything down cleanly[span_5](start_span)[span_5](end_span)
+        // Targets the main parent layouts group to dynamically scale everything down cleanly
         final View loadingViewContainer = binding.getRoot(); 
 
-        // Load custom layout transition configs from res/anim/ folder[span_6](start_span)[span_6](end_span)
+        // Load custom layout transition configs from res/anim/ folder
         Animation exitAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.loading_exit);
         final Animation entryAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.dashboard_entry);
 
@@ -183,11 +184,11 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                // Ensure touch matrices and canvas renders swap safely sequential[span_7](start_span)[span_7](end_span)
+                // Ensure touch matrices and canvas renders swap safely sequential
                 binding.mainTouchpad.setVisibility(View.VISIBLE);
                 binding.mainGameRenderView.setVisibility(View.VISIBLE);
                 
-                // Triggers the cinematic bounce scale-up effect onto the button control decks[span_8](start_span)[span_8](end_span)
+                // Triggers the cinematic bounce scale-up effect onto the button control decks
                 binding.mainControlLayout.setVisibility(View.VISIBLE);
                 binding.mainControlLayout.startAnimation(entryAnim);
             }
@@ -196,7 +197,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             public void onAnimationRepeat(Animation animation) {}
         });
 
-        // Fire the scale-down rotation loop sequence onto the viewport canvas group[span_9](start_span)[span_9](end_span)
+        // Fire the scale-down rotation loop sequence onto the viewport canvas group
         loadingViewContainer.startAnimation(exitAnim);
     }
 
@@ -207,9 +208,12 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         mGameMenuWrapper = new GameMenuViewWrapper(this, v -> onClickedMenu(), true);
         touchCharInput = binding.mainTouchCharInput;
 
-        // 🌟 FIX: direct image resource override hataya gaya hai taaki internal theme systems engine 
-        // transparent surface context read kar sake aur native red rendering layer flawlessly background texture ke upar layer ho sake!
-        BackgroundManager.setBackgroundImage(this, BackgroundType.IN_GAME, binding.backgroundView, null);
+        // 🌟 FIX: backgroundView par direct resource force karne ke bajay hum is structural wrapper view layer ko completely
+        // transparent (null) background denge aur iski visibility handle karenge. Isse transparent rendering surface pipeline block nahi hogi, 
+        // aur native engine ka RED color loading text progress overlay sidhe humare base custom background ke upar layered ho kar visible ho jayega!
+        binding.backgroundView.setBackground(null);
+        binding.backgroundView.setImageResource(android.R.color.transparent);
+        
         binding.backgroundView.post(() -> {
             if (binding.mainGameRenderView != null) {
                 binding.mainGameRenderView.invalidate();
@@ -862,4 +866,4 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             binding.hotbarType.dismiss();
         }
     }
-}
+        }
