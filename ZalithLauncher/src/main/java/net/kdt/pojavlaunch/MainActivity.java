@@ -168,10 +168,10 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
      * Executes the custom native transition animations between launcher screens
      */
     private void playSmoothTransition() {
-        // Targets the root binding elements to safely scale the parent layout down
+        // Targets the main parent layouts group to dynamically scale everything down cleanly
         final View loadingViewContainer = binding.getRoot(); 
 
-        // Load custom XML animations compiled from the res/anim folder
+        // Load custom layout transition configs from res/anim/ folder
         Animation exitAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.loading_exit);
         final Animation entryAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.dashboard_entry);
 
@@ -181,11 +181,11 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                // Instantly swap view matrix scales for the main touch panels smoothly
+                // Ensure touch matrices and canvas renders swap safely sequential
                 binding.mainTouchpad.setVisibility(View.VISIBLE);
                 binding.mainGameRenderView.setVisibility(View.VISIBLE);
                 
-                // Triggers the fluid custom bounce pop animation on the control deck view container
+                // Triggers the cinematic bounce scale-up effect onto the button control decks
                 binding.mainControlLayout.setVisibility(View.VISIBLE);
                 binding.mainControlLayout.startAnimation(entryAnim);
             }
@@ -194,7 +194,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             public void onAnimationRepeat(Animation animation) {}
         });
 
-        // Fire the sequence on the loading container view group canvas
+        // Fire the scale-down rotation loop sequence onto the viewport canvas group
         loadingViewContainer.startAnimation(exitAnim);
     }
 
