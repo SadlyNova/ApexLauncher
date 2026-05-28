@@ -140,7 +140,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         Window window = getWindow();
         
-        // 🌟 FIX 1: Secure spatial backdrop surface to eliminate default empty screen configurations completely
+        // 🌟 FIX 1: Pure surface layout window background par custom wallpaper inject kiya gaya hai[span_4](start_span)[span_4](end_span)
         window.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.apex_loading_bg));
 
         // Set the sustained performance mode for available APIs
@@ -154,7 +154,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         new ControlMenu(this, this, mControlSettingsBinding, controlLayout, false);
         mControlSettingsBinding.saveAndExport.setVisibility(View.GONE);
 
-        // Hide overlay controls during startup context shifts
+        // Buttons controls overlay initialization state invisible[span_5](start_span)[span_5](end_span)
         binding.mainControlLayout.setVisibility(View.INVISIBLE);
         binding.mainControlLayout.setModifiable(false);
 
@@ -172,7 +172,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
     private void playSmoothTransition() {
         final View loadingViewContainer = binding.getRoot(); 
 
-        // Load custom layout transition configs from res/anim/ folder
+        // Load custom layout transition configs from res/anim/ folder[span_6](start_span)[span_6](end_span)
         Animation exitAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.loading_exit);
         final Animation entryAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.dashboard_entry);
 
@@ -203,17 +203,16 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         mGameMenuWrapper = new GameMenuViewWrapper(this, v -> onClickedMenu(), true);
         touchCharInput = binding.mainTouchCharInput;
 
-        // 🌟 FIX 2: Instead of raw resource overrides, we feed our custom template directly into the native 
-        // BackgroundManager rendering stack. This satisfies internal verification structures, completely preventing 
-        // early clearing bugs, and lets the Mojang Red Splash screen load smoothly right on top of our image asset!
-        BackgroundManager.setBackgroundImage(this, BackgroundType.IN_GAME, binding.backgroundView, null);
-        binding.backgroundView.setImageResource(R.drawable.apex_loading_bg);
+        // 🌟 FIX 2: backgroundView par source force karne ki bajay background view hierarchy ko completely 
+        // layered transparent kiya hai taaki internally OpenGL hardware accelerator active rahe aur native RED loading bar blocks visible ho ske[span_7](start_span)[span_7](end_span)!
+        binding.backgroundView.setBackgroundColor(Color.TRANSPARENT);
+        binding.backgroundView.setImageResource(android.R.color.transparent);
         
-        binding.backgroundView.post(() -> {
-            if (binding.mainGameRenderView != null) {
-                binding.mainGameRenderView.invalidate();
-            }
-        });
+        // Render views architecture pipeline matrix refresh logic sync loop
+        if (binding.mainGameRenderView != null) {
+            binding.mainGameRenderView.setAlpha(1.0f);
+            binding.mainGameRenderView.invalidate();
+        }
 
         keyboardDialog = new KeyboardDialog(this).setShowSpecialButtons(false);
 
@@ -833,4 +832,4 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             binding.hotbarType.dismiss();
         }
     }
-             }
+}
