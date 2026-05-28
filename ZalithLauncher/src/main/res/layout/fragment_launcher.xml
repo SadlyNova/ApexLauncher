@@ -75,7 +75,7 @@
         android:layout_width="@dimen/_240sdp"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#CC2C1414"
+        android:background="#00000000"
         android:paddingHorizontal="@dimen/_16sdp"
         android:paddingTop="@dimen/_50sdp"
         android:paddingBottom="@dimen/_16sdp"
@@ -103,13 +103,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="#251214"
+                android:background="#00000000"
                 android:padding="@dimen/_10sdp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="About Nova"
+                    android:text="About Apex"
                     android:textColor="#FF5252"
                     android:textSize="@dimen/_12ssp"
                     android:textStyle="bold"
