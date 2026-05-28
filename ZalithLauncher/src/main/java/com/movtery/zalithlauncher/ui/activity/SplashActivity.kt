@@ -7,6 +7,8 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.Window
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.movtery.zalithlauncher.InfoCenter
@@ -53,7 +55,7 @@ class SplashActivity : BaseActivity() {
         setContentView(binding.root)
 
         binding.titleText.text = InfoDistributor.APP_NAME
-        binding.recyclerView.apply {
+         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(this@SplashActivity)
             adapter = installableAdapter
         }
@@ -70,7 +72,7 @@ class SplashActivity : BaseActivity() {
 
         if (!Tools.checkStorageRoot()) {
             startActivity(Intent(this, MissingStorageActivity::class.java))
-            finish()
+             finish()
             return
         }
 
@@ -80,14 +82,14 @@ class SplashActivity : BaseActivity() {
             TipDialog.Builder(this)
                 .setTitle(R.string.generic_warning)
                 .setMessage(InfoCenter.replaceName(this, R.string.permissions_write_external_storage))
-                .setWarning()
+                 .setWarning()
                 .setConfirmClickListener { requestStoragePermissions() }
                 .setCancelClickListener { checkEnd() } //用户取消，那就跟随用户的意愿
                 .showDialog()
         } else {
             checkEnd()
         }
-    }
+     }
 
     private fun requestStoragePermissions() {
         ActivityCompat.requestPermissions(
@@ -101,7 +103,7 @@ class SplashActivity : BaseActivity() {
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray
-    ) {
+     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == STORAGE_PERMISSION_REQUEST_CODE) {
             //无论用户是否授予了权限，都会完成检查，因为启动器并不强制要求权限
@@ -112,31 +114,31 @@ class SplashActivity : BaseActivity() {
 
     private fun initItems() {
         Components.entries.forEach {
-            val unpackComponentsTask = UnpackComponentsTask(this, it)
+             val unpackComponentsTask = UnpackComponentsTask(this, it)
             if (!unpackComponentsTask.isCheckFailed()) {
                 items.add(
                     InstallableItem(
                         it.displayName,
-                        it.summary?.let { it1 -> getString(it1) },
+                         it.summary?.let { it1 -> getString(it1) },
                         unpackComponentsTask
                     )
                 )
             }
         }
         Jre.entries.forEach {
-            val unpackJreTask = UnpackJreTask(this, it)
+             val unpackJreTask = UnpackJreTask(this, it)
             if (!unpackJreTask.isCheckFailed()) {
                 items.add(
                     InstallableItem(
                         it.jreName,
-                        getString(it.summary),
+                         getString(it.summary),
                         unpackJreTask
                     )
                 )
             }
         }
         items.sort()
-        installableAdapter = InstallableAdapter(items) {
+         installableAdapter = InstallableAdapter(items) {
             toMain()
         }
     }
@@ -151,8 +153,27 @@ class SplashActivity : BaseActivity() {
     }
 
     private fun toMain() {
-        startActivity(Intent(this, LauncherActivity::class.java))
-        finish()
+        // 🎬 Load the smooth setup scale-down transition animation from our res/anim folder
+        val exitAnim = AnimationUtils.loadAnimation(this, R.anim.loading_exit)
+        
+        exitAnim.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) {}
+            
+            override fun onAnimationEnd(animation: Animation?) {
+                // When setup scale-down finishes, smoothly launch into the main dashboard activity
+                val intent = Intent(this@SplashActivity, LauncherActivity::class.java)
+                startActivity(intent)
+                
+                // Triggers a native system Activity override transition to bounce the new window up
+                overridePendingTransition(R.anim.dashboard_entry, 0)
+                finish()
+            }
+            
+            override fun onAnimationRepeat(animation: Animation?) {}
+        })
+
+        // Run the cinematic animation sequence on the primary layout view root element
+        binding.root.startAnimation(exitAnim)
     }
 
     companion object {
