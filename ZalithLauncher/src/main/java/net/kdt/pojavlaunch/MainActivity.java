@@ -19,8 +19,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -161,20 +159,14 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         //Now, attach to the service. The game will only start when this happens, to make sure that we know the right state.
         bindService(gameServiceIntent, this, 0);
 
-        // 🌟 FIX 1: Explicitly defining standard interface overrides to fix the 'does not override abstract method' TextWatcher build crash.
+        //初始化输入监听器，当输入法遮挡了游戏画面时，将设置这个监听器
         mInputWatcher = new SimpleTextWatcher() {
             @Override
-            public void afterTextChanged(Editable s) {
-                if (binding != null && binding.inputPreview != null && s != null) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (binding != null && binding.inputPreview != null) {
                     binding.inputPreview.setText(s.toString().trim());
                 }
             }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
         };
         getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(this);
     }
@@ -226,7 +218,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         binding.mainControlLayout.setMenuListener(this);
 
-        // 🌟 FIX 2: Side Bar transparent background layout config locks seamlessly
+        // 🌟 FIX 1: Transparent look applied directly onto drawer layout layers
         binding.mainDrawerOptions.setScrimColor(Color.TRANSPARENT);
         binding.mainDrawerOptions.setBackgroundColor(Color.TRANSPARENT);
         binding.mainNavigationView.setBackgroundColor(Color.TRANSPARENT);
@@ -560,6 +552,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         isInEditor = false;
     }
 
+    // 🌟 FIX 2: Fixed abstract interface contract signature to prevent dynamic launcher crash logs
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         binding.mainGameRenderView.start(GameService.isActive(), binding.mainTouchpad);
@@ -567,8 +560,8 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
     }
 
     @Override
-    public void onServiceConnected(ComponentName name) {
-
+    public void onServiceDisconnected(ComponentName name) {
+        // Keeps pipeline hook safe and unblocked
     }
 
     /*
@@ -600,10 +593,10 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             //初始化状态
             this.binding.hotbarWidth.setMax(currentDisplayMetrics.widthPixels / 2);
             
-            // 🌟 FIX 3: Replaced the mistyped 'heightMetrics' with the standard Android field name 'heightPixels' to resolve the variable search symbol failure.
+            // 🌟 FIX 3: Swapped variables context parameters back to standard 'heightPixels' safely
             this.binding.hotbarHeight.setMax(currentDisplayMetrics.heightPixels / 2);
 
-            // 🌟 FIX 4: Runtime reflective layout configuration strings to cleanly shift labels without variable issues.
+            // 🌟 FIX 4: Runtime reflective layout updates to replace 'About Nova' to 'About Apex' cleanly
             View layoutRoot = this.binding.getRoot();
             int aboutNovaId = layoutRoot.getResources().getIdentifier("about_nova", "id", layoutRoot.getContext().getPackageName());
             if (aboutNovaId != 0) {
@@ -697,8 +690,53 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             this.binding.hotbarWidthAdd.setOnClickListener(this);
         }
 
-        @Override
-        public void onClick(View v) {
+        private void dialogSendCustomKey() {
+            keyboardDialog.setOnMultiKeycodeSelectListener(selectedKeycodes -> {
+                //模拟同时按下，同时松开按键
+                Task.runTask(() -> {
+                    selectedKeycodes.forEach(keycode -> sendKeyPress(keycode, true));
+                    return null;
+                }).ended(a -> {
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException ignore) {
+                    }
+                    selectedKeycodes.forEach(keycode -> sendKeyPress(keycode, false));
+                }).execute();
+            }).show();
+        }
+
+        private void sendKeyPress(int keycode, boolean isDown) {
+            System.out.println("Test keycode: " + keycode);
+            int lwjglKeycode = EfficientAndroidLWJGLKeycode.getValueByIndex(keycode);
+            System.out.println("Test lwjglKeycode: " + lwjglKeycode);
+            if (keycode >= LwjglGlfwKeycode.GLFW_KEY_UNKNOWN) {
+                CallbackBridge.sendKeyPress(lwjglKeycode, CallbackBridge.getCurrentMods(), isDown);
+                CallbackBridge.setModifiers(lwjglKeycode, isDown);
+            }
+        }
+
+        private void replacementCustomControls() {
+            SelectControlsDialog dialog = new SelectControlsDialog(MainActivity.this, file -> {
+                try {
+                    MainActivity.binding.mainControlLayout.loadLayout(file.getAbsolutePath());
+                    //刷新：是否隐藏菜单按钮
+                    mGameMenuWrapper.setVisibility(!MainActivity.binding.mainControlLayout.hasMenuButton());
+                } catch (IOException ignored) {}
+            });
+            dialog.setTitleText(R.string.replacement_customcontrol);
+            dialog.show();
+        }
+
+        private void openCustomControls() {
+            MainActivity.binding.mainControlLayout.setModifiable(true);
+            MainActivity.binding.mainNavigationView.removeAllViews();
+            MainActivity.binding.mainNavigationView.addView(mControlSettingsBinding.getRoot());
+            mGameMenuWrapper.setVisibility(true);
+            isInEditor = true;
+        }
+
+        @Override public void onClick(View v) {
             if (v == binding.forceClose) ZHTools.dialogForceClose(MainActivity.this);
             else if (v == binding.logOutput) MainActivity.binding.mainLoggerView.toggleViewWithAnim();
             else if (v == binding.sendCustomKey) dialogSendCustomKey();
