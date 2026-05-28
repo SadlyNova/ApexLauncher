@@ -54,29 +54,29 @@ import com.movtery.zalithlauncher.feature.log.Logging;
 import com.movtery.zalithlauncher.feature.version.Version;
 import com.movtery.zalithlauncher.feature.version.VersionInfo;
 import com.movtery.zalithlauncher.launch.LaunchGame;
-import net.kdt.pojavlaunch.listener.SimpleTextWatcher;
-import net.kdt.pojavlaunch.plugins.driver.DriverPluginManager;
-import net.kdt.pojavlaunch.renderer.Renderers;
-import net.kdt.pojavlaunch.setting.AllSettings;
-import net.kdt.pojavlaunch.setting.AllStaticSettings;
-import net.kdt.pojavlaunch.task.Task;
-import net.kdt.pojavlaunch.task.TaskExecutors;
-import net.kdt.pojavlaunch.ui.activity.BaseActivity;
-import net.kdt.pojavlaunch.ui.dialog.KeyboardDialog;
-import net.kdt.pojavlaunch.ui.dialog.SelectControlsDialog;
-import net.kdt.pojavlaunch.ui.dialog.SelectMouseDialog;
-import net.kdt.pojavlaunch.ui.fragment.settings.VideoSettingsFragment;
-import net.kdt.pojavlaunch.ui.subassembly.adapter.ObjectSpinnerAdapter;
-import net.kdt.pojavlaunch.ui.subassembly.hotbar.HotbarType;
-import net.kdt.pojavlaunch.ui.subassembly.hotbar.HotbarUtils;
-import net.kdt.pojavlaunch.ui.subassembly.menu.ControlMenu;
-import net.kdt.pojavlaunch.ui.subassembly.menu.MenuUtils;
-import net.kdt.pojavlaunch.ui.subassembly.view.GameMenuViewWrapper;
-import net.kdt.pojavlaunch.utils.path.PathManager;
-import net.kdt.pojavlaunch.utils.ZHTools;
-import net.kdt.pojavlaunch.utils.anim.AnimUtils;
-import net.kdt.pojavlaunch.utils.file.FileTools;
-import net.kdt.pojavlaunch.utils.stringutils.StringUtils;
+import com.movtery.zalithlauncher.listener.SimpleTextWatcher;
+import com.movtery.zalithlauncher.plugins.driver.DriverPluginManager;
+import com.movtery.zalithlauncher.renderer.Renderers;
+import com.movtery.zalithlauncher.setting.AllSettings;
+import com.movtery.zalithlauncher.setting.AllStaticSettings;
+import com.movtery.zalithlauncher.task.Task;
+import com.movtery.zalithlauncher.task.TaskExecutors;
+import com.movtery.zalithlauncher.ui.activity.BaseActivity;
+import com.movtery.zalithlauncher.ui.dialog.KeyboardDialog;
+import com.movtery.zalithlauncher.ui.dialog.SelectControlsDialog;
+import com.movtery.zalithlauncher.ui.dialog.SelectMouseDialog;
+import com.movtery.zalithlauncher.ui.fragment.settings.VideoSettingsFragment;
+import com.movtery.zalithlauncher.ui.subassembly.adapter.ObjectSpinnerAdapter;
+import com.movtery.zalithlauncher.ui.subassembly.hotbar.HotbarType;
+import com.movtery.zalithlauncher.ui.subassembly.hotbar.HotbarUtils;
+import com.movtery.zalithlauncher.ui.subassembly.menu.ControlMenu;
+import com.movtery.zalithlauncher.ui.subassembly.menu.MenuUtils;
+import com.movtery.zalithlauncher.ui.subassembly.view.GameMenuViewWrapper;
+import com.movtery.zalithlauncher.utils.path.PathManager;
+import com.movtery.zalithlauncher.utils.ZHTools;
+import com.movtery.zalithlauncher.utils.anim.AnimUtils;
+import com.movtery.zalithlauncher.utils.file.FileTools;
+import com.movtery.zalithlauncher.utils.stringutils.StringUtils;
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener;
 
 import net.kdt.pojavlaunch.customcontrols.ControlButtonMenuListener;
@@ -131,6 +131,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         }
 
         Intent gameServiceIntent = new Intent(this, GameService.class);
+        // Start the service a bit early
         ContextCompat.startForegroundService(this, gameServiceIntent);
         initLayout();
         CallbackBridge.addGrabListener(binding.mainTouchpad);
@@ -138,10 +139,14 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         mGyroControl = new GyroControl(this);
 
         Window window = getWindow();
+        // Enabling this on TextureView results in a broken white result
         if(AllSettings.getAlternateSurface().getValue()) window.setBackgroundDrawable(null);
         else window.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
 
+        // Set the sustained performance mode for available APIs
         window.setSustainedPerformanceMode(AllSettings.getSustainedPerformance().getValue());
+
+        // 防止系统息屏
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         ControlLayout controlLayout = binding.mainControlLayout;
@@ -150,15 +155,28 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         mControlSettingsBinding.saveAndExport.setVisibility(View.GONE);
 
         binding.mainControlLayout.setModifiable(false);
+
+        //Now, attach to the service. The game will only start when this happens, to make sure that we know the right state.
         bindService(gameServiceIntent, this, 0);
 
-        mInputWatcher = s -> binding.inputPreview.setText(s.toString().trim());
+        //初始化输入监听器，当输入法遮挡了游戏画面时，将设置这个监听器
+        mInputWatcher = new SimpleTextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                binding.inputPreview.setText(s.toString().trim());
+            }
+        };
         getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(this);
     }
 
+    /**
+     * Executes the custom native transition animations between launcher screens
+     */
     private void playSmoothTransition() {
+        // Targets the main parent layouts group to dynamically scale everything down cleanly
         final View loadingViewContainer = binding.getRoot(); 
 
+        // Load custom layout transition configs from res/anim/ folder
         Animation exitAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.loading_exit);
         final Animation entryAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.dashboard_entry);
 
@@ -168,8 +186,11 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
             @Override
             public void onAnimationEnd(Animation animation) {
+                // Ensure touch matrices and canvas renders swap safely sequential
                 binding.mainTouchpad.setVisibility(View.VISIBLE);
                 binding.mainGameRenderView.setVisibility(View.VISIBLE);
+                
+                // Triggers the cinematic bounce scale-up effect onto the button control decks
                 binding.mainControlLayout.setVisibility(View.VISIBLE);
                 binding.mainControlLayout.startAnimation(entryAnim);
             }
@@ -178,6 +199,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             public void onAnimationRepeat(Animation animation) {}
         });
 
+        // Fire the scale-down rotation loop sequence onto the viewport canvas group
         loadingViewContainer.startAnimation(exitAnim);
     }
 
@@ -191,9 +213,10 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         BackgroundManager.setBackgroundImage(this, BackgroundType.IN_GAME, binding.backgroundView, null);
 
         keyboardDialog = new KeyboardDialog(this).setShowSpecialButtons(false);
+
         binding.mainControlLayout.setMenuListener(this);
 
-        // 🌟 FIX: Side bar panel aur context container dono ko poori tarah transparent kiya gaya hai
+        // 🌟 FIX 1: Side Bar drawer and panel views completely transparent configuration
         binding.mainDrawerOptions.setScrimColor(Color.TRANSPARENT);
         binding.mainDrawerOptions.setBackgroundColor(Color.TRANSPARENT);
         binding.mainNavigationView.setBackgroundColor(Color.TRANSPARENT);
@@ -204,6 +227,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             if(!latestLogFile.exists() && !latestLogFile.createNewFile())
                 throw new IOException("Failed to create a new log file");
             Logger.begin(latestLogFile.getAbsolutePath());
+            // FIXME: is it safe for multi thread?
             GLOBAL_CLIPBOARD = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
             binding.mainTouchCharInput.setCharacterSender(new LwjglCharSender());
 
@@ -213,6 +237,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
             setTitle("Minecraft " + minecraftVersion.getVersionName());
 
+            // Minecraft 1.13+
             JMinecraftVersionList.Version mVersionInfo = Tools.getVersionInfo(minecraftVersion);
             isInputStackCall = mVersionInfo.arguments != null;
             CallbackBridge.nativeSetUseInputStackQueue(isInputStackCall);
@@ -221,6 +246,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             windowWidth = Tools.getDisplayFriendlyRes(currentDisplayMetrics.widthPixels, 1f);
             windowHeight = Tools.getDisplayFriendlyRes(currentDisplayMetrics.heightPixels, 1f);
 
+            // Menu
             mGameMenuBinding = ViewGameMenuBinding.inflate(getLayoutInflater());
             mMenuSettingsInitListener = new MenuSettingsInitListener(mGameMenuBinding);
 
@@ -232,6 +258,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
             binding.mainGameRenderView.setSurfaceReadyListener(() -> {
                 try {
+                    // Setup virtual mouse right before launching
                     if (AllSettings.getVirtualMouseStart().getValue()) {
                         binding.mainTouchpad.post(() -> binding.mainTouchpad.switchState());
                     }
@@ -242,17 +269,29 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             });
 
             binding.mainGameRenderView.setOnRenderingStartedListener(() -> {
+                // Smoothly trigger layout window shifts using our cinematic animations framework
                 runOnUiThread(this::playSmoothTransition);
+                
+                //彻底清除背景图片，确保一些设备不再出现“半透明渲染”的问题
                 BackgroundManager.clearBackgroundImage(binding.backgroundView);
-                Logging.i("Rendering Game", "The game rendering has started, and background clear executed.");
+                Logging.i("Rendering Game", "The game rendering has started, " +
+                        "and the background image has been cleared to prevent certain issues from occurring.");
             });
 
             if (AllSettings.getEnableLogOutput().getValue()) binding.mainLoggerView.setVisibilityWithAnim(true);
 
+            String mcInfo = "";
+            VersionInfo versionInfo = minecraftVersion.getVersionInfo();
+            if (versionInfo != null) {
+                mcInfo = versionInfo.getInfoString();
+            }
             String tipString = StringUtils.insertNewline(
                     binding.gameTip.getText(),
                     StringUtils.insertSpace(getString(R.string.game_tip_version), minecraftVersion.getVersionName())
             );
+            if (!mcInfo.isEmpty()) {
+                tipString = StringUtils.insertNewline(tipString, StringUtils.insertSpace(getString(R.string.game_tip_mc_info), mcInfo));
+            }
             binding.gameTip.setText(tipString);
             AnimUtils.setVisibilityAnim(binding.gameTip, 1000, true, 300, new AnimUtils.AnimationListener() {
                 @Override public void onStart() {}
@@ -267,6 +306,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
     private void loadControls() {
         try {
+            // Load keys
             binding.mainControlLayout.loadLayout(minecraftVersion.getControl());
         } catch(IOException e) {
             try {
@@ -282,22 +322,91 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         binding.mainControlLayout.toggleControlVisible();
     }
 
-    @Override public void onAttachedToWindow() { LauncherPreferences.computeNotchSize(this); loadControls(); }
-    @Override public void onResume() { super.onResume(); if (AllStaticSettings.enableGyro) mGyroControl.enable(); CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_HOVERED, 1); }
-    @Override protected void onPause() { mGyroControl.disable(); if (CallbackBridge.isGrabbing()){ sendKeyPress(LwjglGlfwKeycode.GLFW_KEY_ESCAPE); } CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_HOVERED, 0); super.onPause(); }
-    @Override protected void onStart() { super.onStart(); CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_VISIBLE, 1); }
-    @Override protected void onStop() { CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_VISIBLE, 0); super.onStop(); }
-    @Override protected void onDestroy() { super.onDestroy(); mMenuSettingsInitListener.closeSpinner(); CallbackBridge.removeGrabListener(binding.mainTouchpad); CallbackBridge.removeGrabListener(binding.mainGameRenderView); getWindow().getDecorView().getViewTreeObserver().removeOnGlobalLayoutListener(this); ContextExecutor.clearActivity(); }
-    @Override public void onConfigurationChanged(@NonNull Configuration newConfig) { super.onConfigurationChanged(newConfig); mGyroControl.updateOrientation(); Tools.updateWindowSize(this); binding.mainGameRenderView.refreshSize(); runOnUiThread(() -> binding.mainControlLayout.refreshControlButtonPositions()); }
-    @Override protected void onPostResume() { super.onPostResume(); TaskExecutors.getUIHandler().postDelayed(() -> binding.mainGameRenderView.refreshSize(), 500); }
-    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) { super.onActivityResult(requestCode, resultCode, data); if (requestCode == 1 && resultCode == Activity.RESULT_OK) { try { binding.mainControlLayout.loadLayout((String) null); } catch (IOException e) { Logging.e("LoadLayout", Tools.printToString(e)); } } }
-    @Override public boolean shouldIgnoreNotch() { return AllSettings.getIgnoreNotch().getValue(); }
+    @Override
+    public void onAttachedToWindow() {
+        LauncherPreferences.computeNotchSize(this);
+        loadControls();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (AllStaticSettings.enableGyro) mGyroControl.enable();
+        CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_HOVERED, 1);
+    }
+
+    @Override
+    protected void onPause() {
+        mGyroControl.disable();
+        if (CallbackBridge.isGrabbing()){
+            sendKeyPress(LwjglGlfwKeycode.GLFW_KEY_ESCAPE);
+        }
+        CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_HOVERED, 0);
+        super.onPause();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_VISIBLE, 1);
+    }
+
+    @Override
+    protected void onStop() {
+        CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_VISIBLE, 0);
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mMenuSettingsInitListener.closeSpinner();
+        CallbackBridge.removeGrabListener(binding.mainTouchpad);
+        CallbackBridge.removeGrabListener(binding.mainGameRenderView);
+        getWindow().getDecorView().getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        ContextExecutor.clearActivity();
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        mGyroControl.updateOrientation();
+        Tools.updateWindowSize(this);
+        binding.mainGameRenderView.refreshSize();
+        runOnUiThread(() -> binding.mainControlLayout.refreshControlButtonPositions());
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        TaskExecutors.getUIHandler().postDelayed(() -> binding.mainGameRenderView.refreshSize(), 500);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            try {
+                binding.mainControlLayout.loadLayout((String) null);
+            } catch (IOException e) {
+                Logging.e("LoadLayout", Tools.printToString(e));
+            }
+        }
+    }
+
+    @Override
+    public boolean shouldIgnoreNotch() {
+        return AllSettings.getIgnoreNotch().getValue();
+    }
 
     @Override
     public void onGlobalLayout() {
         Rect rect = new Rect();
         View decorView = getWindow().getDecorView();
         decorView.getWindowVisibleDisplayFrame(rect);
+
         int screenHeight = decorView.getHeight();
         if (screenHeight * 2 / 3 > rect.bottom) {
             if (!isKeyboardVisible) {
@@ -312,8 +421,24 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         }
     }
 
-    private void setInputPreview(boolean show) { mInputPreviewAnim.clearEntries(); mInputPreviewAnim.apply(new AnimPlayer.Entry(binding.inputPreviewLayout, show ? Animations.FadeIn : Animations.FadeOut)).setOnStart(() -> binding.inputPreviewLayout.setVisibility(View.VISIBLE)).setOnEnd(() -> binding.inputPreviewLayout.setVisibility(show ? View.VISIBLE : View.GONE)).start(); }
-    public static void toggleMouse(Context ctx) { if (CallbackBridge.isGrabbing()) return; if (binding != null) { Toast.makeText(ctx, binding.mainTouchpad.switchState() ? R.string.control_mouseon : R.string.control_mouseoff, Toast.LENGTH_SHORT).show(); } }
+    //使用一个输入预览框来展示用户输入的内容
+    private void setInputPreview(boolean show) {
+        mInputPreviewAnim.clearEntries();
+        mInputPreviewAnim.apply(new AnimPlayer.Entry(binding.inputPreviewLayout, show ? Animations.FadeIn : Animations.FadeOut))
+                .setOnStart(() -> binding.inputPreviewLayout.setVisibility(View.VISIBLE))
+                .setOnEnd(() -> binding.inputPreviewLayout.setVisibility(show ? View.VISIBLE : View.GONE))
+                .start();
+    }
+
+    public static void toggleMouse(Context ctx) {
+        if (CallbackBridge.isGrabbing()) return;
+
+        if (binding != null) {
+            Toast.makeText(ctx, binding.mainTouchpad.switchState()
+                            ? R.string.control_mouseon : R.string.control_mouseoff,
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -327,7 +452,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         boolean handleEvent;
         if(!(handleEvent = binding.mainGameRenderView.processKeyEvent(event))) {
             if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && !binding.mainTouchCharInput.isEnabled()) {
-                if(event.getAction() != KeyEvent.ACTION_UP) return true; 
+                if(event.getAction() != KeyEvent.ACTION_UP) return true; // We eat it anyway
                 sendKeyPress(LwjglGlfwKeycode.GLFW_KEY_ESCAPE);
                 return true;
             }
@@ -335,26 +460,148 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         return handleEvent;
     }
 
-    public static void switchKeyboardState() { if (binding != null) binding.mainTouchCharInput.switchKeyboardState(); }
-    private static void setUri(Context context, String input) { if(input.startsWith("file:")) { int truncLength = 5; if(input.startsWith("file://")) truncLength = 7; input = input.substring(truncLength); File inputFile = new File(input); FileTools.shareFile(context, inputFile); } else { ZHTools.openLink(context, input, "*/*"); } }
-    public static void openLink(String link) { Context ctx = binding.mainTouchpad.getContext(); ((Activity)ctx).runOnUiThread(() -> { try { setUri(ctx, link); } catch (Throwable th) { Tools.showError(ctx, th); } }); }
-    public static void querySystemClipboard() { TaskExecutors.runInUIThread(()->{ ClipData clipData = GLOBAL_CLIPBOARD.getPrimaryClip(); if(clipData == null) { AWTInputBridge.nativeClipboardReceived(null, null); return; } ClipData.Item firstClipItem = clipData.getItemAt(0); CharSequence clipItemText = firstClipItem.getText(); if(clipItemText == null) { AWTInputBridge.nativeClipboardReceived(null, null); return; } AWTInputBridge.nativeClipboardReceived(clipItemText.toString(), "plain"); }); }
-    public static void putClipboardData(String data, String mimeType) { TaskExecutors.runInUIThread(()-> { ClipData clipData = null; switch(mimeType) { case "text/plain": clipData = ClipData.newPlainText("AWT Paste", data); break; case "text/html": clipData = ClipData.newHtmlText("AWT Paste", data, data); } if(clipData != null) GLOBAL_CLIPBOARD.setPrimaryClip(clipData); }); }
-    @Override public void onClickedMenu() { DrawerLayout drawerLayout = binding.mainDrawerOptions; View navigationView = binding.mainNavigationView; boolean open = drawerLayout.isDrawerOpen(navigationView); if (open) drawerLayout.closeDrawer(navigationView); else drawerLayout.openDrawer(navigationView); navigationView.requestLayout(); }
-    @Override public void exitEditor() { try { MainActivity.binding.mainControlLayout.loadLayout((CustomControls)null); MainActivity.binding.mainControlLayout.setModifiable(false); System.gc(); MainActivity.binding.mainControlLayout.loadLayout(minecraftVersion.getControl()); mGameMenuWrapper.setVisibility(!binding.mainControlLayout.hasMenuButton()); } catch (IOException e) { Tools.showError(this,e); } binding.mainNavigationView.removeAllViews(); binding.mainNavigationView.addView(mGameMenuBinding.getRoot()); isInEditor = false; }
-    @Override public void onServiceConnected(ComponentName name, IBinder service) { binding.mainGameRenderView.start(GameService.isActive(), binding.mainTouchpad); GameService.setActive(true); }
-    @Override public void onServiceDisconnected(ComponentName name) {}
-    private boolean checkCaptureDispatchConditions(MotionEvent event) { int eventSource = event.getSource(); return (eventSource & InputDevice.SOURCE_MOUSE_RELATIVE) != 0 || (eventSource & InputDevice.SOURCE_MOUSE) != 0; }
-    @Override public boolean dispatchTrackballEvent(MotionEvent ev) { if(checkCaptureDispatchConditions(ev)) return binding.mainGameRenderView.dispatchCapturedPointerEvent(ev); else return super.dispatchTrackballEvent(ev); }
+    public static void switchKeyboardState() {
+        if (binding != null) binding.mainTouchCharInput.switchKeyboardState();
+    }
+
+    private static void setUri(Context context, String input) {
+        if(input.startsWith("file:")) {
+            int truncLength = 5;
+            if(input.startsWith("file://")) truncLength = 7;
+            input = input.substring(truncLength);
+            Logging.i("MainActivity", input);
+
+            File inputFile = new File(input);
+            FileTools.shareFile(context, inputFile);
+            Logging.i("In-game Share File/Folder", "Start!");
+        } else {
+            ZHTools.openLink(context, input, "*/*");
+        }
+    }
+
+    public static void openLink(String link) {
+        Context ctx = binding.mainTouchpad.getContext(); // no more better way to obtain a context statically
+        ((Activity)ctx).runOnUiThread(() -> {
+            try {
+                setUri(ctx, link);
+            } catch (Throwable th) {
+                Tools.showError(ctx, th);
+            }
+        });
+    }
+
+    public static void querySystemClipboard() {
+        TaskExecutors.runInUIThread(()->{
+            ClipData clipData = GLOBAL_CLIPBOARD.getPrimaryClip();
+            if(clipData == null) {
+                AWTInputBridge.nativeClipboardReceived(null, null);
+                return;
+            }
+            ClipData.Item firstClipItem = clipData.getItemAt(0);
+            //TODO: coerce to HTML if the clip item is styled
+            CharSequence clipItemText = firstClipItem.getText();
+            if(clipItemText == null) {
+                AWTInputBridge.nativeClipboardReceived(null, null);
+                return;
+            }
+            AWTInputBridge.nativeClipboardReceived(clipItemText.toString(), "plain");
+        });
+    }
+
+    public static void putClipboardData(String data, String mimeType) {
+        TaskExecutors.runInUIThread(()-> {
+            ClipData clipData = null;
+            switch(mimeType) {
+                case "text/plain":
+                    clipData = ClipData.newPlainText("AWT Paste", data);
+                    break;
+                case "text/html":
+                    clipData = ClipData.newHtmlText("AWT Paste", data, data);
+            }
+            if(clipData != null) GLOBAL_CLIPBOARD.setPrimaryClip(clipData);
+        });
+    }
+
+    @Override
+    public void onClickedMenu() {
+        DrawerLayout drawerLayout = binding.mainDrawerOptions;
+        View navigationView = binding.mainNavigationView;
+
+        boolean open = drawerLayout.isDrawerOpen(navigationView);
+        if (open) drawerLayout.closeDrawer(navigationView);
+        else drawerLayout.openDrawer(navigationView);
+
+        navigationView.requestLayout();
+    }
+
+    @Override
+    public void exitEditor() {
+        try {
+            MainActivity.binding.mainControlLayout.loadLayout((CustomControls)null);
+            MainActivity.binding.mainControlLayout.setModifiable(false);
+            System.gc();
+            MainActivity.binding.mainControlLayout.loadLayout(minecraftVersion.getControl());
+            mGameMenuWrapper.setVisibility(!binding.mainControlLayout.hasMenuButton());
+        } catch (IOException e) {
+            Tools.showError(this,e);
+        }
+        binding.mainNavigationView.removeAllViews();
+        binding.mainNavigationView.addView(mGameMenuBinding.getRoot());
+        isInEditor = false;
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        binding.mainGameRenderView.start(GameService.isActive(), binding.mainTouchpad);
+        GameService.setActive(true);
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+
+    }
+
+    /*
+     * Android 14 (or some devices, at least) seems to dispatch the the captured mouse events as trackball events
+     * due to a bug(?) somewhere(????)
+     */
+    private boolean checkCaptureDispatchConditions(MotionEvent event) {
+        int eventSource = event.getSource();
+        // On my device, the mouse sends events as a relative mouse device.
+        // Not comparing with == here because apparently `eventSource` is a mask that can
+        // sometimes indicate multiple sources, like in the case of InputDevice.SOURCE_TOUCHPAD
+        // (which is *also* an InputDevice.SOURCE_MOUSE when controlling a cursor)
+        return (eventSource & InputDevice.SOURCE_MOUSE_RELATIVE) != 0 ||
+                (eventSource & InputDevice.SOURCE_MOUSE) != 0;
+    }
+
+    @Override
+    public boolean dispatchTrackballEvent(MotionEvent ev) {
+        if(checkCaptureDispatchConditions(ev))
+            return binding.mainGameRenderView.dispatchCapturedPointerEvent(ev);
+        else return super.dispatchTrackballEvent(ev);
+    }
 
     private class MenuSettingsInitListener implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, CompoundButton.OnCheckedChangeListener, OnSpinnerItemSelectedListener<HotbarType>, DrawerLayout.DrawerListener {
         private final ViewGameMenuBinding binding;
 
         public MenuSettingsInitListener(ViewGameMenuBinding binding) {
             this.binding = binding;
+            //初始化状态
             this.binding.hotbarWidth.setMax(currentDisplayMetrics.widthPixels / 2);
             this.binding.hotbarHeight.setMax(currentDisplayMetrics.heightMetrics / 2);
 
+            // 🌟 FIX 2: Dynamic Branding layout context replacement lock
+            View layoutRoot = this.binding.getRoot();
+            int aboutNovaId = layoutRoot.getResources().getIdentifier("about_nova", "id", layoutRoot.getContext().getPackageName());
+            if (aboutNovaId != 0) {
+                View aboutNovaView = layoutRoot.findViewById(aboutNovaId);
+                if (aboutNovaView instanceof android.widget.TextView) {
+                    ((android.widget.TextView) aboutNovaView).setText("About Apex");
+                }
+            }
+
+            //初始化Seekbar的值
             MenuUtils.initSeekBarValue(this.binding.resolutionScaler, AllSettings.getResolutionRatio().getValue(), this.binding.resolutionScalerValue, "%");
             binding.resolutionScalerPreview.setText(VideoSettingsFragment.getResolutionRatioPreview(getResources(), AllSettings.getResolutionRatio().getValue()));
             MenuUtils.initSeekBarValue(this.binding.timeLongPressTrigger, AllSettings.getTimeLongPressTrigger().getValue(), this.binding.timeLongPressTriggerValue, "ms");
@@ -363,6 +610,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             MenuUtils.initSeekBarValue(this.binding.hotbarHeight, AllSettings.getHotbarHeight().getValue().getValue(), this.binding.hotbarHeightValue, "px");
             MenuUtils.initSeekBarValue(this.binding.hotbarWidth, AllSettings.getHotbarWidth().getValue().getValue(), this.binding.hotbarWidthValue, "px");
 
+            //初始化Switch的状态
             this.binding.openMemoryInfo.setChecked(AllSettings.getGameMenuShowMemory().getValue());
             this.binding.openFpsInfo.setChecked(AllSettings.getGameMenuShowFPS().getValue());
             this.binding.disableGestures.setChecked(AllSettings.getDisableGestures().getValue());
@@ -374,6 +622,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             refreshLayoutVisible(this.binding.timeLongPressTriggerLayout, !AllSettings.getDisableGestures().getValue());
             refreshLayoutVisible(this.binding.gyroLayout, AllSettings.getEnableGyro().getValue());
 
+            //初始化点击事件
             this.binding.forceClose.setOnClickListener(this);
             this.binding.logOutput.setOnClickListener(this);
             this.binding.sendCustomKey.setOnClickListener(this);
@@ -438,20 +687,24 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         private void dialogSendCustomKey() {
             keyboardDialog.setOnMultiKeycodeSelectListener(selectedKeycodes -> {
+                //模拟同时按下，同时松开按键
                 Task.runTask(() -> {
                     selectedKeycodes.forEach(keycode -> sendKeyPress(keycode, true));
                     return null;
                 }).ended(a -> {
                     try {
                         Thread.sleep(50);
-                    } catch (InterruptedException ignore) {}
+                    } catch (InterruptedException ignore) {
+                    }
                     selectedKeycodes.forEach(keycode -> sendKeyPress(keycode, false));
                 }).execute();
             }).show();
         }
 
         private void sendKeyPress(int keycode, boolean isDown) {
+            System.out.println("Test keycode: " + keycode);
             int lwjglKeycode = EfficientAndroidLWJGLKeycode.getValueByIndex(keycode);
+            System.out.println("Test lwjglKeycode: " + lwjglKeycode);
             if (keycode >= LwjglGlfwKeycode.GLFW_KEY_UNKNOWN) {
                 CallbackBridge.sendKeyPress(lwjglKeycode, CallbackBridge.getCurrentMods(), isDown);
                 CallbackBridge.setModifiers(lwjglKeycode, isDown);
@@ -462,6 +715,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             SelectControlsDialog dialog = new SelectControlsDialog(MainActivity.this, file -> {
                 try {
                     MainActivity.binding.mainControlLayout.loadLayout(file.getAbsolutePath());
+                    //刷新：是否隐藏菜单按钮
                     mGameMenuWrapper.setVisibility(!MainActivity.binding.mainControlLayout.hasMenuButton());
                 } catch (IOException ignored) {}
             });
@@ -505,27 +759,116 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             else if (v == binding.hotbarHeightAdd) MenuUtils.adjustSeekbar(binding.hotbarHeight, 1);
         }
 
-        @Override public void onProgressChanged(SeekBar s, int progress, boolean fromUser) { updateSeekbarValue(s, !fromUser); }
+        @Override
+        @SuppressLint("SetTextI18n")
+        public void onProgressChanged(SeekBar s, int progress, boolean fromUser) {
+            updateSeekbarValue(s, !fromUser);
+        }
         @Override public void onStartTrackingTouch(SeekBar s) {}
-        @Override public void onStopTrackingTouch(SeekBar s) { updateSeekbarValue(s, true); }
+        @Override public void onStopTrackingTouch(SeekBar s) {
+            updateSeekbarValue(s, true);
+        }
 
         private void updateSeekbarValue(SeekBar seekbar, boolean saveValue) {
             int progress = seekbar == null ? 0 : seekbar.getProgress();
-            if (seekbar == binding.resolutionScaler) { if (saveValue) AllSettings.getResolutionRatio().put(progress).save(); MenuUtils.updateSeekbarValue(progress, binding.resolutionScalerValue, "%"); binding.resolutionScalerPreview.setText(VideoSettingsFragment.getResolutionRatioPreview(getResources(), progress)); AllStaticSettings.scaleFactor = progress / 100f; MainActivity.binding.mainGameRenderView.refreshSize(); }
-            else if (seekbar == binding.timeLongPressTrigger) { if (saveValue) AllSettings.getTimeLongPressTrigger().put(progress).save(); MenuUtils.updateSeekbarValue(progress, binding.timeLongPressTriggerValue, "ms"); AllStaticSettings.timeLongPressTrigger = progress; }
-            else if (seekbar == binding.mouseSpeed) { if (saveValue) AllSettings.getMouseSpeed().put(progress).save(); MenuUtils.updateSeekbarValue(progress, binding.mouseSpeedValue, "%"); }
-            else if (seekbar == binding.gyroSensitivity) { if (saveValue) AllSettings.getGyroSensitivity().put(progress).save(); MenuUtils.updateSeekbarValue(progress, binding.gyroSensitivityValue, "%"); AllStaticSettings.gyroSensitivity = progress; }
-            else if (seekbar == binding.hotbarWidth) { if (saveValue) AllSettings.getHotbarWidth().getValue().put(progress).save(); MenuUtils.updateSeekbarValue(progress, binding.hotbarWidthValue, "px"); EventBus.getDefault().post(new HotbarChangeEvent(progress, binding.hotbarHeight.getProgress())); }
-            else if (seekbar == binding.hotbarHeight) { if (saveValue) AllSettings.getHotbarHeight().getValue().put(progress).save(); MenuUtils.updateSeekbarValue(progress, binding.hotbarHeightValue, "px"); EventBus.getDefault().post(new HotbarChangeEvent(binding.hotbarWidth.getProgress(), progress)); }
+
+            if (seekbar == binding.resolutionScaler) {
+                if (saveValue) AllSettings.getResolutionRatio().put(progress).save();
+
+                MenuUtils.updateSeekbarValue(progress, binding.resolutionScalerValue, "%");
+                binding.resolutionScalerPreview.setText(VideoSettingsFragment.getResolutionRatioPreview(getResources(), progress));
+
+                AllStaticSettings.scaleFactor = progress / 100f;
+                MainActivity.binding.mainGameRenderView.refreshSize();
+            } else if (seekbar == binding.timeLongPressTrigger) {
+                if (saveValue) AllSettings.getTimeLongPressTrigger().put(progress).save();
+
+                MenuUtils.updateSeekbarValue(progress, binding.timeLongPressTriggerValue, "ms");
+                AllStaticSettings.timeLongPressTrigger = progress;
+            } else if (seekbar == binding.mouseSpeed) {
+                if (saveValue) AllSettings.getMouseSpeed().put(progress).save();
+
+                MenuUtils.updateSeekbarValue(progress, binding.mouseSpeedValue, "%");
+            } else if (seekbar == binding.gyroSensitivity) {
+                if (saveValue) AllSettings.getGyroSensitivity().put(progress).save();
+
+                MenuUtils.updateSeekbarValue(progress, binding.gyroSensitivityValue, "%");
+                AllStaticSettings.gyroSensitivity = progress;
+            } else if (seekbar == binding.hotbarWidth) {
+                if (saveValue) AllSettings.getHotbarWidth().getValue().put(progress).save();
+
+                MenuUtils.updateSeekbarValue(progress, binding.hotbarWidthValue, "px");
+                EventBus.getDefault().post(new HotbarChangeEvent(progress, binding.hotbarHeight.getProgress()));
+            } else if (seekbar == binding.hotbarHeight) {
+                if (saveValue) AllSettings.getHotbarHeight().getValue().put(progress).save();
+
+                MenuUtils.updateSeekbarValue(progress, binding.hotbarHeightValue, "px");
+                EventBus.getDefault().post(new HotbarChangeEvent(binding.hotbarWidth.getProgress(), progress));
+            }
         }
 
-        @Override public void onCheckedChanged(CompoundButton v, boolean isChecked) { if (v == binding.openMemoryInfo) { AllSettings.getGameMenuShowMemory().put(isChecked).save(); mGameMenuWrapper.refreshSettingsState(); } else if (v == binding.openFpsInfo) { AllSettings.getGameMenuShowFPS().put(isChecked).save(); mGameMenuWrapper.refreshSettingsState(); } else if (v == binding.disableGestures) { refreshLayoutVisible(binding.timeLongPressTriggerLayout, !isChecked); AllSettings.getDisableGestures().put(isChecked).save(); } else if (v == binding.disableDoubleTap) { AllSettings.getDisableDoubleTap().put(isChecked).save(); AllStaticSettings.disableDoubleTap = isChecked; } else if (v == binding.enableGyro) { refreshLayoutVisible(binding.gyroLayout, isChecked); AllSettings.getEnableGyro().put(isChecked).save(); AllStaticSettings.enableGyro = isChecked; mGyroControl.updateOrientation(); if (isChecked) mGyroControl.enable(); else mGyroControl.disable(); } else if (v == binding.gyroInvertX) { AllSettings.getGyroInvertX().put(isChecked).save(); AllStaticSettings.gyroInvertX = isChecked; } else if (v == binding.gyroInvertY) { AllSettings.getGyroInvertY().put(isChecked).save(); AllStaticSettings.gyroInvertY = isChecked; } }
-        private void refreshLayoutVisible(View view, boolean visible) { view.setVisibility(visible ? View.VISIBLE : View.GONE); }
-        @Override public void onItemSelected(int i, @Nullable HotbarType t, int i1, HotbarType t1) { if (t1 == HotbarType.AUTO) { binding.hotbarWidthLayout.setVisibility(View.GONE); binding.hotbarHeightLayout.setVisibility(View.GONE); } else if (t1 == HotbarType.MANUALLY) { binding.hotbarWidthLayout.setVisibility(View.VISIBLE); binding.hotbarHeightLayout.setVisibility(View.VISIBLE); binding.hotbarWidth.setProgress(AllSettings.getHotbarWidth().getValue().getValue()); binding.hotbarHeight.setProgress(AllSettings.getHotbarHeight().getValue().getValue()); } AllSettings.getHotbarType().put(t1.getValueName()).save(); EventBus.getDefault().post(new RefreshHotbarEvent()); }
+        @Override public void onCheckedChanged(CompoundButton v, boolean isChecked) {
+            if (v == binding.openMemoryInfo) {
+                AllSettings.getGameMenuShowMemory().put(isChecked).save();
+                mGameMenuWrapper.refreshSettingsState();
+            } else if (v == binding.openFpsInfo) {
+                AllSettings.getGameMenuShowFPS().put(isChecked).save();
+                mGameMenuWrapper.refreshSettingsState();
+            } else if (v == binding.disableGestures) {
+                refreshLayoutVisible(binding.timeLongPressTriggerLayout, !isChecked);
+                AllSettings.getDisableGestures().put(isChecked).save();
+            } else if (v == binding.disableDoubleTap) {
+                AllSettings.getDisableDoubleTap().put(isChecked).save();
+                AllStaticSettings.disableDoubleTap = isChecked;
+            } else if (v == binding.enableGyro) {
+                refreshLayoutVisible(binding.gyroLayout, isChecked);
+                AllSettings.getEnableGyro().put(isChecked).save();
+                //刷新陀螺仪的启用状态
+                AllStaticSettings.enableGyro = isChecked;
+                mGyroControl.updateOrientation();
+                if (isChecked) mGyroControl.enable();
+                else mGyroControl.disable();
+            } else if (v == binding.gyroInvertX) {
+                AllSettings.getGyroInvertX().put(isChecked).save();
+                AllStaticSettings.gyroInvertX = isChecked;
+            } else if (v == binding.gyroInvertY) {
+                AllSettings.getGyroInvertY().put(isChecked).save();
+                AllStaticSettings.gyroInvertY = isChecked;
+            }
+        }
+
+        /**
+         * 刷新View的可见状态
+         */
+        private void refreshLayoutVisible(View view, boolean visible) {
+            view.setVisibility(visible ? View.VISIBLE : View.GONE);
+        }
+
+        @Override public void onItemSelected(int i, @Nullable HotbarType t, int i1, HotbarType t1) {
+            if (t1 == HotbarType.AUTO) {
+                binding.hotbarWidthLayout.setVisibility(View.GONE);
+                binding.hotbarHeightLayout.setVisibility(View.GONE);
+            } else if (t1 == HotbarType.MANUALLY) {
+                binding.hotbarWidthLayout.setVisibility(View.VISIBLE);
+                binding.hotbarHeightLayout.setVisibility(View.VISIBLE);
+                binding.hotbarWidth.setProgress(AllSettings.getHotbarWidth().getValue().getValue());
+                binding.hotbarHeight.setProgress(AllSettings.getHotbarHeight().getValue().getValue());
+            }
+
+            AllSettings.getHotbarType().put(t1.getValueName()).save();
+            EventBus.getDefault().post(new RefreshHotbarEvent());
+        }
         @Override public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {}
         @Override public void onDrawerOpened(@NonNull View drawerView) {}
         @Override public void onDrawerClosed(@NonNull View drawerView) {}
-        @Override public void onDrawerStateChanged(int newState) { closeSpinner(); }
-        public void closeSpinner() { binding.hotbarType.dismiss(); }
+        @Override public void onDrawerStateChanged(int newState) {
+            //需要在菜单状态改变的时候，关闭Hotbar类型的Spinner，这个库并没有自动关闭的功能，所以需要这么做
+            //关掉！关掉！一定要关掉！
+            closeSpinner();
+        }
+
+        public void closeSpinner() {
+            binding.hotbarType.dismiss();
+        }
     }
-                }
+            }
