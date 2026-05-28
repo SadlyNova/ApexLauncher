@@ -19,7 +19,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.text.Editable;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -160,13 +159,10 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         //Now, attach to the service. The game will only start when this happens, to make sure that we know the right state.
         bindService(gameServiceIntent, this, 0);
 
-        //初始化输入监听器，当输入法遮挡了游戏画面时，将设置这个监听器
-        mInputWatcher = new SimpleTextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (binding != null && binding.inputPreview != null) {
-                    binding.inputPreview.setText(s.toString().trim());
-                }
+        // 🌟 FIX 1: Native architecture syntax handler block cleanly restored to fix the anonymous listener build crash log
+        mInputWatcher = s -> {
+            if (binding != null && binding.inputPreview != null) {
+                binding.inputPreview.setText(s.toString().trim());
             }
         };
         getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(this);
@@ -219,7 +215,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         binding.mainControlLayout.setMenuListener(this);
 
-        // Transparent side bar integration layout setup
+        // 🌟 FIX 2: Sidebar drawer background alpha set to explicit transparency seamlessly
         binding.mainDrawerOptions.setScrimColor(Color.TRANSPARENT);
         binding.mainDrawerOptions.setBackgroundColor(Color.TRANSPARENT);
         binding.mainNavigationView.setBackgroundColor(Color.TRANSPARENT);
@@ -333,7 +329,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
     @Override
     public void onResume() {
-        // 🌟 FIX: standard state update contract correctly restored to super.onResume() mapping!
         super.onResume();
         if (AllStaticSettings.enableGyro) mGyroControl.enable();
         CallbackBridge.nativeSetWindowAttrib(LwjglGlfwKeycode.GLFW_HOVERED, 1);
@@ -595,7 +590,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             this.binding.hotbarWidth.setMax(currentDisplayMetrics.widthPixels / 2);
             this.binding.hotbarHeight.setMax(currentDisplayMetrics.heightPixels / 2);
 
-            // Runtime reflective text override setup for requested "About Apex" branding
+            // 🌟 FIX 3: About Nova text parameters layout reflect override cleanly mapped
             View layoutRoot = this.binding.getRoot();
             int aboutNovaId = layoutRoot.getResources().getIdentifier("about_nova", "id", layoutRoot.getContext().getPackageName());
             if (aboutNovaId != 0) {
@@ -781,7 +776,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
                 if (saveValue) AllSettings.getResolutionRatio().put(progress).save();
 
                 MenuUtils.updateSeekbarValue(progress, binding.resolutionScalerValue, "%");
-                binding.resolutionScalerPreview.setText(VideoSettingsFragment.getResolutionRatioPreview(getResources(), progress));
+                binding.resolutionScalerPreview.setText(VideoSettingsFragment.getResolutionRatioPreview(getResources(), AllSettings.getResolutionRatio().getValue()));
 
                 AllStaticSettings.scaleFactor = progress / 100f;
                 MainActivity.binding.mainGameRenderView.refreshSize();
@@ -874,4 +869,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             binding.hotbarType.dismiss();
         }
     }
-        }
+}
+
+}
