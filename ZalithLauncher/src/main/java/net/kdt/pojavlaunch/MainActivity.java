@@ -211,7 +211,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         binding.mainControlLayout.setMenuListener(this);
 
-        // 🌟 FIX 1: Side bar ke layout options aur container navigation drawer dono ka background absolute transparent kiya gaya hai!
+        // 🌟 FIX 1: Side Bar aur Background menu elements dono ko absolute translucent banaya gaya hai.
         binding.mainDrawerOptions.setScrimColor(Color.TRANSPARENT);
         binding.mainDrawerOptions.setBackgroundColor(Color.TRANSPARENT);
         binding.mainNavigationView.setBackgroundColor(Color.TRANSPARENT);
@@ -241,14 +241,8 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             windowWidth = Tools.getDisplayFriendlyRes(currentDisplayMetrics.widthPixels, 1f);
             windowHeight = Tools.getDisplayFriendlyRes(currentDisplayMetrics.heightPixels, 1f);
 
-            // Menu
+            // Menu Initialization
             mGameMenuBinding = ViewGameMenuBinding.inflate(getLayoutInflater());
-            
-            // 🌟 FIX 2: Dynamic runtime logic hook execute karke 'About Nova' text elements ko surgically 'About Apex' se override kiya hai!
-            if (mGameMenuBinding.aboutNova != null) {
-                mGameMenuBinding.aboutNova.setText("About Apex");
-            }
-            
             mMenuSettingsInitListener = new MenuSettingsInitListener(mGameMenuBinding);
 
             binding.mainNavigationView.removeAllViews();
@@ -580,6 +574,19 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             this.binding = binding;
             this.binding.hotbarWidth.setMax(currentDisplayMetrics.widthPixels / 2);
             this.binding.hotbarHeight.setMax(currentDisplayMetrics.heightPixels / 2);
+
+            // 🌟 FIX 2: Text rename directly runtime logic helper framework strings se kiya.
+            // XML template values code injection error se bachne ke liye standard access call layout handle kiya hai.
+            View rootMenuView = this.binding.getRoot();
+            int aboutNovaId = rootMenuView.getResources().getIdentifier("about_nova", "id", rootMenuView.getContext().getPackageName());
+            if (aboutNovaId != 0) {
+                View aboutView = rootMenuView.findViewById(aboutNovaId);
+                if (aboutView instanceof android.widget.TextView) {
+                    ((android.widget.TextView) aboutView).setText("About Apex");
+                } else if (aboutView instanceof android.widget.Button) {
+                    ((android.widget.Button) aboutView).setText("About Apex");
+                }
+            }
 
             MenuUtils.initSeekBarValue(this.binding.resolutionScaler, AllSettings.getResolutionRatio().getValue(), this.binding.resolutionScalerValue, "%");
             binding.resolutionScalerPreview.setText(VideoSettingsFragment.getResolutionRatioPreview(getResources(), AllSettings.getResolutionRatio().getValue()));
