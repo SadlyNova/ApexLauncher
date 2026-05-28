@@ -139,9 +139,9 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         mGyroControl = new GyroControl(this);
 
         Window window = getWindow();
-        // Enabling this on TextureView results in a broken white result
-        if(AllSettings.getAlternateSurface().getValue()) window.setBackgroundDrawable(null);
-        else window.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+        
+        // 🌟 FIX: Purani plain black background screen hatakar humara custom Apex Launcher loading graphics set kar rahe hain
+        window.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.apex_loading_bg));
 
         // Set the sustained performance mode for available APIs
         window.setSustainedPerformanceMode(AllSettings.getSustainedPerformance().getValue());
@@ -154,6 +154,8 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         new ControlMenu(this, this, mControlSettingsBinding, controlLayout, false);
         mControlSettingsBinding.saveAndExport.setVisibility(View.GONE);
 
+        // 🌟 FIX: Jab tak game load na ho jaye button control templates ko initial state par hide rakhein
+        binding.mainControlLayout.setVisibility(View.INVISIBLE);
         binding.mainControlLayout.setModifiable(false);
 
         //Now, attach to the service. The game will only start when this happens, to make sure that we know the right state.
@@ -205,7 +207,8 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         mGameMenuWrapper = new GameMenuViewWrapper(this, v -> onClickedMenu(), true);
         touchCharInput = binding.mainTouchCharInput;
 
-        BackgroundManager.setBackgroundImage(this, BackgroundType.IN_GAME, binding.backgroundView, null);
+        // 🌟 FIX: Yahan default layout background set karne ki bajay apex texture inject kar rahe hain
+        binding.backgroundView.setImageResource(R.drawable.apex_loading_bg);
 
         keyboardDialog = new KeyboardDialog(this).setShowSpecialButtons(false);
 
@@ -853,4 +856,4 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             binding.hotbarType.dismiss();
         }
     }
-}
+                }
