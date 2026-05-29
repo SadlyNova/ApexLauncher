@@ -47,8 +47,6 @@ public class ControlButton extends TextView implements ControlInterface {
         setTextSize(14); // Nullify the default size setting
         setOutlineProvider(null); // Disable shadow casting, removing one drawing pass
 
-        //setOnLongClickListener(this);
-
         //When a button is created, the width/height has yet to be processed to fit the scaling.
         setProperties(preProcessProperties(properties, layout));
 
@@ -67,15 +65,16 @@ public class ControlButton extends TextView implements ControlInterface {
         ControlInterface.super.setProperties(properties, changePos);
         mComputedRadius = ControlInterface.super.computeCornerRadius(mProperties.cornerRadius);
 
+        // 🌟 PREMIUM GLOWING TRANSPARENCY INTEGRATION FOR GAMEPAD DECK
         if (mProperties.isToggle) {
-            //For the toggle layer
             final TypedValue value = new TypedValue();
             getContext().getTheme().resolveAttribute(R.attr.colorAccent, value, true);
             mRectPaint.setColor(value.data);
-            mRectPaint.setAlpha(128);
+            mRectPaint.setAlpha(160); // Glowing translucent border effect for toggled buttons
         } else {
-            mRectPaint.setColor(Color.WHITE);
-            mRectPaint.setAlpha(60);
+            // #26120C1F custom color profile mapped dynamically to match the wallpaper cards
+            mRectPaint.setColor(Color.parseColor("#120C1F"));
+            mRectPaint.setAlpha(140); // Dark sleek semi-transparent glass backdrop overlay
         }
 
         setText(properties.name);
@@ -84,10 +83,11 @@ public class ControlButton extends TextView implements ControlInterface {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (mIsToggled || (!mProperties.isToggle && isActivated()))
+        // Clean layout rendering logic
+        if (mIsToggled || (!mProperties.isToggle && isActivated())) {
             canvas.drawRoundRect(0, 0, getWidth(), getHeight(), mComputedRadius, mComputedRadius, mRectPaint);
+        }
     }
-
 
     public void loadEditValues(EditControlPopup editControlPopup){
         editControlPopup.loadValues(getProperties());
@@ -106,7 +106,6 @@ public class ControlButton extends TextView implements ControlInterface {
         getControlLayoutParent().getLayout().mControlDataList.remove(getProperties());
         getControlLayoutParent().removeView(this);
     }
-
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -173,11 +172,9 @@ public class ControlButton extends TextView implements ControlInterface {
         return super.onTouchEvent(event);
     }
 
-
-
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean triggerToggle(){
-        //returns true a the toggle system is triggered
+        //returns true if the toggle system is triggered
         if(mProperties.isToggle){
             mIsToggled = !mIsToggled;
             invalidate();
