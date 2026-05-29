@@ -1,249 +1,516 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://tools.android.com/tools"
     android:id="@+id/fragment_menu_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/launcher_bg"
     tools:context="net.kdt.pojavlaunch.fragments.MainMenuFragment">
- 
+
+    <!-- Notice pipeline container layer -->
     <LinearLayout
         android:id="@+id/noticeContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"
         android:orientation="vertical" />
-    
+
+    <!-- ================================================================= -->
+    <!-- 1️⃣ LEFT NAVIGATION SIDEBAR                                         -->
+    <!-- ================================================================= -->
     <LinearLayout
-        android:id="@+id/centeredLogosContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/_45sdp"
-        android:orientation="horizontal"
-        android:gravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/custom_control_button"
-            android:layout_width="@dimen/_24sdp"
-            android:layout_height="@dimen/_24sdp"
-            android:layout_marginHorizontal="@dimen/_14sdp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_menu_custom_controls"
-            android:clickable="true"
-            android:focusable="true"
-            android:contentDescription="@string/setting_category_control"/>
-
-        <ImageView
-            android:id="@+id/open_main_dir_button"
-            android:layout_width="@dimen/_24sdp"
-            android:layout_height="@dimen/_24sdp"
-            android:layout_marginHorizontal="@dimen/_14sdp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_folder"
-            android:clickable="true"
-            android:focusable="true"
-            android:contentDescription="@string/main_open_main_dir"/>
-
-        <ImageView
-            android:id="@+id/install_jar_button"
-            android:layout_width="@dimen/_24sdp"
-            android:layout_height="@dimen/_24sdp"
-            android:layout_marginHorizontal="@dimen/_14sdp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_java"
-            android:clickable="true"
-            android:focusable="true"
-            android:contentDescription="@string/main_install_jar_file"/>
-
-        <ImageView
-            android:id="@+id/share_logs_button"
-            android:layout_width="@dimen/_24sdp"
-            android:layout_height="@dimen/_24sdp"
-            android:layout_marginHorizontal="@dimen/_14sdp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_share"
-            android:clickable="true"
-            android:focusable="true"
-            android:contentDescription="@string/main_share_logs"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/playLayout"
-        android:layout_width="@dimen/_240sdp"
+        android:id="@+id/leftSidebar"
+        android:layout_width="@dimen/_180sdp"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#00000000"
-        android:paddingHorizontal="@dimen/_16sdp"
-        android:paddingTop="@dimen/_50sdp"
-        android:paddingBottom="@dimen/_16sdp"
-        android:gravity="center_horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="#140D1F"
+        android:paddingVertical="@dimen/_16sdp"
+        android:paddingHorizontal="@dimen/_12sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
+        <!-- Logo Deck -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="@dimen/_24sdp"
+            android:paddingHorizontal="@dimen/_4sdp">
+            
+            <ImageView
+                android:layout_width="@dimen/_28sdp"
+                android:layout_height="@dimen/_28sdp"
+                android:src="@drawable/ic_java"
+                app:tint="#9D4EDD" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="@dimen/_8sdp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="APEX"
+                    android:textColor="#FFFFFF"
+                    android:textSize="@dimen/_14ssp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="LAUNCHER"
+                    android:textColor="#9D4EDD"
+                    android:textSize="@dimen/_8ssp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.1" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Sidebar Navigation Options Stack -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Home Tab -->
+            <TextView
+                android:id="@+id/tab_home"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_32sdp"
+                android:text="Home"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/_11ssp"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/_12sdp"
+                android:drawableStart="@drawable/ic_folder"
+                android:drawablePadding="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_4sdp"
+                android:background="@drawable/button_background" />
+
+            <!-- Settings Tab -->
+            <TextView
+                android:id="@+id/tab_settings"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_32sdp"
+                android:text="Settings"
+                android:textColor="#A09BB0"
+                android:textSize="@dimen/_11ssp"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/_12sdp"
+                android:drawableStart="@drawable/ic_setting_launcher"
+                android:drawablePadding="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_4sdp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"/>
+
+            <!-- Mods Tab -->
+            <TextView
+                android:id="@+id/tab_mods"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_32sdp"
+                android:text="Mods"
+                android:textColor="#A09BB0"
+                android:textSize="@dimen/_11ssp"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/_12sdp"
+                android:drawableStart="@drawable/ic_menu_custom_controls"
+                android:drawablePadding="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_4sdp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"/>
+
+            <!-- Community Tab -->
+            <TextView
+                android:id="@+id/nova_discord"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_32sdp"
+                android:text="Community"
+                android:textColor="#A09BB0"
+                android:textSize="@dimen/_11ssp"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/_12sdp"
+                android:drawableStart="@drawable/ic_share"
+                android:drawablePadding="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_4sdp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"/>
+
+            <!-- About Apex Tab -->
+            <TextView
+                android:id="@+id/about_apex_tab"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_32sdp"
+                android:text="About Apex"
+                android:textColor="#A09BB0"
+                android:textSize="@dimen/_11ssp"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/_12sdp"
+                android:drawableStart="@drawable/ic_folder"
+                android:drawablePadding="@dimen/_10sdp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"/>
+        </LinearLayout>
+
+        <!-- Sidebar Footer Layer: Account Profile Preview Card -->
         <include
             android:id="@+id/viewAccount"
             layout="@layout/view_account"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:visibility="visible"/>
+            android:layout_marginBottom="@dimen/_12sdp" />
+
+        <!-- Social Navigation Quick Deck -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingTop="@dimen/_4sdp">
+            <ImageView
+                android:id="@+id/sidebar_discord"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:src="@drawable/ic_share"
+                app:tint="#A09BB0"
+                android:clickable="true"
+                android:focusable="true"/>
+            <ImageView
+                android:id="@+id/sidebar_website"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:src="@drawable/ic_folder"
+                app:tint="#A09BB0"
+                android:clickable="true"
+                android:focusable="true"/>
+            <ImageView
+                android:id="@+id/sidebar_github"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:src="@drawable/ic_java"
+                app:tint="#A09BB0"
+                android:clickable="true"
+                android:focusable="true"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- ================================================================= -->
+    <!-- 2️⃣ TOP TOOLBAR CONTROL ROW                                        -->
+    <!-- ================================================================= -->
+    <LinearLayout
+        android:id="@+id/centeredLogosContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_40dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/_8sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/leftSidebar"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/custom_control_button"
+            android:layout_width="@dimen/_22sdp"
+            android:layout_height="@dimen/_22sdp"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_menu_custom_controls"
+            app:tint="#FFFFFF"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="@null"/>
+
+        <ImageView
+            android:id="@+id/open_main_dir_button"
+            android:layout_width="@dimen/_22sdp"
+            android:layout_height="@dimen/_22sdp"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_folder"
+            app:tint="#FFFFFF"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="@null"/>
+
+        <ImageView
+            android:id="@+id/install_jar_button"
+            android:layout_width="@dimen/_22sdp"
+            android:layout_height="@dimen/_22sdp"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_java"
+            app:tint="#FFFFFF"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="@null"/>
+
+        <ImageView
+            android:id="@+id/share_logs_button"
+            android:layout_width="@dimen/_22sdp"
+            android:layout_height="@dimen/_22sdp"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_share"
+            app:tint="#FFFFFF"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="@null"/>
+    </LinearLayout>
+
+    <!-- ================================================================= -->
+    <!-- 3️⃣ CENTER MAIN BODY: HERO WELCOME AREA                            -->
+    <!-- ================================================================= -->
+    <LinearLayout
+        android:id="@+id/heroWelcomeArea"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="@dimen/_24sdp"
+        android:layout_marginBottom="@dimen/_40sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/leftSidebar"
+        app:layout_constraintEnd_toStartOf="@id/playLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WELCOME TO"
+            android:textColor="#B3A9C9"
+            android:textSize="@dimen/_10ssp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="APEX\nLAUNCHER"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/_26ssp"
+            android:textStyle="bold"
+            android:lineSpacingMultiplier="0.9" />
+
+        <TextView
+            android:layout_width="@dimen/_180sdp"
+            android:layout_height="wrap_content"
+            android:text="Your ultimate Minecraft experience starts here. Customize, explore, and play without limits."
+            android:textColor="#9E96B3"
+            android:textSize="@dimen/_9ssp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_marginBottom="@dimen/_14sdp" />
+
+        <!-- Quick Launch Action Button -->
+        <Button
+            android:id="@+id/playButton"
+            android:layout_width="@dimen/_130sdp"
+            android:layout_height="@dimen/_36sdp"
+            android:text="LAUNCH GAME  ›"
+            android:background="@drawable/button_background"
+            android:textColor="#FFFFFF"
+            android:textAllCaps="true"
+            android:textSize="@dimen/_11ssp"
+            android:textStyle="bold"
+            android:elevation="@dimen/_4sdp" />
+    </LinearLayout>
+
+    <!-- ================================================================= -->
+    <!-- 4️⃣ RIGHT DASHBOARD PANEL (GLASSMORPHIC CARDS)                      -->
+    <!-- ================================================================= -->
+    <LinearLayout
+        android:id="@+id/playLayout"
+        android:layout_width="@dimen/_220sdp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#33000000"
+        android:paddingHorizontal="@dimen/_14sdp"
+        android:paddingTop="@dimen/_50sdp"
+        android:paddingBottom="@dimen/_16sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:scrollbars="none"
-            android:layout_marginBottom="@dimen/_10sdp">
+            android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="#00000000"
-                android:padding="@dimen/_10sdp">
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="About Apex"
-                    android:textColor="#FF5252"
-                    android:textSize="@dimen/_12ssp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="@dimen/_6sdp"/>
-
-                <TextView
-                    android:id="@+id/nova_discord"
+                <!-- CARD A: MY ACCOUNT DETAILS -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="• Discord Community"
-                    android:textColor="#FFFFFF"
-                    android:textSize="@dimen/_11ssp"
-                    android:paddingVertical="@dimen/_4sdp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground"/>
+                    android:orientation="vertical"
+                    android:background="#26120C1F"
+                    android:padding="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_12sdp">
 
-                <TextView
-                    android:id="@+id/nova_website"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="MY ACCOUNT"
+                        android:textColor="#7D7495"
+                        android:textSize="@dimen/_8ssp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="@dimen/_6sdp" />
+
+                    <!-- Dynamic Sub-Account Info Box Reference -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        <ImageView
+                            android:id="@+id/versionIcon"
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="@dimen/_24sdp"
+                            android:src="@drawable/ic_java" />
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_weight="1"
+                            android:layout_marginStart="@dimen/_8sdp">
+                            <TextView
+                                android:id="@+id/versionName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="PlayerOne"
+                                android:textColor="#FFFFFF"
+                                android:textSize="@dimen/_11ssp"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Premium Account"
+                                android:textColor="#FFC107"
+                                android:textSize="@dimen/_8ssp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- CARD B: QUICK ACTIONS DECK -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="• Official Website"
-                    android:textColor="#FFFFFF"
-                    android:textSize="@dimen/_11ssp"
-                    android:paddingVertical="@dimen/_4sdp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground"/>
+                    android:orientation="vertical"
+                    android:background="#26120C1F"
+                    android:padding="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_12sdp">
 
-                <TextView
-                    android:id="@+id/nova_github"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="QUICK ACTIONS"
+                        android:textColor="#7D7495"
+                        android:textSize="@dimen/_8ssp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="@dimen/_4sdp" />
+
+                    <TextView
+                        android:id="@+id/nova_website"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_28sdp"
+                        android:text="+  Add Account"
+                        android:textColor="#FFFFFF"
+                        android:textSize="@dimen/_10ssp"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/_6sdp"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/nova_github"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_28sdp"
+                        android:text="🧩  Install Mods"
+                        android:textColor="#FFFFFF"
+                        android:textSize="@dimen/_10ssp"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/_6sdp"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
+
+                <!-- CARD C: GAME VERSION RUNTIME DISPLAY -->
+                <LinearLayout
+                    android:id="@+id/versionInfoContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="• GitHub Repository"
-                    android:textColor="#FFC107"
-                    android:textSize="@dimen/_11ssp"
-                    android:paddingVertical="@dimen/_4sdp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:textStyle="bold"
-                    android:background="?android:attr/selectableItemBackground"/>
+                    android:orientation="vertical"
+                    android:background="#26120C1F"
+                    android:padding="@dimen/_10sdp">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="• Upcoming Features..."
-                    android:textColor="#E0DCDA"
-                    android:textSize="@dimen/_11ssp"
-                    android:paddingVertical="@dimen/_4sdp"
-                    android:textStyle="italic"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="VERSION STATUS"
+                        android:textColor="#7D7495"
+                        android:textSize="@dimen/_8ssp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="@dimen/_6sdp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_weight="1">
+                            <TextView
+                                android:id="@+id/versionInfo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="No versions installed"
+                                android:textColor="#E0DCDA"
+                                android:textSize="@dimen/_11ssp" />
+                        </LinearLayout>
+
+                        <ImageButton
+                            android:id="@+id/version"
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="@dimen/_24sdp"
+                            android:layout_marginEnd="@dimen/_4sdp"
+                            android:background="?android:attr/selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_folder"
+                            app:tint="#A09BB0"
+                            android:contentDescription="@null"/>
+
+                        <ImageButton
+                            android:id="@+id/edit_settings_button"
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="@dimen/_24sdp"
+                            android:background="?android:attr/selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_setting_launcher"
+                            app:tint="#A09BB0"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:contentDescription="@null"/>
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
         </ScrollView>
 
-        <LinearLayout
-            android:id="@+id/versionInfoContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="@dimen/_12sdp">
-
-            <ImageView
-                android:id="@+id/versionIcon"
-                android:layout_width="@dimen/_28sdp"
-                android:layout_height="@dimen/_28sdp"
-                android:layout_marginEnd="@dimen/_8sdp"
-                android:contentDescription="@null"/>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1">
-                
-                <TextView
-                    android:id="@+id/versionName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#FFFFFF"
-                    android:textSize="@dimen/_12ssp"
-                    android:textStyle="bold"/>
-                    
-                <TextView
-                    android:id="@+id/versionInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#E0DCDA"
-                    android:textSize="@dimen/_10ssp"/>
-            </LinearLayout>
-
-            <ImageButton
-                android:id="@+id/version"
-                android:layout_width="@dimen/_28sdp"
-                android:layout_height="@dimen/_28sdp"
-                android:layout_marginEnd="@dimen/_4sdp"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_folder"
-                app:tint="#FFFFFF"
-                android:contentDescription="@null"/>
-
-            <ImageButton
-                android:id="@+id/edit_settings_button"
-                android:layout_width="@dimen/_28sdp"
-                android:layout_height="@dimen/_28sdp"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_setting_launcher"
-                app:tint="#FFFFFF"
-                android:clickable="true"
-                android:focusable="true"
-                android:contentDescription="@null"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/playButtonsLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="visible">
-
-            <Button
-                android:id="@+id/playButton"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_36sdp"
-                android:text="@string/main_launch"
-                android:background="@drawable/button_background"
-                android:textColor="#FFFFFF"
-                android:textAllCaps="false"
-                android:textSize="@dimen/_13ssp"
-                android:shadowColor="#000000"
-                android:shadowDx="2"
-                android:shadowDy="2"
-                android:shadowRadius="3"/>
-        </LinearLayout>
-
+        <!-- Hidden Legacy Bindings Stack to ensure no framework crashes occur -->
         <View android:id="@+id/managerProfileButton" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
         <View android:id="@+id/aboutButton" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
         <TextView android:id="@+id/aboutText" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
