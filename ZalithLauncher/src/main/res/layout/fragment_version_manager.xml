@@ -43,10 +43,10 @@
                 android:id="@+id/mods_icon"
                 android:layout_width="@dimen/_24sdp"
                 android:layout_height="@dimen/_24sdp"
-                android:layout_constraintStart_toStartOf="parent"
-                android:layout_annotation_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_8sdp"
                 app:layout_constraintBottom_toBottomOf="@+id/shortcuts_mods"
                 app:layout_constraintTop_toTopOf="@+id/shortcuts_mods"
+                app:layout_constraintStart_toStartOf="parent"
                 app:srcCompat="@drawable/ic_profile_mods" />
 
             <com.movtery.zalithlauncher.ui.view.AnimButton
@@ -63,9 +63,10 @@
                 android:id="@+id/game_icon"
                 android:layout_width="@dimen/_24sdp"
                 android:layout_height="@dimen/_24sdp"
-                android:layout_annotation_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_8sdp"
                 app:layout_constraintBottom_toBottomOf="@+id/game_path"
                 app:layout_constraintTop_toTopOf="@+id/game_path"
+                app:layout_constraintStart_toStartOf="parent"
                 app:srcCompat="@drawable/ic_profile_folder" />
 
             <com.movtery.zalithlauncher.ui.view.AnimButton
@@ -82,9 +83,10 @@
                 android:id="@+id/resource_icon"
                 android:layout_width="@dimen/_24sdp"
                 android:layout_height="@dimen/_24sdp"
-                android:layout_annotation_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_8sdp"
                 app:layout_constraintBottom_toBottomOf="@+id/resource_path"
                 app:layout_constraintTop_toTopOf="@+id/resource_path"
+                app:layout_constraintStart_toStartOf="parent"
                 app:srcCompat="@drawable/ic_profile_resource_pack" />
 
             <com.movtery.zalithlauncher.ui.view.AnimButton
@@ -101,9 +103,10 @@
                 android:id="@+id/world_icon"
                 android:layout_width="@dimen/_24sdp"
                 android:layout_height="@dimen/_24sdp"
-                android:layout_annotation_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_8sdp"
                 app:layout_constraintBottom_toBottomOf="@+id/world_path"
                 app:layout_constraintTop_toTopOf="@+id/world_path"
+                app:layout_constraintStart_toStartOf="parent"
                 app:srcCompat="@drawable/ic_profile_saves" />
 
             <com.movtery.zalithlauncher.ui.view.AnimButton
@@ -120,9 +123,10 @@
                 android:id="@+id/shader_icon"
                 android:layout_width="@dimen/_24sdp"
                 android:layout_height="@dimen/_24sdp"
-                android:layout_annotation_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_8sdp"
                 app:layout_constraintBottom_toBottomOf="@+id/shader_path"
                 app:layout_constraintTop_toTopOf="@+id/shader_path"
+                app:layout_constraintStart_toStartOf="parent"
                 app:srcCompat="@drawable/ic_profile_shader_pack" />
 
             <com.movtery.zalithlauncher.ui.view.AnimButton
@@ -139,9 +143,10 @@
                 android:id="@+id/screenshot_icon"
                 android:layout_width="@dimen/_24sdp"
                 android:layout_height="@dimen/_24sdp"
-                android:layout_annotation_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_8sdp"
                 app:layout_constraintBottom_toBottomOf="@+id/screenshot_path"
                 app:layout_constraintTop_toTopOf="@+id/screenshot_path"
+                app:layout_constraintStart_toStartOf="parent"
                 app:srcCompat="@drawable/ic_screenshot" />
 
             <com.movtery.zalithlauncher.ui.view.AnimButton
@@ -158,9 +163,10 @@
                 android:id="@+id/logs_icon"
                 android:layout_width="@dimen/_24sdp"
                 android:layout_height="@dimen/_24sdp"
-                android:layout_annotation_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_8sdp"
                 app:layout_constraintBottom_toBottomOf="@+id/logs_path"
                 app:layout_constraintTop_toTopOf="@+id/logs_path"
+                app:layout_constraintStart_toStartOf="parent"
                 app:srcCompat="@drawable/ic_profile_logs" />
 
             <com.movtery.zalithlauncher.ui.view.AnimButton
@@ -177,9 +183,10 @@
                 android:id="@+id/crash_report_icon"
                 android:layout_width="@dimen/_24sdp"
                 android:layout_height="@dimen/_24sdp"
-                android:layout_annotation_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_8sdp"
                 app:layout_constraintBottom_toBottomOf="@+id/crash_report_path"
                 app:layout_constraintTop_toTopOf="@+id/crash_report_path"
+                app:layout_constraintStart_toStartOf="parent"
                 app:srcCompat="@drawable/ic_profile_crash_report" />
 
             <com.movtery.zalithlauncher.ui.view.AnimButton
@@ -228,10 +235,10 @@
                 android:id="@+id/version_settings_icon"
                 android:layout_width="@dimen/_24sdp"
                 android:layout_height="@dimen/_24sdp"
-                android:layout_annotation_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_8sdp"
                 app:layout_constraintBottom_toBottomOf="@+id/version_settings"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/version_settings"
+                app:layout_constraintStart_toStartOf="parent"
                 app:srcCompat="@drawable/ic_setting" />
 
             <com.movtery.zalithlauncher.ui.view.AnimButton
@@ -248,10 +255,10 @@
                 android:id="@+id/rename_version_icon"
                 android:layout_width="@dimen/_24sdp"
                 android:layout_height="@dimen/_24sdp"
-                android:layout_annotation_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_8sdp"
                 app:layout_constraintBottom_toBottomOf="@+id/version_rename"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/version_rename"
+                app:layout_constraintStart_toStartOf="parent"
                 app:srcCompat="@drawable/ic_edit" />
 
             <com.movtery.zalithlauncher.ui.view.AnimButton
@@ -268,10 +275,10 @@
                 android:id="@+id/copy_version_icon"
                 android:layout_width="@dimen/_24sdp"
                 android:layout_height="@dimen/_24sdp"
-                android:layout_annotation_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_8sdp"
                 app:layout_constraintBottom_toBottomOf="@+id/version_copy"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/version_copy"
+                app:layout_constraintStart_toStartOf="parent"
                 app:srcCompat="@drawable/ic_copy" />
 
             <com.movtery.zalithlauncher.ui.view.AnimButton
@@ -288,10 +295,10 @@
                 android:id="@+id/delete_version_icon"
                 android:layout_width="@dimen/_24sdp"
                 android:layout_height="@dimen/_24sdp"
-                android:layout_annotation_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_8sdp"
                 app:layout_constraintBottom_toBottomOf="@+id/version_delete"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/version_delete"
+                app:layout_constraintStart_toStartOf="parent"
                 app:srcCompat="@drawable/ic_menu_delete_forever" />
 
             <com.movtery.zalithlauncher.ui.view.AnimButton
