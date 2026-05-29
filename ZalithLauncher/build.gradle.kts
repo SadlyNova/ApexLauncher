@@ -98,9 +98,7 @@ android {
             isMinifyEnabled = false
             isShrinkResources = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            
             signingConfig = signingConfigs.getByName("customDebug")
-            
             resValue("string", "storageProviderAuthorities", "$storageProviderId.debug")
         }
         create("proguard") {
@@ -211,7 +209,7 @@ android {
     }
 
     aaptOptions {
-        ignoreAssetsPattern("ic_notification*")
+        setIgnoreAssetsPattern("ic_notification*")
     }
 }
 
