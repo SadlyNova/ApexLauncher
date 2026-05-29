@@ -209,7 +209,7 @@ android {
     }
 
     aaptOptions {
-        setIgnoreAssetsPattern("ic_notification*")
+        ignoreAssetsPattern = "ic_notification*:!.git:!.svn:!.jpeg:!.jpg:!.png"
     }
 }
 
