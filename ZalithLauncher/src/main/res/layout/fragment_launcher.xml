@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://tools.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_menu_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/launcher_bg"
     tools:context="net.kdt.pojavlaunch.fragments.MainMenuFragment">
 
+    <!-- Notice pipeline container layer -->
     <LinearLayout
         android:id="@+id/noticeContainer"
         android:layout_width="0dp"
@@ -15,6 +16,9 @@
         android:visibility="gone"
         android:orientation="vertical" />
 
+    <!-- ================================================================= -->
+    <!-- 1️⃣ LEFT NAVIGATION SIDEBAR                                         -->
+    <!-- ================================================================= -->
     <LinearLayout
         android:id="@+id/leftSidebar"
         android:layout_width="@dimen/_180sdp"
@@ -27,6 +31,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
+        <!-- Logo Deck -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,6 +69,7 @@
             </LinearLayout>
         </LinearLayout>
 
+        <!-- Sidebar Navigation Options List Stack -->
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -75,6 +81,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <!-- 1. Home Tab -->
                 <TextView
                     android:id="@+id/tab_home"
                     android:layout_width="match_parent"
@@ -89,6 +96,7 @@
                     android:layout_marginBottom="@dimen/_4sdp"
                     android:background="@drawable/button_background" />
 
+                <!-- 2. Version Management Tab -->
                 <TextView
                     android:id="@+id/tab_settings"
                     android:layout_width="match_parent"
@@ -105,24 +113,9 @@
                     android:clickable="true"
                     android:focusable="true"/>
 
+                <!-- 3. Custom Controls Tab (Clean and Fixed) -->
                 <TextView
                     android:id="@+id/tab_mods"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_32sdp"
-                    android:text="Controls"
-                    android:textColor="#A09BB0"
-                    android:textSize="@dimen/_11ssp"
-                    android:gravity="center_vertical"
-                    android:paddingStart="@dimen/_12sdp"
-                    android:drawableStart="@drawable/ic_menu_custom_controls"
-                    android:drawablePadding="@dimen/_10sdp"
-                    android:layout_marginBottom="@dimen/_4sdp"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true"/>
-
-                <TextView
-                    android:id="@+id/custom_control_button"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_32sdp"
                     android:text="Custom Controls"
@@ -137,6 +130,7 @@
                     android:clickable="true"
                     android:focusable="true"/>
 
+                <!-- 4. Game Directory Tab -->
                 <TextView
                     android:id="@+id/open_main_dir_button"
                     android:layout_width="match_parent"
@@ -153,6 +147,7 @@
                     android:clickable="true"
                     android:focusable="true"/>
 
+                <!-- 5. Install .JAR File Tab -->
                 <TextView
                     android:id="@+id/install_jar_button"
                     android:layout_width="match_parent"
@@ -169,6 +164,7 @@
                     android:clickable="true"
                     android:focusable="true"/>
 
+                <!-- 6. Share Logs Tab -->
                 <TextView
                     android:id="@+id/share_logs_button"
                     android:layout_width="match_parent"
@@ -185,6 +181,7 @@
                     android:clickable="true"
                     android:focusable="true"/>
 
+                <!-- 7. Community Connection Tab -->
                 <TextView
                     android:id="@+id/nova_discord"
                     android:layout_width="match_parent"
@@ -202,6 +199,7 @@
             </LinearLayout>
         </ScrollView>
 
+        <!-- Sidebar Footer Layer: Account Profile Preview Card -->
         <include
             android:id="@+id/viewAccount"
             layout="@layout/view_account"
@@ -209,6 +207,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_12sdp" />
 
+        <!-- Social Navigation Quick Bottom Deck -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -245,13 +244,13 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/centeredLogosContainer"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        tools:ignore="MissingConstraints"/>
+    <!-- Invisible bindings to maintain framework alignment without crashes -->
+    <View android:id="@+id/custom_control_button" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints"/>
+    <LinearLayout android:id="@+id/centeredLogosContainer" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints"/>
 
+    <!-- ================================================================= -->
+    <!-- 2️⃣ DYNAMIC CENTER CONTAINER INTERFACE HOLDER                       -->
+    <!-- ================================================================= -->
     <FrameLayout
         android:id="@+id/dashboard_content_container"
         android:layout_width="0dp"
@@ -262,6 +261,7 @@
         app:layout_constraintStart_toEndOf="@id/leftSidebar"
         app:layout_constraintEnd_toStartOf="@id/playLayout">
 
+        <!-- Nested Default Welcome Hero Area View -->
         <LinearLayout
             android:id="@+id/heroWelcomeArea"
             android:layout_width="match_parent"
@@ -312,6 +312,9 @@
         </LinearLayout>
     </FrameLayout>
 
+    <!-- ================================================================= -->
+    <!-- 3️⃣ RIGHT DASHBOARD PANEL (GLASSMORPHIC CARDS)                      -->
+    <!-- ================================================================= -->
     <LinearLayout
         android:id="@+id/playLayout"
         android:layout_width="@dimen/_220sdp"
@@ -336,6 +339,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <!-- CARD A: MY ACCOUNT DETAILS -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -387,6 +391,7 @@
                     </LinearLayout>
                 </LinearLayout>
 
+                <!-- CARD B: QUICK ACTIONS DECK -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -431,6 +436,7 @@
                         android:focusable="true" />
                 </LinearLayout>
 
+                <!-- CARD C: GAME VERSION DISPLAY -->
                 <LinearLayout
                     android:id="@+id/versionInfoContainer"
                     android:layout_width="match_parent"
@@ -493,6 +499,7 @@
             </LinearLayout>
         </ScrollView>
 
+        <!-- Hidden Legacy View References Layer -->
         <View android:id="@+id/playButtonsLayout" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
         <View android:id="@+id/managerProfileButton" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
         <View android:id="@+id/aboutButton" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
