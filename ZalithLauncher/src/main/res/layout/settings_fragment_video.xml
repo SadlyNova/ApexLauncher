@@ -1,39 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:scrollbars="none"
     tools:ignore="UseSwitchCompatOrMaterialXml">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_12sdp"
         android:orientation="vertical"
-        android:paddingVertical="@dimen/_12sdp">
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_10sdp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="@dimen/_14sdp"
+            android:layout_marginStart="@dimen/_4sdp">
+            
+            <ImageView
+                android:layout_width="@dimen/_22sdp"
+                android:layout_height="@dimen/_22sdp"
+                android:src="@drawable/ic_setting_video"
+                app:tint="#9D4EDD" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:text="VIDEO SETTINGS"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/_13ssp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05" />
+        </LinearLayout>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/video_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_card"
-            android:orientation="vertical"
-            android:paddingHorizontal="@dimen/_2sdp"
-            android:paddingVertical="@dimen/_12sdp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_12sdp"
-                android:text="@string/setting_category_video"
-                android:textColor="@color/settings_category" />
+            android:background="@android:color/transparent"
+            android:orientation="vertical">
 
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/renderer_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:padding="@dimen/_12sdp">
+                android:background="@drawable/card_glass_bg"
+                android:padding="@dimen/_12sdp"
+                android:layout_marginBottom="@dimen/_8sdp">
 
                 <TextView
                     android:id="@+id/renderer_title"
@@ -43,7 +63,9 @@
                     android:layout_alignParentStart="true"
                     android:layout_toStartOf="@id/renderer_download"
                     android:text="@string/setting_renderer_title"
-                    android:textColor="@color/black_or_white" />
+                    android:textColor="#FFFFFF"
+                    android:textSize="@dimen/_11ssp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/renderer_value"
@@ -53,16 +75,20 @@
                     android:layout_below="@+id/renderer_title"
                     android:layout_alignParentStart="true"
                     android:layout_toStartOf="@id/renderer_download"
+                    android:textColor="#A09BB0"
+                    android:textSize="@dimen/_9ssp"
+                    android:layout_marginTop="@dimen/_2sdp"
                     android:text="@string/generic_default" />
 
                 <ImageButton
                     android:id="@+id/renderer_download"
-                    android:layout_width="@dimen/_32sdp"
-                    android:layout_height="@dimen/_32sdp"
+                    android:layout_width="@dimen/_28sdp"
+                    android:layout_height="@dimen/_28sdp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:contentDescription="@string/setting_category_download"
                     android:src="@drawable/ic_download"
+                    app:tint="#9D4EDD"
                     android:background="?android:attr/selectableItemBackgroundBorderless"/>
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
@@ -70,8 +96,9 @@
                 android:id="@+id/renderer_local_import_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:padding="@dimen/_12sdp">
+                android:background="@drawable/card_glass_bg"
+                android:padding="@dimen/_12sdp"
+                android:layout_marginBottom="@dimen/_8sdp">
 
                 <TextView
                     android:id="@+id/renderer_local_import_title"
@@ -81,7 +108,9 @@
                     android:layout_alignParentStart="true"
                     android:layout_toStartOf="@id/renderer_local_import_manage"
                     android:text="@string/setting_renderer_local_import_title"
-                    android:textColor="@color/black_or_white" />
+                    android:textColor="#FFFFFF"
+                    android:textSize="@dimen/_11ssp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/renderer_local_import_summary"
@@ -91,16 +120,20 @@
                     android:layout_below="@+id/renderer_local_import_title"
                     android:layout_alignParentStart="true"
                     android:layout_toStartOf="@id/renderer_local_import_manage"
+                    android:textColor="#A09BB0"
+                    android:textSize="@dimen/_9ssp"
+                    android:layout_marginTop="@dimen/_2sdp"
                     android:text="@string/setting_renderer_local_import_desc" />
 
                 <ImageButton
                     android:id="@+id/renderer_local_import_manage"
-                    android:layout_width="@dimen/_32sdp"
-                    android:layout_height="@dimen/_32sdp"
+                    android:layout_width="@dimen/_28sdp"
+                    android:layout_height="@dimen/_28sdp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:contentDescription="@string/setting_renderer_local_manage"
                     android:src="@drawable/ic_setting"
+                    app:tint="#9D4EDD"
                     android:background="?android:attr/selectableItemBackgroundBorderless"/>
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
@@ -108,8 +141,9 @@
                 android:id="@+id/driver_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:padding="@dimen/_12sdp">
+                android:background="@drawable/card_glass_bg"
+                android:padding="@dimen/_12sdp"
+                android:layout_marginBottom="@dimen/_8sdp">
 
                 <TextView
                     android:id="@+id/driver_title"
@@ -119,7 +153,9 @@
                     android:layout_alignParentStart="true"
                     android:layout_toStartOf="@id/driver_download"
                     android:text="@string/setting_driver_title"
-                    android:textColor="@color/black_or_white" />
+                    android:textColor="#FFFFFF"
+                    android:textSize="@dimen/_11ssp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/driver_value"
@@ -129,16 +165,20 @@
                     android:layout_below="@+id/driver_title"
                     android:layout_alignParentStart="true"
                     android:layout_toStartOf="@id/driver_download"
+                    android:textColor="#A09BB0"
+                    android:textSize="@dimen/_9ssp"
+                    android:layout_marginTop="@dimen/_2sdp"
                     android:text="@string/generic_default" />
 
                 <ImageButton
                     android:id="@+id/driver_download"
-                    android:layout_width="@dimen/_32sdp"
-                    android:layout_height="@dimen/_32sdp"
+                    android:layout_width="@dimen/_28sdp"
+                    android:layout_height="@dimen/_28sdp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:contentDescription="@string/setting_category_download"
                     android:src="@drawable/ic_download"
+                    app:tint="#9D4EDD"
                     android:background="?android:attr/selectableItemBackgroundBorderless"/>
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
@@ -146,8 +186,9 @@
                 android:id="@+id/ignoreNotch_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:padding="@dimen/_12sdp">
+                android:background="@drawable/card_glass_bg"
+                android:padding="@dimen/_12sdp"
+                android:layout_marginBottom="@dimen/_8sdp">
 
                 <TextView
                     android:id="@+id/ignoreNotch_title"
@@ -157,7 +198,9 @@
                     android:layout_marginEnd="@dimen/_8sdp"
                     android:layout_toStartOf="@+id/ignoreNotch"
                     android:text="@string/setting_ignore_notch_title"
-                    android:textColor="@color/black_or_white" />
+                    android:textColor="#FFFFFF"
+                    android:textSize="@dimen/_11ssp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/ignoreNotch_summary"
@@ -167,6 +210,9 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginEnd="@dimen/_8sdp"
                     android:layout_toStartOf="@+id/ignoreNotch"
+                    android:textColor="#A09BB0"
+                    android:textSize="@dimen/_9ssp"
+                    android:layout_marginTop="@dimen/_2sdp"
                     android:text="@string/setting_ignore_notch_desc" />
 
                 <Switch
@@ -182,8 +228,9 @@
                 android:id="@+id/ignoreNotchLauncher_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:padding="@dimen/_12sdp">
+                android:background="@drawable/card_glass_bg"
+                android:padding="@dimen/_12sdp"
+                android:layout_marginBottom="@dimen/_8sdp">
 
                 <TextView
                     android:id="@+id/ignoreNotchLauncher_title"
@@ -193,7 +240,9 @@
                     android:layout_marginEnd="@dimen/_8sdp"
                     android:layout_toStartOf="@+id/ignoreNotchLauncher"
                     android:text="@string/setting_launcher_ignore_notch_title"
-                    android:textColor="@color/black_or_white" />
+                    android:textColor="#FFFFFF"
+                    android:textSize="@dimen/_11ssp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/ignoreNotchLauncher_summary"
@@ -203,6 +252,9 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginEnd="@dimen/_8sdp"
                     android:layout_toStartOf="@+id/ignoreNotchLauncher"
+                    android:textColor="#A09BB0"
+                    android:textSize="@dimen/_9ssp"
+                    android:layout_marginTop="@dimen/_2sdp"
                     android:text="@string/setting_launcher_ignore_notch_desc" />
 
                 <Switch
@@ -218,7 +270,9 @@
                 android:id="@+id/resolutionRatio_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground">
+                android:background="@drawable/card_glass_bg"
+                android:paddingBottom="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_8sdp">
 
                 <TextView
                     android:id="@+id/resolutionRatio_title"
@@ -229,7 +283,9 @@
                     android:layout_marginHorizontal="@dimen/_12sdp"
                     android:layout_marginTop="@dimen/_12sdp"
                     android:text="@string/setting_resolution_scaler_title"
-                    android:textColor="@color/black_or_white" />
+                    android:textColor="#FFFFFF"
+                    android:textSize="@dimen/_11ssp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/resolutionRatio_summary"
@@ -239,6 +295,8 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentEnd="true"
                     android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:textColor="#A09BB0"
+                    android:textSize="@dimen/_9ssp"
                     android:text="@string/setting_resolution_scaler_desc" />
 
                 <SeekBar
@@ -260,7 +318,10 @@
                     android:layout_toStartOf="@id/resolutionRatio_value"
                     android:layout_marginVertical="@dimen/_8sdp"
                     android:layout_marginEnd="@dimen/_8sdp"
-                    android:background="@drawable/background_text"
+                    android:textColor="#FFFFFF"
+                    android:textSize="@dimen/_9ssp"
+                    android:background="@drawable/button_background_unselected"
+                    android:paddingHorizontal="@dimen/_4sdp"
                     tools:text="0 x 0" />
 
                 <TextView
@@ -271,7 +332,11 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginVertical="@dimen/_8sdp"
                     android:layout_marginEnd="@dimen/_12sdp"
-                    android:background="@drawable/background_text"
+                    android:textColor="#9D4EDD"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/_9ssp"
+                    android:background="@drawable/button_background_selected"
+                    android:paddingHorizontal="@dimen/_6sdp"
                     tools:text="0" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
@@ -279,8 +344,9 @@
                 android:id="@+id/sustainedPerformance_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:padding="@dimen/_12sdp">
+                android:background="@drawable/card_glass_bg"
+                android:padding="@dimen/_12sdp"
+                android:layout_marginBottom="@dimen/_8sdp">
 
                 <TextView
                     android:id="@+id/sustainedPerformance_title"
@@ -290,7 +356,9 @@
                     android:layout_marginEnd="@dimen/_8sdp"
                     android:layout_toStartOf="@+id/sustainedPerformance"
                     android:text="@string/setting_sustained_performance_title"
-                    android:textColor="@color/black_or_white" />
+                    android:textColor="#FFFFFF"
+                    android:textSize="@dimen/_11ssp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/sustainedPerformance_summary"
@@ -300,6 +368,9 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginEnd="@dimen/_8sdp"
                     android:layout_toStartOf="@+id/sustainedPerformance"
+                    android:textColor="#A09BB0"
+                    android:textSize="@dimen/_9ssp"
+                    android:layout_marginTop="@dimen/_2sdp"
                     android:text="@string/setting_limit_overheating_throttling" />
 
                 <Switch
@@ -314,8 +385,9 @@
                 android:id="@+id/alternate_surface_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:padding="@dimen/_12sdp">
+                android:background="@drawable/card_glass_bg"
+                android:padding="@dimen/_12sdp"
+                android:layout_marginBottom="@dimen/_8sdp">
 
                 <TextView
                     android:id="@+id/alternate_surface_title"
@@ -325,7 +397,9 @@
                     android:layout_marginEnd="@dimen/_8sdp"
                     android:layout_toStartOf="@+id/alternate_surface"
                     android:text="@string/setting_use_surface_view_title"
-                    android:textColor="@color/black_or_white" />
+                    android:textColor="#FFFFFF"
+                    android:textSize="@dimen/_11ssp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/alternate_surface_summary"
@@ -335,6 +409,9 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginEnd="@dimen/_8sdp"
                     android:layout_toStartOf="@+id/alternate_surface"
+                    android:textColor="#A09BB0"
+                    android:textSize="@dimen/_9ssp"
+                    android:layout_marginTop="@dimen/_2sdp"
                     android:text="@string/setting_use_surface_view_desc" />
 
                 <Switch
@@ -349,8 +426,9 @@
                 android:id="@+id/force_vsync_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:padding="@dimen/_12sdp">
+                android:background="@drawable/card_glass_bg"
+                android:padding="@dimen/_12sdp"
+                android:layout_marginBottom="@dimen/_8sdp">
 
                 <TextView
                     android:id="@+id/force_vsync_title"
@@ -360,7 +438,9 @@
                     android:layout_marginEnd="@dimen/_8sdp"
                     android:layout_toStartOf="@+id/force_vsync"
                     android:text="@string/setting_force_vsync_title"
-                    android:textColor="@color/black_or_white" />
+                    android:textColor="#FFFFFF"
+                    android:textSize="@dimen/_11ssp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/force_vsync_summary"
@@ -370,6 +450,9 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginEnd="@dimen/_8sdp"
                     android:layout_toStartOf="@+id/force_vsync"
+                    android:textColor="#A09BB0"
+                    android:textSize="@dimen/_9ssp"
+                    android:layout_marginTop="@dimen/_2sdp"
                     android:text="@string/setting_limit_overheating_throttling" />
 
                 <Switch
@@ -384,8 +467,9 @@
                 android:id="@+id/vsync_in_zink_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:padding="@dimen/_12sdp">
+                android:background="@drawable/card_glass_bg"
+                android:padding="@dimen/_12sdp"
+                android:layout_marginBottom="@dimen/_8sdp">
 
                 <TextView
                     android:id="@+id/vsync_in_zink_title"
@@ -395,7 +479,9 @@
                     android:layout_marginEnd="@dimen/_8sdp"
                     android:layout_toStartOf="@+id/vsync_in_zink"
                     android:text="@string/setting_vsync_in_zink_title"
-                    android:textColor="@color/black_or_white" />
+                    android:textColor="#FFFFFF"
+                    android:textSize="@dimen/_11ssp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/vsync_in_zink_summary"
@@ -405,6 +491,9 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginEnd="@dimen/_8sdp"
                     android:layout_toStartOf="@+id/vsync_in_zink"
+                    android:textColor="#A09BB0"
+                    android:textSize="@dimen/_9ssp"
+                    android:layout_marginTop="@dimen/_2sdp"
                     android:text="@string/setting_vsync_in_zink_desc" />
 
                 <Switch
@@ -419,7 +508,7 @@
                 android:id="@+id/zinkPreferSystemDriver_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
+                android:background="@drawable/card_glass_bg"
                 android:padding="@dimen/_12sdp">
 
                 <TextView
@@ -430,7 +519,9 @@
                     android:layout_marginEnd="@dimen/_8sdp"
                     android:layout_toStartOf="@+id/zinkPreferSystemDriver"
                     android:text="@string/setting_vulkan_driver_system_title"
-                    android:textColor="@color/black_or_white" />
+                    android:textColor="#FFFFFF"
+                    android:textSize="@dimen/_11ssp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/zinkPreferSystemDriver_summary"
@@ -440,6 +531,9 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginEnd="@dimen/_8sdp"
                     android:layout_toStartOf="@+id/zinkPreferSystemDriver"
+                    android:textColor="#A09BB0"
+                    android:textSize="@dimen/_9ssp"
+                    android:layout_marginTop="@dimen/_2sdp"
                     android:text="@string/setting_vulkan_driver_system_desc" />
 
                 <Switch
@@ -451,7 +545,5 @@
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
-
     </androidx.appcompat.widget.LinearLayoutCompat>
-
 </ScrollView>
