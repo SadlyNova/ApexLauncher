@@ -13,6 +13,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.movtery.anim.AnimPlayer;
 import com.movtery.anim.animations.Animations;
@@ -118,9 +119,8 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
             if (topShareBtn != null) topShareBtn.setOnClickListener(this);
         }
 
-        // 🌟 Premium Left Sidebar Tabs Binding & Click Configurations
+        // Left Navigation Menu Deck Listeners Hook
         View rootLayout = binding.getRoot();
-        
         View tabHome = rootLayout.findViewById(R.id.tab_home);
         if (tabHome != null) tabHome.setOnClickListener(this);
 
@@ -133,7 +133,7 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         View aboutApexTab = rootLayout.findViewById(R.id.about_apex_tab);
         if (aboutApexTab != null) aboutApexTab.setOnClickListener(this);
 
-        // Top Toolbar Buttons Clicks
+        // Standard Icon Trigger Actions Setup
         if (binding.customControlButton != null) binding.customControlButton.setOnClickListener(this);
         if (binding.openMainDirButton != null) binding.openMainDirButton.setOnClickListener(this);
         if (binding.installJarButton != null) {
@@ -145,18 +145,13 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         }
         if (binding.shareLogsButton != null) binding.shareLogsButton.setOnClickListener(this);
 
-        // Dashboard Right Card Action Click Bindings
         binding.version.setOnClickListener(this);
         if (binding.editSettingsButton != null) binding.editSettingsButton.setOnClickListener(this);
         if (binding.novaDiscord != null) binding.novaDiscord.setOnClickListener(this);
         if (binding.novaWebsite != null) binding.novaWebsite.setOnClickListener(this);
         if (binding.novaGithub != null) binding.novaGithub.setOnClickListener(this);
-        
         if (binding.managerProfileButton != null) binding.managerProfileButton.setOnClickListener(this);
         binding.playButton.setOnClickListener(this);
-
-        if (binding.playButtonsLayout != null) binding.playButtonsLayout.setVisibility(View.VISIBLE);
-        if (binding.playButton != null) binding.playButton.setVisibility(View.VISIBLE);
 
         binding.versionName.setSelected(true);
         binding.versionInfo.setSelected(true);
@@ -164,6 +159,22 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         refreshCurrentVersion();
     }
 
+    // 🌟 DYNAMIC DASHBOARD FRAGMENT TRANSITION MATRIX METHOD
+    private void switchDashboardFeature(Fragment featureFragment) {
+        if (binding != null) {
+            // Hero Welcome Layout elements ko safe hide karo taaki view clear ho sake
+            if (binding.heroWelcomeArea != null) {
+                binding.heroWelcomeArea.setVisibility(View.GONE);
+            }
+            // ChildFragmentManager ke standard framework transactions call karo
+            getChildFragmentManager().beginTransaction()
+                .replace(R.id.dashboard_content_container, featureFragment)
+                .setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
+        }
+    }
+
+    // 🌟 FULLY LOADED CORE CLICK LOGIC HANDLING REDIRECTIONS
     @Override
     public void onClick(View v) {
         View activityRoot = requireActivity().findViewById(android.R.id.content);
@@ -183,46 +194,44 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         } 
         else if (v == tabHome) {
             ViewAnimUtils.setViewAnim(tabHome, Animations.Pulse);
-            Toast.makeText(requireContext(), "You are already on Home screen", Toast.LENGTH_SHORT).show();
+            // Re-inflate default state wrapper logic
+            if (binding.heroWelcomeArea != null) {
+                // Pehle active custom fragment layer ko hatao
+                Fragment activeFragment = getChildFragmentManager().findFragmentById(R.id.dashboard_content_container);
+                if (activeFragment != null) {
+                    getChildFragmentManager().beginTransaction().remove(activeFragment).commit();
+                }
+                binding.heroWelcomeArea.setVisibility(View.VISIBLE);
+            }
         } 
         else if (v == tabSettings || v == binding.editSettingsButton || v == binding.managerProfileButton) {
             if (!isTaskRunning()) {
                 if (v == binding.editSettingsButton) ViewAnimUtils.setViewAnim(binding.editSettingsButton, Animations.Pulse);
-                if (v == binding.managerProfileButton) ViewAnimUtils.setViewAnim(binding.managerProfileButton, Animations.Pulse);
-                ZHTools.swapFragmentWithAnim(this, VersionManagerFragment.class, VersionManagerFragment.TAG, null);
+                switchDashboardFeature(new VersionManagerFragment());
             } else {
-                if (v == binding.editSettingsButton) ViewAnimUtils.setViewAnim(binding.editSettingsButton, Animations.Shake);
-                if (v == binding.managerProfileButton) ViewAnimUtils.setViewAnim(binding.managerProfileButton, Animations.Shake);
                 TaskExecutors.runInUIThread(() -> Toast.makeText(requireContext(), R.string.version_manager_task_in_progress, Toast.LENGTH_SHORT).show());
             }
         } 
         else if (v == tabMods || v == binding.customControlButton || v == topGamingBtn) {
-            if (topGamingBtn != null && v == topGamingBtn) ViewAnimUtils.setViewAnim(topGamingBtn, Animations.Pulse);
-            ZHTools.swapFragmentWithAnim(this, ControlButtonFragment.class, ControlButtonFragment.TAG, null);
+            switchDashboardFeature(new ControlButtonFragment());
         } 
         else if (v == aboutApexTab) {
-            ZHTools.swapFragmentWithAnim(this, AboutFragment.class, AboutFragment.TAG, null);
+            switchDashboardFeature(new AboutFragment());
         } 
         else if (v == binding.openMainDirButton || v == topFolderBtn) {
-            if (topFolderBtn != null && v == topFolderBtn) ViewAnimUtils.setViewAnim(topFolderBtn, Animations.Pulse);
             Bundle bundle = new Bundle();
             bundle.putString(FilesFragment.BUNDLE_LIST_PATH, PathManager.DIR_GAME_HOME);
             ZHTools.swapFragmentWithAnim(this, FilesFragment.class, FilesFragment.TAG, bundle);
         } 
         else if (v == binding.installJarButton || v == topJavaBtn) {
-            if (topJavaBtn != null && v == topJavaBtn) ViewAnimUtils.setViewAnim(topJavaBtn, Animations.Pulse);
             runInstallerWithConfirmation(false);
         } 
         else if (v == binding.shareLogsButton || v == topShareBtn) {
-            if (topShareBtn != null && v == topShareBtn) ViewAnimUtils.setViewAnim(topShareBtn, Animations.Pulse);
             ZHTools.shareLogs(requireActivity());
         } 
         else if (v == binding.version) {
             if (!isTaskRunning()) {
                 ZHTools.swapFragmentWithAnim(this, VersionsListFragment.class, VersionsListFragment.TAG, null);
-            } else {
-                ViewAnimUtils.setViewAnim(binding.version, Animations.Shake);
-                TaskExecutors.runInUIThread(() -> Toast.makeText(requireContext(), R.string.version_manager_task_in_progress, Toast.LENGTH_SHORT).show());
             }
         } 
         else if (v == binding.novaDiscord) {
@@ -230,7 +239,7 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
             startActivity(intent);
         } 
         else if (v == binding.novaWebsite) {
-            android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://YOUR_WEBSITE.com"));
+            android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://github.com/SadlyNova/NovaLauncher-"));
             startActivity(intent);
         } 
         else if (v == binding.novaGithub) {
@@ -294,51 +303,13 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
 
     @Override
     public void slideIn(AnimPlayer animPlayer) {
-        View activityRoot = requireActivity().findViewById(android.R.id.content);
-        if (activityRoot != null) {
-            View topContainer = activityRoot.findViewById(R.id.btn_override_gaming);
-            if (topContainer != null && topContainer.getParent() instanceof View) {
-                animPlayer.apply(new AnimPlayer.Entry((View) topContainer.getParent(), Animations.BounceInDown));
-            }
-            View topTitle = activityRoot.findViewById(R.id.txt_override_title);
-            if (topTitle != null) {
-                animPlayer.apply(new AnimPlayer.Entry(topTitle, Animations.BounceInDown));
-            }
-        }
-        if (binding.centeredLogosContainer != null) {
-            animPlayer.apply(new AnimPlayer.Entry(binding.centeredLogosContainer, Animations.BounceInDown));
-        }
+        if (binding.centeredLogosContainer != null) animPlayer.apply(new AnimPlayer.Entry(binding.centeredLogosContainer, Animations.BounceInDown));
         animPlayer.apply(new AnimPlayer.Entry(binding.playLayout, Animations.BounceInLeft));
-        if (binding.playButtonsLayout != null) {
-            animPlayer.apply(new AnimPlayer.Entry(binding.playButtonsLayout, Animations.BounceEnlarge));
-        }
-        if (binding.editSettingsButton != null) {
-            animPlayer.apply(new AnimPlayer.Entry(binding.editSettingsButton, Animations.BounceInLeft));
-        }
     }
 
     @Override
     public void slideOut(AnimPlayer animPlayer) {
-        View activityRoot = requireActivity().findViewById(android.R.id.content);
-        if (activityRoot != null) {
-            View topContainer = activityRoot.findViewById(R.id.btn_override_gaming);
-            if (topContainer != null && topContainer.getParent() instanceof View) {
-                animPlayer.apply(new AnimPlayer.Entry((View) topContainer.getParent(), Animations.FadeOutUp));
-            }
-            View topTitle = activityRoot.findViewById(R.id.txt_override_title);
-            if (topTitle != null) {
-                animPlayer.apply(new AnimPlayer.Entry(topTitle, Animations.FadeOutUp));
-            }
-        }
-        if (binding.centeredLogosContainer != null) {
-            animPlayer.apply(new AnimPlayer.Entry(binding.centeredLogosContainer, Animations.FadeOutUp));
-        }
+        if (binding.centeredLogosContainer != null) animPlayer.apply(new AnimPlayer.Entry(binding.centeredLogosContainer, Animations.FadeOutUp));
         animPlayer.apply(new AnimPlayer.Entry(binding.playLayout, Animations.FadeOutRight));
-        if (binding.playButtonsLayout != null) {
-            animPlayer.apply(new AnimPlayer.Entry(binding.playButtonsLayout, Animations.BounceShrink));
-        }
-        if (binding.editSettingsButton != null) {
-            animPlayer.apply(new AnimPlayer.Entry(binding.editSettingsButton, Animations.FadeOutRight));
-        }
     }
 }
