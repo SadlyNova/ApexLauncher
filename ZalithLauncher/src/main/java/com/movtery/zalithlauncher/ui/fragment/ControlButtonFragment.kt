@@ -118,7 +118,12 @@ class ControlButtonFragment : FragmentWithAnim(R.layout.fragment_control_manager
         }
 
         binding.operateView.apply {
-            returnButton.setOnClickListener { ZHTools.onBackPressed(requireActivity()) }
+            // 🌟 REDIRECT TO HOME DASHBOARD INSTANTLY INSTEAD OF CLOSING WHOLE APP
+            returnButton.setOnClickListener {
+                parentFragmentManager.beginTransaction().remove(this@ControlButtonFragment).commit()
+                val parentRoot = activity?.findViewById<View>(android.R.id.content)
+                parentRoot?.findViewById<View>(R.id.heroWelcomeArea)?.visibility = View.VISIBLE
+            }
 
             pasteButton.setOnClickListener {
                 PasteFile.getInstance().pasteFiles(
@@ -136,22 +141,18 @@ class ControlButtonFragment : FragmentWithAnim(R.layout.fragment_control_manager
                 val suffix = ".json"
                 Toast.makeText(requireActivity(), String.format(getString(R.string.file_add_file_tip), suffix), Toast.LENGTH_SHORT).show()
                 openDocumentLauncher?.launch(suffix)
-            } //限制.json文件
+            }
 
             createFolderButton.setOnClickListener {
                 val editControlInfoDialog = EditControlInfoDialog(requireContext(), true, null, ControlInfoData())
                 editControlInfoDialog.setTitle(getString(R.string.controls_create_new))
                 editControlInfoDialog.setOnConfirmClickListener { fileName: String, controlInfoData: ControlInfoData ->
                     val file = File(File(PathManager.DIR_CTRLMAP_PATH).absolutePath, "$fileName.json")
-                    if (file.exists()) { //检查文件是否已经存在
-                        editControlInfoDialog.fileNameEditBox.error =
-                            getString(R.string.file_rename_exitis)
+                    if (file.exists()) {
+                        editControlInfoDialog.fileNameEditBox.error = getString(R.string.file_rename_exitis)
                         return@setOnConfirmClickListener
                     }
-
-                    //创建布局文件
                     createNewControlFile(requireContext(), file, controlInfoData)
-
                     controlsListViewCreator.refresh()
                     editControlInfoDialog.dismiss()
                 }
@@ -163,7 +164,6 @@ class ControlButtonFragment : FragmentWithAnim(R.layout.fragment_control_manager
         }
 
         controlsListViewCreator.listAtPath()
-
         startNewbieGuide()
     }
 
@@ -192,13 +192,12 @@ class ControlButtonFragment : FragmentWithAnim(R.layout.fragment_control_manager
                 val bundle = Bundle()
                 bundle.putString(CustomControlsActivity.BUNDLE_CONTROL_PATH, file.absolutePath)
                 intent.putExtras(bundle)
-
                 startActivity(intent)
             } else {
                 Toast.makeText(requireActivity(), getString(R.string.tasks_ongoing), Toast.LENGTH_SHORT).show()
             }
             filesDialog.dismiss()
-        } //加载
+        }
         filesDialog.show()
     }
 
@@ -225,17 +224,9 @@ class ControlButtonFragment : FragmentWithAnim(R.layout.fragment_control_manager
         binding.operateView.apply {
             addFileButton.setContentDescription(getString(R.string.controls_import_control))
             createFolderButton.setContentDescription(getString(R.string.controls_create_new))
+            pasteButton.visibility = if (PasteFile.getInstance().pasteType != null) View.VISIBLE else View.GONE
 
-            pasteButton.setVisibility(if (PasteFile.getInstance().pasteType != null) View.VISIBLE else View.GONE)
-
-            ZHTools.setTooltipText(
-                returnButton,
-                addFileButton,
-                createFolderButton,
-                pasteButton,
-                searchButton,
-                refreshButton
-            )
+            ZHTools.setTooltipText(returnButton, addFileButton, createFolderButton, pasteButton, searchButton, refreshButton)
         }
     }
 
@@ -254,14 +245,6 @@ class ControlButtonFragment : FragmentWithAnim(R.layout.fragment_control_manager
         }
     }
 
-    override fun slideIn(animPlayer: AnimPlayer) {
-        animPlayer.apply(AnimPlayer.Entry(binding.controlLayout, Animations.BounceInDown))
-            .apply(AnimPlayer.Entry(binding.operateLayout, Animations.BounceInLeft))
-    }
-
-    override fun slideOut(animPlayer: AnimPlayer) {
-        animPlayer.apply(AnimPlayer.Entry(binding.controlLayout, Animations.FadeOutUp))
-            .apply(AnimPlayer.Entry(binding.operateLayout, Animations.FadeOutRight))
-    }
+    override fun slideIn(animPlayer: AnimPlayer) {}
+    override fun slideOut(animPlayer: AnimPlayer) {}
 }
-
