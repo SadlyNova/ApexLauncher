@@ -82,7 +82,7 @@ android {
         manifestPlaceholders["launcher_name"] = launcherAPPName
     }
 
-    // =================================================================
+        // =================================================================
     // 🌍 BYPASS TRANSLATION STRINGS SUB-COMPILATION ERRORS GLOBALLY
     // =================================================================
     lint {
@@ -98,7 +98,9 @@ android {
             isMinifyEnabled = false
             isShrinkResources = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            
             signingConfig = signingConfigs.getByName("customDebug")
+            
             resValue("string", "storageProviderAuthorities", "$storageProviderId.debug")
         }
         create("proguard") {
@@ -203,13 +205,8 @@ android {
     }
 
     buildToolsVersion = "34.0.0"
-    
     kotlinOptions {
         jvmTarget = "1.8"
-    }
-
-    aaptOptions {
-        ignoreAssetsPattern = "ic_notification*:!.git:!.svn:!.jpeg:!.jpg:!.png"
     }
 }
 
