@@ -17,7 +17,7 @@
         android:orientation="vertical" />
 
     <!-- ================================================================= -->
-    <!-- 1️⃣ LEFT NAVIGATION SIDEBAR                                         -->
+    <!-- 1️⃣ LEFT NAVIGATION SIDEBAR (CLEAN & CLUTTERLESS)                  -->
     <!-- ================================================================= -->
     <LinearLayout
         android:id="@+id/leftSidebar"
@@ -113,7 +113,7 @@
                     android:clickable="true"
                     android:focusable="true"/>
 
-                <!-- 3. Custom Controls Tab (Clean and Fixed) -->
+                <!-- 3. Custom Controls Tab -->
                 <TextView
                     android:id="@+id/tab_mods"
                     android:layout_width="match_parent"
@@ -204,49 +204,15 @@
             android:id="@+id/viewAccount"
             layout="@layout/view_account"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_12sdp" />
-
-        <!-- Social Navigation Quick Bottom Deck -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:paddingTop="@dimen/_4sdp">
-            <ImageView
-                android:id="@+id/sidebar_discord"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:layout_marginHorizontal="@dimen/_8sdp"
-                android:src="@drawable/ic_share"
-                app:tint="#A09BB0"
-                android:clickable="true"
-                android:focusable="true"/>
-            <ImageView
-                android:id="@+id/sidebar_website"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:layout_marginHorizontal="@dimen/_8sdp"
-                android:src="@drawable/ic_folder"
-                app:tint="#A09BB0"
-                android:clickable="true"
-                android:focusable="true"/>
-            <ImageView
-                android:id="@+id/sidebar_github"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:layout_marginHorizontal="@dimen/_8sdp"
-                android:src="@drawable/ic_java"
-                app:tint="#A09BB0"
-                android:clickable="true"
-                android:focusable="true"/>
-        </LinearLayout>
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
-    <!-- Invisible bindings to maintain framework alignment without crashes -->
+    <!-- Invisible bindings to maintain java controller mappings without crash -->
     <View android:id="@+id/custom_control_button" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints"/>
     <LinearLayout android:id="@+id/centeredLogosContainer" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints"/>
+    <ImageView android:id="@+id/sidebar_discord" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints"/>
+    <ImageView android:id="@+id/sidebar_website" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints"/>
+    <ImageView android:id="@+id/sidebar_github" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints"/>
 
     <!-- ================================================================= -->
     <!-- 2️⃣ DYNAMIC CENTER CONTAINER INTERFACE HOLDER                       -->
