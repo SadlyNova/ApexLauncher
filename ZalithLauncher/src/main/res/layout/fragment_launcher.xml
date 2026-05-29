@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://tools.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_menu_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/launcher_bg"
     tools:context="net.kdt.pojavlaunch.fragments.MainMenuFragment">
 
-    <!-- Notice pipeline container layer -->
     <LinearLayout
         android:id="@+id/noticeContainer"
         android:layout_width="0dp"
@@ -16,9 +15,6 @@
         android:visibility="gone"
         android:orientation="vertical" />
 
-    <!-- ================================================================= -->
-    <!-- 1️⃣ LEFT NAVIGATION SIDEBAR                                         -->
-    <!-- ================================================================= -->
     <LinearLayout
         android:id="@+id/leftSidebar"
         android:layout_width="@dimen/_180sdp"
@@ -31,7 +27,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <!-- Logo Deck -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -69,14 +64,12 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Sidebar Navigation Options Stack -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <!-- Home Tab -->
             <TextView
                 android:id="@+id/tab_home"
                 android:layout_width="match_parent"
@@ -91,7 +84,6 @@
                 android:layout_marginBottom="@dimen/_4sdp"
                 android:background="@drawable/button_background" />
 
-            <!-- Settings Tab -->
             <TextView
                 android:id="@+id/tab_settings"
                 android:layout_width="match_parent"
@@ -108,7 +100,6 @@
                 android:clickable="true"
                 android:focusable="true"/>
 
-            <!-- Mods Tab -->
             <TextView
                 android:id="@+id/tab_mods"
                 android:layout_width="match_parent"
@@ -125,7 +116,6 @@
                 android:clickable="true"
                 android:focusable="true"/>
 
-            <!-- Community Tab -->
             <TextView
                 android:id="@+id/nova_discord"
                 android:layout_width="match_parent"
@@ -142,7 +132,6 @@
                 android:clickable="true"
                 android:focusable="true"/>
 
-            <!-- About Apex Tab -->
             <TextView
                 android:id="@+id/about_apex_tab"
                 android:layout_width="match_parent"
@@ -159,7 +148,6 @@
                 android:focusable="true"/>
         </LinearLayout>
 
-        <!-- Sidebar Footer Layer: Account Profile Preview Card -->
         <include
             android:id="@+id/viewAccount"
             layout="@layout/view_account"
@@ -167,7 +155,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_12sdp" />
 
-        <!-- Social Navigation Quick Deck -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -204,9 +191,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- ================================================================= -->
-    <!-- 2️⃣ TOP TOOLBAR CONTROL ROW                                        -->
-    <!-- ================================================================= -->
     <LinearLayout
         android:id="@+id/centeredLogosContainer"
         android:layout_width="wrap_content"
@@ -267,64 +251,66 @@
             android:contentDescription="@null"/>
     </LinearLayout>
 
-    <!-- ================================================================= -->
-    <!-- 3️⃣ CENTER MAIN BODY: HERO WELCOME AREA                            -->
-    <!-- ================================================================= -->
-    <LinearLayout
-        android:id="@+id/heroWelcomeArea"
+    <FrameLayout
+        android:id="@+id/dashboard_content_container"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginStart="@dimen/_24sdp"
-        android:layout_marginBottom="@dimen/_40sdp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_45sdp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/leftSidebar"
         app:layout_constraintEnd_toStartOf="@id/playLayout">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/heroWelcomeArea"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="WELCOME TO"
-            android:textColor="#B3A9C9"
-            android:textSize="@dimen/_10ssp"
-            android:textStyle="bold"
-            android:letterSpacing="0.05" />
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/_24sdp"
+            android:layout_marginEnd="@dimen/_12sdp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="APEX\nLAUNCHER"
-            android:textColor="#FFFFFF"
-            android:textSize="@dimen/_26ssp"
-            android:textStyle="bold"
-            android:lineSpacingMultiplier="0.9" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="WELCOME TO"
+                android:textColor="#B3A9C9"
+                android:textSize="@dimen/_10ssp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05" />
 
-        <TextView
-            android:layout_width="@dimen/_180sdp"
-            android:layout_height="wrap_content"
-            android:text="Your ultimate Minecraft experience starts here. Customize, explore, and play without limits."
-            android:textColor="#9E96B3"
-            android:textSize="@dimen/_9ssp"
-            android:layout_marginTop="@dimen/_6sdp"
-            android:layout_marginBottom="@dimen/_14sdp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="APEX\nLAUNCHER"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/_26ssp"
+                android:textStyle="bold"
+                android:lineSpacingMultiplier="0.9" />
 
-        <!-- Quick Launch Action Button -->
-        <Button
-            android:id="@+id/playButton"
-            android:layout_width="@dimen/_130sdp"
-            android:layout_height="@dimen/_36sdp"
-            android:text="LAUNCH GAME  ›"
-            android:background="@drawable/button_background"
-            android:textColor="#FFFFFF"
-            android:textAllCaps="true"
-            android:textSize="@dimen/_11ssp"
-            android:textStyle="bold"
-            android:elevation="@dimen/_4sdp" />
-    </LinearLayout>
+            <TextView
+                android:layout_width="@dimen/_180sdp"
+                android:layout_height="wrap_content"
+                android:text="Your ultimate Minecraft experience starts here. Customize, explore, and play without limits."
+                android:textColor="#9E96B3"
+                android:textSize="@dimen/_9ssp"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:layout_marginBottom="@dimen/_14sdp" />
 
-    <!-- ================================================================= -->
-    <!-- 4️⃣ RIGHT DASHBOARD PANEL (GLASSMORPHIC CARDS)                      -->
-    <!-- ================================================================= -->
+            <Button
+                android:id="@+id/playButton"
+                android:layout_width="@dimen/_130sdp"
+                android:layout_height="@dimen/_36sdp"
+                android:text="LAUNCH GAME  ›"
+                android:background="@drawable/button_background"
+                android:textColor="#FFFFFF"
+                android:textAllCaps="true"
+                android:textSize="@dimen/_11ssp"
+                android:textStyle="bold"
+                android:elevation="@dimen/_4sdp" />
+        </LinearLayout>
+    </FrameLayout>
+
     <LinearLayout
         android:id="@+id/playLayout"
         android:layout_width="@dimen/_220sdp"
@@ -349,7 +335,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- CARD A: MY ACCOUNT DETAILS -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -367,7 +352,6 @@
                         android:textStyle="bold"
                         android:layout_marginBottom="@dimen/_6sdp" />
 
-                    <!-- Dynamic Sub-Account Info Box Reference -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -402,7 +386,6 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- CARD B: QUICK ACTIONS DECK -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -447,7 +430,6 @@
                         android:focusable="true" />
                 </LinearLayout>
 
-                <!-- CARD C: GAME VERSION RUNTIME DISPLAY -->
                 <LinearLayout
                     android:id="@+id/versionInfoContainer"
                     android:layout_width="match_parent"
@@ -510,7 +492,6 @@
             </LinearLayout>
         </ScrollView>
 
-        <!-- Hidden Legacy Bindings Stack to ensure no framework crashes occur -->
         <View android:id="@+id/playButtonsLayout" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
         <View android:id="@+id/managerProfileButton" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
         <View android:id="@+id/aboutButton" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
