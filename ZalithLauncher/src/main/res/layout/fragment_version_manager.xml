@@ -10,6 +10,7 @@
     android:padding="@dimen/_4sdp"
     tools:ignore="ContentDescription">
 
+    <!-- Left Shortcut Scroll Deck -->
     <ScrollView
         android:id="@+id/shortcuts_layout"
         android:layout_width="0dp"
@@ -39,6 +40,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <!-- Mods Row -->
             <ImageView
                 android:id="@+id/mods_icon"
                 android:layout_width="@dimen/_24sdp"
@@ -55,10 +57,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_10sdp"
+                android:text="@string/version_manager_shortcuts_mods"
+                android:textColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/mods_icon"
                 app:layout_constraintTop_toBottomOf="@+id/title_textview" />
 
+            <!-- Folder Row -->
             <ImageView
                 android:id="@+id/game_icon"
                 android:layout_width="@dimen/_24sdp"
@@ -75,10 +80,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_4sdp"
+                android:text="@string/version_manager_shortcuts_version_path"
+                android:textColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/game_icon"
                 app:layout_constraintTop_toBottomOf="@+id/shortcuts_mods" />
 
+            <!-- Resource Pack Row -->
             <ImageView
                 android:id="@+id/resource_icon"
                 android:layout_width="@dimen/_24sdp"
@@ -95,10 +103,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_4sdp"
+                android:text="@string/version_manager_shortcuts_resource_path"
+                android:textColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/resource_icon"
                 app:layout_constraintTop_toBottomOf="@+id/game_path" />
 
+            <!-- Saves Row -->
             <ImageView
                 android:id="@+id/world_icon"
                 android:layout_width="@dimen/_24sdp"
@@ -115,10 +126,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_4sdp"
+                android:text="@string/version_manager_shortcuts_world_path"
+                android:textColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/world_icon"
                 app:layout_constraintTop_toBottomOf="@+id/resource_path" />
 
+            <!-- Shaders Row -->
             <ImageView
                 android:id="@+id/shader_icon"
                 android:layout_width="@dimen/_24sdp"
@@ -135,10 +149,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_4sdp"
+                android:text="@string/version_manager_shortcuts_shader_path"
+                android:textColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/shader_icon"
                 app:layout_constraintTop_toBottomOf="@+id/world_path" />
 
+            <!-- Screenshot Row -->
             <ImageView
                 android:id="@+id/screenshot_icon"
                 android:layout_width="@dimen/_24sdp"
@@ -155,10 +172,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_4sdp"
+                android:text="@string/version_manager_shortcuts_screenshot_path"
+                android:textColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/screenshot_icon"
                 app:layout_constraintTop_toBottomOf="@+id/shader_path" />
 
+            <!-- Logs Row -->
             <ImageView
                 android:id="@+id/logs_icon"
                 android:layout_width="@dimen/_24sdp"
@@ -175,10 +195,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_4sdp"
+                android:text="@string/version_manager_shortcuts_logs_path"
+                android:textColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/logs_icon"
                 app:layout_constraintTop_toBottomOf="@+id/screenshot_path" />
 
+            <!-- Crash Report Row -->
             <ImageView
                 android:id="@+id/crash_report_icon"
                 android:layout_width="@dimen/_24sdp"
@@ -195,6 +218,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_4sdp"
+                android:text="@string/version_manager_shortcuts_crash_report_path"
+                android:textColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/crash_report_icon"
                 app:layout_constraintTop_toBottomOf="@+id/logs_path" />
@@ -202,6 +227,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
+    <!-- Right Management Scroll Deck -->
     <ScrollView
         android:id="@+id/edit_layout"
         android:layout_width="0dp"
@@ -224,13 +250,14 @@
                 style="@style/TextAppearance.AppCompat.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/version_manager_title"
+                android:text="Version Management"
                 android:textColor="#FFFFFF"
                 android:textSize="@dimen/_11ssp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <!-- Version Settings Row -->
             <ImageView
                 android:id="@+id/version_settings_icon"
                 android:layout_width="@dimen/_24sdp"
@@ -247,10 +274,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_10sdp"
+                android:text="@string/setting_category_version"
+                android:textColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/version_settings_icon"
                 app:layout_constraintTop_toBottomOf="@+id/title_manage_textview" />
 
+            <!-- Rename Row -->
             <ImageView
                 android:id="@+id/rename_version_icon"
                 android:layout_width="@dimen/_24sdp"
@@ -267,10 +297,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_4sdp"
+                android:text="@string/version_manager_rename"
+                android:textColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/rename_version_icon"
                 app:layout_constraintTop_toBottomOf="@+id/version_settings" />
 
+            <!-- Copy Row -->
             <ImageView
                 android:id="@+id/copy_version_icon"
                 android:layout_width="@dimen/_24sdp"
@@ -287,10 +320,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_4sdp"
+                android:text="@string/version_manager_copy"
+                android:textColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/copy_version_icon"
                 app:layout_constraintTop_toBottomOf="@+id/version_rename" />
 
+            <!-- Delete Row -->
             <ImageView
                 android:id="@+id/delete_version_icon"
                 android:layout_width="@dimen/_24sdp"
@@ -307,6 +343,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_4sdp"
+                android:text="@string/version_manager_delete"
+                android:textColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/delete_version_icon"
                 app:layout_constraintTop_toBottomOf="@+id/version_copy" />
