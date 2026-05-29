@@ -45,7 +45,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class MainMenuFragment extends FragmentWithAnim {
+public class MainMenuFragment extends FragmentWithAnim implements View.OnClickListener {
     public static final String TAG = "MainMenuFragment";
     private FragmentLauncherBinding binding;
     private AccountViewWrapper accountViewWrapper;
@@ -93,18 +93,6 @@ public class MainMenuFragment extends FragmentWithAnim {
             binding.aboutButton.setVisibility(View.GONE); 
         }
 
-        // 🌟 FIX: Branding "About Nova" se badal kar "About Apex" runtime reflection layout layout se configure kiya
-        if (binding != null) {
-            View rootLayout = binding.getRoot();
-            int aboutNovaId = rootLayout.getResources().getIdentifier("about_nova", "id", rootLayout.getContext().getPackageName());
-            if (aboutNovaId != 0) {
-                View aboutView = rootLayout.findViewById(aboutNovaId);
-                if (aboutView instanceof TextView) {
-                    ((TextView) aboutView).setText("About Apex");
-                }
-            }
-        }
-
         View activityRoot = requireActivity().findViewById(android.R.id.content);
         if (activityRoot != null) {
             ImageView topGamingBtn = activityRoot.findViewById(R.id.btn_override_gaming);
@@ -114,129 +102,141 @@ public class MainMenuFragment extends FragmentWithAnim {
             TextView topTitleView = activityRoot.findViewById(R.id.txt_override_title);
 
             if (topTitleView != null) {
-                topTitleView.setText("Apex Launcher"); // Branding update
+                topTitleView.setText("Apex Launcher"); 
                 topTitleView.setVisibility(View.VISIBLE);
             }
 
-            if (topGamingBtn != null) {
-                topGamingBtn.setOnClickListener(v -> {
-                    ViewAnimUtils.setViewAnim(topGamingBtn, Animations.Pulse);
-                    ZHTools.swapFragmentWithAnim(this, ControlButtonFragment.class, ControlButtonFragment.TAG, null);
-                });
-            }
-
-            if (topFolderBtn != null) {
-                topFolderBtn.setOnClickListener(v -> {
-                    ViewAnimUtils.setViewAnim(topFolderBtn, Animations.Pulse);
-                    Bundle bundle = new Bundle();
-                    bundle.putString(FilesFragment.BUNDLE_LIST_PATH, PathManager.DIR_GAME_HOME);
-                    ZHTools.swapFragmentWithAnim(this, FilesFragment.class, FilesFragment.TAG, bundle);
-                });
-            }
-
+            if (topGamingBtn != null) topGamingBtn.setOnClickListener(this);
+            if (topFolderBtn != null) topFolderBtn.setOnClickListener(this);
             if (topJavaBtn != null) {
-                topJavaBtn.setOnClickListener(v -> {
-                    ViewAnimUtils.setViewAnim(topJavaBtn, Animations.Pulse);
-                    runInstallerWithConfirmation(false);
-                });
+                topJavaBtn.setOnClickListener(this);
                 topJavaBtn.setOnLongClickListener(v -> {
                     runInstallerWithConfirmation(true);
                     return true;
                 });
             }
-
-            if (topShareBtn != null) {
-                topShareBtn.setOnClickListener(v -> {
-                    ViewAnimUtils.setViewAnim(topShareBtn, Animations.Pulse);
-                    ZHTools.shareLogs(requireActivity());
-                });
-            }
+            if (topShareBtn != null) topShareBtn.setOnClickListener(this);
         }
 
-        if (binding.customControlButton != null) {
-            binding.customControlButton.setOnClickListener(v -> ZHTools.swapFragmentWithAnim(this, ControlButtonFragment.class, ControlButtonFragment.TAG, null));
-        }
-        if (binding.openMainDirButton != null) {
-            binding.openMainDirButton.setOnClickListener(v -> {
-                Bundle bundle = new Bundle();
-                bundle.putString(FilesFragment.BUNDLE_LIST_PATH, PathManager.DIR_GAME_HOME);
-                ZHTools.swapFragmentWithAnim(this, FilesFragment.class, FilesFragment.TAG, bundle);
-            });
-        }
+        // 🌟 Premium Left Sidebar Tabs Binding & Click Configurations
+        View rootLayout = binding.getRoot();
+        
+        View tabHome = rootLayout.findViewById(R.id.tab_home);
+        if (tabHome != null) tabHome.setOnClickListener(this);
+
+        View tabSettings = rootLayout.findViewById(R.id.tab_settings);
+        if (tabSettings != null) tabSettings.setOnClickListener(this);
+
+        View tabMods = rootLayout.findViewById(R.id.tab_mods);
+        if (tabMods != null) tabMods.setOnClickListener(this);
+
+        View aboutApexTab = rootLayout.findViewById(R.id.about_apex_tab);
+        if (aboutApexTab != null) aboutApexTab.setOnClickListener(this);
+
+        // Top Toolbar Buttons Clicks
+        if (binding.customControlButton != null) binding.customControlButton.setOnClickListener(this);
+        if (binding.openMainDirButton != null) binding.openMainDirButton.setOnClickListener(this);
         if (binding.installJarButton != null) {
-            binding.installJarButton.setOnClickListener(v -> runInstallerWithConfirmation(false));
+            binding.installJarButton.setOnClickListener(this);
             binding.installJarButton.setOnLongClickListener(v -> {
                 runInstallerWithConfirmation(true);
                 return true;
             });
         }
-        if (binding.shareLogsButton != null) {
-            binding.shareLogsButton.setOnClickListener(v -> ZHTools.shareLogs(requireActivity()));
-        }
+        if (binding.shareLogsButton != null) binding.shareLogsButton.setOnClickListener(this);
 
-        binding.version.setOnClickListener(v -> {
+        // Dashboard Right Card Action Click Bindings
+        binding.version.setOnClickListener(this);
+        if (binding.editSettingsButton != null) binding.editSettingsButton.setOnClickListener(this);
+        if (binding.novaDiscord != null) binding.novaDiscord.setOnClickListener(this);
+        if (binding.novaWebsite != null) binding.novaWebsite.setOnClickListener(this);
+        if (binding.novaGithub != null) binding.novaGithub.setOnClickListener(this);
+        
+        if (binding.managerProfileButton != null) binding.managerProfileButton.setOnClickListener(this);
+        binding.playButton.setOnClickListener(this);
+
+        if (binding.playButtonsLayout != null) binding.playButtonsLayout.setVisibility(View.VISIBLE);
+        if (binding.playButton != null) binding.playButton.setVisibility(View.VISIBLE);
+
+        binding.versionName.setSelected(true);
+        binding.versionInfo.setSelected(true);
+
+        refreshCurrentVersion();
+    }
+
+    @Override
+    public void onClick(View v) {
+        View activityRoot = requireActivity().findViewById(android.R.id.content);
+        View topGamingBtn = activityRoot != null ? activityRoot.findViewById(R.id.btn_override_gaming) : null;
+        View topFolderBtn = activityRoot != null ? activityRoot.findViewById(R.id.btn_override_folder) : null;
+        View topJavaBtn = activityRoot != null ? activityRoot.findViewById(R.id.btn_override_java) : null;
+        View topShareBtn = activityRoot != null ? activityRoot.findViewById(R.id.btn_override_share) : null;
+
+        View rootLayout = binding.getRoot();
+        View tabHome = rootLayout.findViewById(R.id.tab_home);
+        View tabSettings = rootLayout.findViewById(R.id.tab_settings);
+        View tabMods = rootLayout.findViewById(R.id.tab_mods);
+        View aboutApexTab = rootLayout.findViewById(R.id.about_apex_tab);
+
+        if (v == binding.playButton) {
+            EventBus.getDefault().post(new LaunchGameEvent());
+        } 
+        else if (v == tabHome) {
+            ViewAnimUtils.setViewAnim(tabHome, Animations.Pulse);
+            Toast.makeText(requireContext(), "You are already on Home screen", Toast.LENGTH_SHORT).show();
+        } 
+        else if (v == tabSettings || v == binding.editSettingsButton || v == binding.managerProfileButton) {
+            if (!isTaskRunning()) {
+                if (v == binding.editSettingsButton) ViewAnimUtils.setViewAnim(binding.editSettingsButton, Animations.Pulse);
+                if (v == binding.managerProfileButton) ViewAnimUtils.setViewAnim(binding.managerProfileButton, Animations.Pulse);
+                ZHTools.swapFragmentWithAnim(this, VersionManagerFragment.class, VersionManagerFragment.TAG, null);
+            } else {
+                if (v == binding.editSettingsButton) ViewAnimUtils.setViewAnim(binding.editSettingsButton, Animations.Shake);
+                if (v == binding.managerProfileButton) ViewAnimUtils.setViewAnim(binding.managerProfileButton, Animations.Shake);
+                TaskExecutors.runInUIThread(() -> Toast.makeText(requireContext(), R.string.version_manager_task_in_progress, Toast.LENGTH_SHORT).show());
+            }
+        } 
+        else if (v == tabMods || v == binding.customControlButton || v == topGamingBtn) {
+            if (topGamingBtn != null && v == topGamingBtn) ViewAnimUtils.setViewAnim(topGamingBtn, Animations.Pulse);
+            ZHTools.swapFragmentWithAnim(this, ControlButtonFragment.class, ControlButtonFragment.TAG, null);
+        } 
+        else if (v == aboutApexTab) {
+            ZHTools.swapFragmentWithAnim(this, AboutFragment.class, AboutFragment.TAG, null);
+        } 
+        else if (v == binding.openMainDirButton || v == topFolderBtn) {
+            if (topFolderBtn != null && v == topFolderBtn) ViewAnimUtils.setViewAnim(topFolderBtn, Animations.Pulse);
+            Bundle bundle = new Bundle();
+            bundle.putString(FilesFragment.BUNDLE_LIST_PATH, PathManager.DIR_GAME_HOME);
+            ZHTools.swapFragmentWithAnim(this, FilesFragment.class, FilesFragment.TAG, bundle);
+        } 
+        else if (v == binding.installJarButton || v == topJavaBtn) {
+            if (topJavaBtn != null && v == topJavaBtn) ViewAnimUtils.setViewAnim(topJavaBtn, Animations.Pulse);
+            runInstallerWithConfirmation(false);
+        } 
+        else if (v == binding.shareLogsButton || v == topShareBtn) {
+            if (topShareBtn != null && v == topShareBtn) ViewAnimUtils.setViewAnim(topShareBtn, Animations.Pulse);
+            ZHTools.shareLogs(requireActivity());
+        } 
+        else if (v == binding.version) {
             if (!isTaskRunning()) {
                 ZHTools.swapFragmentWithAnim(this, VersionsListFragment.class, VersionsListFragment.TAG, null);
             } else {
                 ViewAnimUtils.setViewAnim(binding.version, Animations.Shake);
                 TaskExecutors.runInUIThread(() -> Toast.makeText(requireContext(), R.string.version_manager_task_in_progress, Toast.LENGTH_SHORT).show());
             }
-        });
-        
-        if (binding.editSettingsButton != null) {
-            binding.editSettingsButton.setOnClickListener(v -> {
-                if (!isTaskRunning()) {
-                    ViewAnimUtils.setViewAnim(binding.editSettingsButton, Animations.Pulse);
-                    ZHTools.swapFragmentWithAnim(this, VersionManagerFragment.class, VersionManagerFragment.TAG, null);
-                } else {
-                    ViewAnimUtils.setViewAnim(binding.editSettingsButton, Animations.Shake);
-                    TaskExecutors.runInUIThread(() -> Toast.makeText(requireContext(), R.string.version_manager_task_in_progress, Toast.LENGTH_SHORT).show());
-                }
-            });
+        } 
+        else if (v == binding.novaDiscord) {
+            android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://discord.gg/xFpfUufXg3"));
+            startActivity(intent);
+        } 
+        else if (v == binding.novaWebsite) {
+            android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://YOUR_WEBSITE.com"));
+            startActivity(intent);
+        } 
+        else if (v == binding.novaGithub) {
+            android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://github.com/SadlyNova"));
+            startActivity(intent);
         }
-
-        if (binding.novaDiscord != null) {
-            binding.novaDiscord.setOnClickListener(v -> {
-                android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://discord.gg/xFpfUufXg3"));
-                startActivity(intent);
-            });
-        }
-        if (binding.novaWebsite != null) {
-            binding.novaWebsite.setOnClickListener(v -> {
-                android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://YOUR_WEBSITE.com"));
-                startActivity(intent);
-            });
-        }
-        if (binding.novaGithub != null) {
-            binding.novaGithub.setOnClickListener(v -> {
-                android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://github.com/SadlyNova"));
-                startActivity(intent);
-            });
-        }
-
-        binding.managerProfileButton.setOnClickListener(v -> {
-            if (!isTaskRunning()) {
-                ViewAnimUtils.setViewAnim(binding.managerProfileButton, Animations.Pulse);
-                ZHTools.swapFragmentWithAnim(this, VersionManagerFragment.class, VersionManagerFragment.TAG, null);
-            } else {
-                ViewAnimUtils.setViewAnim(binding.managerProfileButton, Animations.Shake);
-                TaskExecutors.runInUIThread(() -> Toast.makeText(requireContext(), R.string.version_manager_task_in_progress, Toast.LENGTH_SHORT).show());
-            }
-        });
-
-        binding.playButton.setOnClickListener(v -> EventBus.getDefault().post(new LaunchGameEvent()));
-
-        if (binding.playButtonsLayout != null) {
-            binding.playButtonsLayout.setVisibility(View.VISIBLE);
-        }
-        if (binding.playButton != null) {
-            binding.playButton.setVisibility(View.VISIBLE);
-        }
-
-        binding.versionName.setSelected(true);
-        binding.versionInfo.setSelected(true);
-
-        refreshCurrentVersion();
     }
 
     private void refreshCurrentVersion() {
@@ -251,10 +251,10 @@ public class MainMenuFragment extends FragmentWithAnim {
             } else versionInfoVisibility = View.GONE;
 
             new VersionIconUtils(version).start(binding.versionIcon);
-            binding.managerProfileButton.setVisibility(View.VISIBLE);
+            if (binding.managerProfileButton != null) binding.managerProfileButton.setVisibility(View.VISIBLE);
         } else {
             binding.versionName.setText(R.string.version_no_versions);
-            binding.managerProfileButton.setVisibility(View.GONE);
+            if (binding.managerProfileButton != null) binding.managerProfileButton.setVisibility(View.GONE);
             versionInfoVisibility = View.GONE;
         }
         binding.versionInfo.setVisibility(versionInfoVisibility);
