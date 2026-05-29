@@ -207,6 +207,8 @@ android {
     buildToolsVersion = "34.0.0"
     kotlinOptions {
         jvmTarget = "1.8"
+    aaptOptions {
+        ignoreAssetsPattern.set("ic_notification")
     }
 }
 
