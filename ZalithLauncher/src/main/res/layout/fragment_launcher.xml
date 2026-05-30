@@ -4,234 +4,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"
-    tools:context="com.movtery.zalithlauncher.ui.fragment.SettingsFragment">
+    android:background="@android:color/transparent">
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/settings_viewpager"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/launcher_components_recyclerview"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="@dimen/_minus4sdp"
-        android:background="@drawable/card_glass_bg"
-        android:layout_marginHorizontal="@dimen/_12sdp"
-        android:layout_marginVertical="@dimen/_12sdp"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/_12sdp"
+        android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/settings_layout"
+        app:layout_constraintEnd_toStartOf="@+id/launcher_side_card"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/settings_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="parent"
-        android:background="#140D1F"
-        android:paddingVertical="@dimen/_8sdp"
+        android:id="@+id/launcher_side_card"
+        android:layout_width="@dimen/_240sdp"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/_12sdp"
+        android:background="@drawable/card_glass_bg"
+        android:padding="@dimen/_14sdp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <View
-            android:id="@+id/shadowView"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="#1F9D4EDD"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+        <TextView
+            android:id="@+id/launcher_instruction_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="The launcher needs to install these contents to ensure Minecraft can start properly. These contents are included in the app and need to be extracted before they can be used."
+            android:textColor="#A09BB0"
+            android:textSize="@dimen/_10ssp"
+            android:lineSpacingMultiplier="1.2"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.angcyo.tablayout.DslTabLayout
-            android:id="@+id/settings_tab"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            app:layout_constraintEnd_toStartOf="@+id/shadowView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:tab_draw_indicator="true"
-            app:tab_indicator_enable_flow="true"
-            app:tab_indicator_drawable="@drawable/tab_selected_bg"
-            app:tab_indicator_x_offset="@dimen/_4sdp"
-            app:tab_orientation="VERTICAL">
+        <ImageView
+            android:id="@+id/launcher_portal_preview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginVertical="@dimen/_14sdp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_menu_custom_controls"
+            app:tint="#269D4EDD"
+            app:layout_constraintBottom_toTopOf="@+id/launcher_install_action_btn"
+            app:layout_constraintTop_toBottomOf="@+id/launcher_instruction_text" />
 
-            <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
-                android:id="@+id/video_settings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/_10sdp"
-                android:background="?android:attr/selectableItemBackground">
-                <ImageView
-                    android:id="@+id/video_image"
-                    android:layout_width="@dimen/_24sdp"
-                    android:layout_height="@dimen/_24sdp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/_6sdp"
-                    android:background="@android:color/transparent"
-                    android:contentDescription="@string/setting_category_video"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/ic_setting_video"
-                    app:tint="#FFFFFF" />
-                <TextView
-                    android:layout_width="@dimen/_90sdp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_toEndOf="@+id/video_image"
-                    android:text="@string/setting_category_video"
-                    android:textColor="#FFFFFF"
-                    android:textSize="@dimen/_11ssp"
-                    android:textStyle="bold" />
-            </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
+        <com.movtery.zalithlauncher.ui.view.AnimButton
+            android:id="@+id/launcher_install_action_btn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_36sdp"
+            android:text="Agree and Install"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="@dimen/_11ssp"
+            android:background="@drawable/button_background"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-            <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
-                android:id="@+id/controls_settings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/_10sdp"
-                android:background="?android:attr/selectableItemBackground"
-                app:layout_constraintStart_toStartOf="@+id/video_settings"
-                app:layout_constraintTop_toBottomOf="@+id/video_settings">
-                <ImageView
-                    android:id="@+id/controls_image"
-                    android:layout_width="@dimen/_24sdp"
-                    android:layout_height="@dimen/_24sdp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/_6sdp"
-                    android:background="@android:color/transparent"
-                    android:contentDescription="@string/setting_category_control"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/ic_menu_custom_controls"
-                    app:tint="#A09BB0" />
-                <TextView
-                    android:layout_width="@dimen/_90sdp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_toEndOf="@+id/controls_image"
-                    android:text="@string/setting_category_control"
-                    android:textColor="#A09BB0"
-                    android:textSize="@dimen/_11ssp" />
-            </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
-
-            <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
-                android:id="@+id/game_settings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/_10sdp"
-                android:background="?android:attr/selectableItemBackground"
-                app:layout_constraintStart_toStartOf="@+id/controls_settings"
-                app:layout_constraintTop_toBottomOf="@+id/controls_settings">
-                <ImageView
-                    android:id="@+id/game_image"
-                    android:layout_width="@dimen/_24sdp"
-                    android:layout_height="@dimen/_24sdp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/_6sdp"
-                    android:background="@android:color/transparent"
-                    android:contentDescription="@string/setting_category_launcher"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/ic_setting_game"
-                    app:tint="#A09BB0" />
-                <TextView
-                    android:layout_width="@dimen/_90sdp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_toEndOf="@+id/game_image"
-                    android:text="@string/setting_category_game"
-                    android:textColor="#A09BB0"
-                    android:textSize="@dimen/_11ssp" />
-            </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
-
-            <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
-                android:id="@+id/launcher_settings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/_10sdp"
-                android:background="?android:attr/selectableItemBackground"
-                app:layout_constraintStart_toStartOf="@+id/game_settings"
-                app:layout_constraintTop_toBottomOf="@+id/game_settings">
-                <ImageView
-                    android:id="@+id/launcher_image"
-                    android:layout_width="@dimen/_24sdp"
-                    android:layout_height="@dimen/_24sdp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/_6sdp"
-                    android:background="@android:color/transparent"
-                    android:contentDescription="@string/setting_category_launcher"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/ic_setting_launcher"
-                    app:tint="#A09BB0" />
-                <TextView
-                    android:layout_width="@dimen/_90sdp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_toEndOf="@+id/launcher_image"
-                    android:text="@string/setting_category_launcher"
-                    android:textColor="#A09BB0"
-                    android:textSize="@dimen/_11ssp" />
-            </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
-
-            <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
-                android:id="@+id/experimental_settings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/_10sdp"
-                android:background="?android:attr/selectableItemBackground"
-                app:layout_constraintStart_toStartOf="@+id/launcher_settings"
-                app:layout_constraintTop_toBottomOf="@+id/launcher_settings">
-                <ImageView
-                    android:id="@+id/experimental_image"
-                    android:layout_width="@dimen/_24sdp"
-                    android:layout_height="@dimen/_24sdp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/_6sdp"
-                    android:background="@android:color/transparent"
-                    android:contentDescription="@string/setting_category_experimental"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/ic_setting_experimental"
-                    app:tint="#A09BB0" />
-                <TextView
-                    android:id="@+id/experimental_image_text"
-                    android:layout_width="@dimen/_90sdp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_toEndOf="@+id/experimental_image"
-                    android:text="@string/setting_category_experimental"
-                    android:textColor="#A09BB0"
-                    android:textSize="@dimen/_11ssp" />
-            </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
-
-            <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
-                android:id="@+id/cosmetics_settings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/_10sdp"
-                android:background="?android:attr/selectableItemBackground"
-                app:layout_constraintStart_toStartOf="@+id/experimental_settings"
-                app:layout_constraintTop_toBottomOf="@+id/experimental_settings">
-                <ImageView
-                    android:id="@+id/cosmetics_image"
-                    android:layout_width="@dimen/_24sdp"
-                    android:layout_height="@dimen/_24sdp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/_6sdp"
-                    android:background="@android:color/transparent"
-                    android:contentDescription="Capes Selection"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@android:drawable/ic_menu_preferences"
-                    app:tint="#A09BB0" />
-                <TextView
-                    android:layout_width="@dimen/_90sdp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_toEndOf="@+id/cosmetics_image"
-                    android:text="Capes &amp; Skins"
-                    android:textColor="#A09BB0"
-                    android:textSize="@dimen/_11ssp" />
-            </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
-
-        </com.angcyo.tablayout.DslTabLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
