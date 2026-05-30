@@ -1,291 +1,475 @@
-package net.kdt.pojavlaunch.fragments;
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_menu_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/launcher_bg"
+    tools:context="net.kdt.pojavlaunch.fragments.MainMenuFragment">
 
-import static com.movtery.zalithlauncher.event.single.RefreshVersionsEvent.MODE.END;
+    <!-- Notice pipeline container layer -->
+    <LinearLayout
+        android:id="@+id/noticeContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:orientation="vertical" />
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.Toast;
-import android.widget.TextView;
-import android.widget.ImageView;
+    <!-- ================================================================= -->
+    <!-- 1️⃣ LEFT NAVIGATION SIDEBAR (CLEAN & CLUTTERLESS)                  -->
+    <!-- ================================================================= -->
+    <LinearLayout
+        android:id="@+id/leftSidebar"
+        android:layout_width="@dimen/_180sdp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#140D1F"
+        android:paddingVertical="@dimen/_16sdp"
+        android:paddingHorizontal="@dimen/_12sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+        <!-- Logo Deck -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="@dimen/_20sdp"
+            android:paddingHorizontal="@dimen/_4sdp">
+            
+            <ImageView
+                android:layout_width="@dimen/_28sdp"
+                android:layout_height="@dimen/_28sdp"
+                android:src="@drawable/ic_java"
+                app:tint="#9D4EDD" />
 
-import com.movtery.anim.AnimPlayer;
-import com.movtery.anim.animations.Animations;
-import com.movtery.zalithlauncher.InfoCenter;
-import com.movtery.zalithlauncher.R;
-import com.movtery.zalithlauncher.databinding.FragmentLauncherBinding;
-import com.movtery.zalithlauncher.event.single.AccountUpdateEvent;
-import com.movtery.zalithlauncher.event.single.LaunchGameEvent;
-import com.movtery.zalithlauncher.event.single.RefreshVersionsEvent;
-import com.movtery.zalithlauncher.feature.version.Version;
-import com.movtery.zalithlauncher.feature.version.utils.VersionIconUtils;
-import com.movtery.zalithlauncher.feature.version.VersionInfo;
-import com.movtery.zalithlauncher.feature.version.VersionsManager;
-import com.movtery.zalithlauncher.task.TaskExecutors;
-import com.movtery.zalithlauncher.ui.fragment.ControlButtonFragment;
-import com.movtery.zalithlauncher.ui.fragment.FilesFragment;
-import com.movtery.zalithlauncher.ui.fragment.FragmentWithAnim;
-import com.movtery.zalithlauncher.ui.fragment.VersionManagerFragment;
-import com.movtery.zalithlauncher.ui.fragment.VersionsListFragment;
-import com.movtery.zalithlauncher.ui.subassembly.account.AccountViewWrapper;
-import com.movtery.zalithlauncher.utils.path.PathManager;
-import com.movtery.zalithlauncher.utils.ZHTools;
-import com.movtery.zalithlauncher.utils.anim.ViewAnimUtils;
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="@dimen/_8sdp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="APEX"
+                    android:textColor="#FFFFFF"
+                    android:textSize="@dimen/_14ssp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="LAUNCHER"
+                    android:textColor="#9D4EDD"
+                    android:textSize="@dimen/_8ssp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.1" />
+            </LinearLayout>
+        </LinearLayout>
 
-import net.kdt.pojavlaunch.Tools;
-import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper;
+        <!-- Sidebar Navigation Options List Stack -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="none">
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-public class MainMenuFragment extends FragmentWithAnim implements View.OnClickListener {
-    public static final String TAG = "MainMenuFragment";
-    private FragmentLauncherBinding binding;
-    private AccountViewWrapper accountViewWrapper;
-    private ViewTreeObserver.OnWindowFocusChangeListener focusChangeListener;
+                <!-- 1. Home Tab -->
+                <TextView
+                    android:id="@+id/tab_home"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_32sdp"
+                    android:text="Home"
+                    android:textColor="#FFFFFF"
+                    android:textSize="@dimen/_11ssp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/_12sdp"
+                    android:drawableStart="@drawable/ic_folder"
+                    android:drawablePadding="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_4sdp"
+                    android:background="@drawable/button_background" />
 
-    public MainMenuFragment() {
-        super(R.layout.fragment_launcher);
-    }
+                <!-- 2. Version Management Tab -->
+                <TextView
+                    android:id="@+id/tab_settings"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_32sdp"
+                    android:text="Version Management"
+                    android:textColor="#A09BB0"
+                    android:textSize="@dimen/_11ssp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/_12sdp"
+                    android:drawableStart="@drawable/ic_setting_launcher"
+                    android:drawablePadding="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_4sdp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"/>
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentLauncherBinding.inflate(inflater, container, false);
-        accountViewWrapper = new AccountViewWrapper(this, binding.viewAccount);
-        accountViewWrapper.refreshAccountInfo();
-        return binding.getRoot();
-    }
+                <!-- 3. Custom Controls Tab -->
+                <TextView
+                    android:id="@+id/tab_mods"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_32sdp"
+                    android:text="Custom Controls"
+                    android:textColor="#A09BB0"
+                    android:textSize="@dimen/_11ssp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/_12sdp"
+                    android:drawableStart="@drawable/ic_menu_custom_controls"
+                    android:drawablePadding="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_4sdp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"/>
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        if (getActivity() != null) {
-            focusChangeListener = hasFocus -> {
-                View activityRoot = getActivity().findViewById(android.R.id.content);
-                if (activityRoot != null) {
-                    activityRoot.postDelayed(() -> {
-                        try {
-                            java.util.ArrayList<View> dialogButtons = new java.util.ArrayList<>();
-                            activityRoot.findViewsWithText(dialogButtons, "OK", View.FIND_VIEWS_WITH_TEXT);
-                            for (View btn : dialogButtons) {
-                                if (btn.isShown()) {
-                                    btn.performClick();
-                                }
-                            }
-                        } catch (Exception ignored) {}
-                    }, 50);
-                }
-            };
-            view.getViewTreeObserver().addOnWindowFocusChangeListener(focusChangeListener);
-        }
+                <!-- 4. Game Directory Tab -->
+                <TextView
+                    android:id="@+id/open_main_dir_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_32sdp"
+                    android:text="Game Directory"
+                    android:textColor="#A09BB0"
+                    android:textSize="@dimen/_11ssp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/_12sdp"
+                    android:drawableStart="@drawable/ic_folder"
+                    android:drawablePadding="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_4sdp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"/>
 
-        View activityRoot = requireActivity().findViewById(android.R.id.content);
-        if (activityRoot != null) {
-            ImageView topGamingBtn = activityRoot.findViewById(R.id.btn_override_gaming);
-            ImageView topFolderBtn = activityRoot.findViewById(R.id.btn_override_folder);
-            ImageView topJavaBtn = activityRoot.findViewById(R.id.btn_override_java);
-            ImageView topShareBtn = activityRoot.findViewById(R.id.btn_override_share);
-            TextView topTitleView = activityRoot.findViewById(R.id.txt_override_title);
+                <!-- 5. Install .JAR File Tab -->
+                <TextView
+                    android:id="@+id/install_jar_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_32sdp"
+                    android:text="Install .JAR File"
+                    android:textColor="#A09BB0"
+                    android:textSize="@dimen/_11ssp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/_12sdp"
+                    android:drawableStart="@drawable/ic_java"
+                    android:drawablePadding="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_4sdp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"/>
 
-            if (topTitleView != null) {
-                topTitleView.setText("Apex Launcher"); 
-                topTitleView.setVisibility(View.VISIBLE);
-            }
+                <!-- 6. Share Logs Tab -->
+                <TextView
+                    android:id="@+id/share_logs_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_32sdp"
+                    android:text="Share Logs"
+                    android:textColor="#A09BB0"
+                    android:textSize="@dimen/_11ssp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/_12sdp"
+                    android:drawableStart="@drawable/ic_share"
+                    android:drawablePadding="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_4sdp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"/>
 
-            if (topGamingBtn != null) topGamingBtn.setOnClickListener(this);
-            if (topFolderBtn != null) topFolderBtn.setOnClickListener(this);
-            if (topJavaBtn != null) {
-                topJavaBtn.setOnClickListener(this);
-                topJavaBtn.setOnLongClickListener(v -> {
-                    runInstallerWithConfirmation(true);
-                    return true;
-                });
-            }
-            if (topShareBtn != null) topShareBtn.setOnClickListener(this);
-        }
+                <!-- 7. Community Connection Tab -->
+                <TextView
+                    android:id="@+id/nova_discord"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_32sdp"
+                    android:text="Community"
+                    android:textColor="#A09BB0"
+                    android:textSize="@dimen/_11ssp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/_12sdp"
+                    android:drawableStart="@drawable/ic_share"
+                    android:drawablePadding="@dimen/_10sdp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"/>
+            </LinearLayout>
+        </ScrollView>
 
-        // Left Sidebar Tab Hooks Bindings
-        View rootLayout = binding.getRoot();
-        View tabHome = rootLayout.findViewById(R.id.tab_home);
-        if (tabHome != null) tabHome.setOnClickListener(this);
+        <!-- Sidebar Footer Layer: Account Profile Preview Card -->
+        <include
+            android:id="@+id/viewAccount"
+            layout="@layout/view_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
-        View tabSettings = rootLayout.findViewById(R.id.tab_settings);
-        if (tabSettings != null) tabSettings.setOnClickListener(this);
+    <!-- Invisible bindings to maintain java controller mappings without crash -->
+    <View android:id="@+id/custom_control_button" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints"/>
+    <LinearLayout android:id="@+id/centeredLogosContainer" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints"/>
+    <ImageView android:id="@+id/sidebar_discord" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints"/>
+    <ImageView android:id="@+id/sidebar_website" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints"/>
+    <ImageView android:id="@+id/sidebar_github" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints"/>
 
-        View tabMods = rootLayout.findViewById(R.id.tab_mods);
-        if (tabMods != null) tabMods.setOnClickListener(this);
+    <!-- ================================================================= -->
+    <!-- 2️⃣ DYNAMIC CENTER CONTAINER INTERFACE HOLDER                       -->
+    <!-- ================================================================= -->
+    <FrameLayout
+        android:id="@+id/dashboard_content_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/_24sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/leftSidebar"
+        app:layout_constraintEnd_toStartOf="@id/playLayout">
 
-        // Top Horizontal Toolbars
-        if (binding.customControlButton != null) binding.customControlButton.setOnClickListener(this);
-        if (binding.openMainDirButton != null) binding.openMainDirButton.setOnClickListener(this);
-        if (binding.installJarButton != null) {
-            binding.installJarButton.setOnClickListener(this);
-            binding.installJarButton.setOnLongClickListener(v -> {
-                runInstallerWithConfirmation(true);
-                return true;
-            });
-        }
-        if (binding.shareLogsButton != null) binding.shareLogsButton.setOnClickListener(this);
+        <!-- Nested Default Welcome Hero Area View (CRITICAL ANCHOR FOR CONTROL FRAGMENT BINDING) -->
+        <LinearLayout
+            android:id="@+id/heroWelcomeArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/_24sdp"
+            android:layout_marginEnd="@dimen/_12sdp">
 
-        // Dashboard Elements Clicks setup
-        binding.version.setOnClickListener(this);
-        if (binding.editSettingsButton != null) binding.editSettingsButton.setOnClickListener(this);
-        if (binding.novaDiscord != null) binding.novaDiscord.setOnClickListener(this);
-        if (binding.novaWebsite != null) binding.novaWebsite.setOnClickListener(this);
-        if (binding.novaGithub != null) binding.novaGithub.setOnClickListener(this);
-        binding.playButton.setOnClickListener(this);
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="WELCOME TO"
+                android:textColor="#B3A9C9"
+                android:textSize="@dimen/_10ssp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05" />
 
-        binding.versionName.setSelected(true);
-        binding.versionInfo.setSelected(true);
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="APEX\nLAUNCHER"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/_26ssp"
+                android:textStyle="bold"
+                android:lineSpacingMultiplier="0.9" />
 
-        refreshCurrentVersion();
-    }
+            <TextView
+                android:layout_width="@dimen/_180sdp"
+                android:layout_height="wrap_content"
+                android:text="Your ultimate Minecraft experience starts here. Customize, explore, and play without limits."
+                android:textColor="#9E96B3"
+                android:textSize="@dimen/_9ssp"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:layout_marginBottom="@dimen/_14sdp" />
 
-    // Live Frame Swap Handler Engine inside Center Core Panel Container
-    private void switchDashboardFeature(Fragment featureFragment) {
-        if (binding != null) {
-            if (binding.heroWelcomeArea != null) {
-                binding.heroWelcomeArea.setVisibility(View.GONE);
-            }
-            getChildFragmentManager().beginTransaction()
-                .replace(R.id.dashboard_content_container, featureFragment)
-                .setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit();
-        }
-    }
+            <Button
+                android:id="@+id/playButton"
+                android:layout_width="@dimen/_130sdp"
+                android:layout_height="@dimen/_36sdp"
+                android:text="LAUNCH GAME  ›"
+                android:background="@drawable/button_background"
+                android:textColor="#FFFFFF"
+                android:textAllCaps="true"
+                android:textSize="@dimen/_11ssp"
+                android:textStyle="bold"
+                android:elevation="@dimen/_4sdp" />
+        </LinearLayout>
+    </FrameLayout>
 
-    @Override
-    public void onClick(View v) {
-        View activityRoot = requireActivity().findViewById(android.R.id.content);
-        View topGamingBtn = activityRoot != null ? activityRoot.findViewById(R.id.btn_override_gaming) : null;
-        View topFolderBtn = activityRoot != null ? activityRoot.findViewById(R.id.btn_override_folder) : null;
-        View topJavaBtn = activityRoot != null ? activityRoot.findViewById(R.id.btn_override_java) : null;
-        View topShareBtn = activityRoot != null ? activityRoot.findViewById(R.id.btn_override_share) : null;
+    <!-- ================================================================= -->
+    <!-- 3️⃣ RIGHT DASHBOARD PANEL (UPGRADED GLASSMORPHIC TEMPLATE)          -->
+    <!-- ================================================================= -->
+    <LinearLayout
+        android:id="@+id/playLayout"
+        android:layout_width="@dimen/_220sdp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/card_glass_bg"
+        android:paddingHorizontal="@dimen/_14sdp"
+        android:paddingTop="@dimen/_50sdp"
+        android:paddingBottom="@dimen/_16sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        View rootLayout = binding.getRoot();
-        View tabHome = rootLayout.findViewById(R.id.tab_home);
-        View tabSettings = rootLayout.findViewById(R.id.tab_settings);
-        View tabMods = rootLayout.findViewById(R.id.tab_mods);
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="none">
 
-        if (v == binding.playButton) {
-            EventBus.getDefault().post(new LaunchGameEvent());
-        } 
-        else if (v == tabHome) {
-            ViewAnimUtils.setViewAnim(tabHome, Animations.Pulse);
-            if (binding.heroWelcomeArea != null) {
-                Fragment activeFragment = getChildFragmentManager().findFragmentById(R.id.dashboard_content_container);
-                if (activeFragment != null) {
-                    getChildFragmentManager().beginTransaction().remove(activeFragment).commit();
-                }
-                binding.heroWelcomeArea.setVisibility(View.VISIBLE);
-            }
-        } 
-        else if (v == tabSettings || v == binding.editSettingsButton) {
-            if (!isTaskRunning()) {
-                if (v == binding.editSettingsButton) ViewAnimUtils.setViewAnim(binding.editSettingsButton, Animations.Pulse);
-                switchDashboardFeature(new VersionManagerFragment());
-            } else {
-                TaskExecutors.runInUIThread(() -> Toast.makeText(requireContext(), R.string.version_manager_task_in_progress, Toast.LENGTH_SHORT).show());
-            }
-        } 
-        else if (v == tabMods || v == binding.customControlButton || v == topGamingBtn) {
-            switchDashboardFeature(new ControlButtonFragment());
-        } 
-        else if (v == binding.openMainDirButton || v == topFolderBtn) {
-            Bundle bundle = new Bundle();
-            bundle.putString(FilesFragment.BUNDLE_LIST_PATH, PathManager.DIR_GAME_HOME);
-            ZHTools.swapFragmentWithAnim(this, FilesFragment.class, FilesFragment.TAG, bundle);
-        } 
-        else if (v == binding.installJarButton || v == topJavaBtn) {
-            runInstallerWithConfirmation(false);
-        } 
-        else if (v == binding.shareLogsButton || v == topShareBtn) {
-            ZHTools.shareLogs(requireActivity());
-        } 
-        else if (v == binding.version) {
-            if (!isTaskRunning()) {
-                ZHTools.swapFragmentWithAnim(this, VersionsListFragment.class, VersionsListFragment.TAG, null);
-            }
-        } 
-        else if (v == binding.novaDiscord || v == binding.novaWebsite) {
-            // Remapped to open Discord invitation cleanly via Action Intents links
-            android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://discord.gg/xFpfUufXg3"));
-            startActivity(intent);
-        } 
-        else if (v == binding.novaGithub) {
-            // Remapped to directly route traffic towards custom official webpage mapping
-            android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://github.com/SadlyNova/NovaLauncher-"));
-            startActivity(intent);
-        }
-    }
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-    private void refreshCurrentVersion() {
-        Version version = VersionsManager.INSTANCE.getCurrentVersion();
-        int versionInfoVisibility;
-        if (version != null) {
-            binding.versionName.setText(version.getVersionName());
-            VersionInfo versionInfo = version.getVersionInfo();
-            if (versionInfo != null) {
-                binding.versionInfo.setText(versionInfo.getInfoString());
-                versionInfoVisibility = View.VISIBLE;
-            } else versionInfoVisibility = View.GONE;
+                <!-- CARD A: MY ACCOUNT DETAILS -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_glass_bg"
+                    android:padding="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_12sdp">
 
-            new VersionIconUtils(version).start(binding.versionIcon);
-        } else {
-            binding.versionName.setText(R.string.version_no_versions);
-            versionInfoVisibility = View.GONE;
-        }
-        binding.versionInfo.setVisibility(versionInfoVisibility);
-    }
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="MY ACCOUNT"
+                        android:textColor="#7D7495"
+                        android:textSize="@dimen/_8ssp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="@dimen/_6sdp" />
 
-    @Subscribe()
-    public void event(RefreshVersionsEvent event) {
-        if (event.getMode() == END) {
-            TaskExecutors.runInUIThread(this::refreshCurrentVersion);
-        }
-    }
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        <ImageView
+                            android:id="@+id/versionIcon"
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="@dimen/_24sdp"
+                            android:src="@drawable/ic_java" />
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_weight="1"
+                            android:layout_marginStart="@dimen/_8sdp">
+                            <TextView
+                                android:id="@+id/versionName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="PlayerOne"
+                                android:textColor="#FFFFFF"
+                                android:textSize="@dimen/_11ssp"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Premium Account"
+                                android:textColor="#FFC107"
+                                android:textSize="@dimen/_8ssp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void event(AccountUpdateEvent event) {
-        if (accountViewWrapper != null) accountViewWrapper.refreshAccountInfo();
-    }
+                <!-- CARD B: QUICK ACTIONS DECK -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_glass_bg"
+                    android:padding="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_12sdp">
 
-    @Override
-    public void onDestroyView() {
-        if (getView() != null && focusChangeListener != null) {
-            getView().getViewTreeObserver().removeOnWindowFocusChangeListener(focusChangeListener);
-        }
-        super.onDestroyView();
-    }
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="QUICK ACTIONS"
+                        android:textColor="#7D7495"
+                        android:textSize="@dimen/_8ssp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="@dimen/_4sdp" />
 
-    @Override
-    public void onStart() { super.onStart(); EventBus.getDefault().register(this); }
-    @Override
-    public void onStop() { super.onStop(); EventBus.getDefault().unregister(this); }
+                    <TextView
+                        android:id="@+id/nova_website"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_28sdp"
+                        android:text="💬  Discord Community"
+                        android:textColor="#FFFFFF"
+                        android:textSize="@dimen/_10ssp"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/_6sdp"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true" />
 
-    private void runInstallerWithConfirmation(boolean isCustomArgs) {
-        if (ProgressKeeper.getTaskCount() == 0)
-            Tools.installMod(requireActivity(), isCustomArgs);
-        else
-            Toast.makeText(requireContext(), R.string.tasks_ongoing, Toast.LENGTH_LONG).show();
-    }
+                    <TextView
+                        android:id="@+id/nova_github"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_28sdp"
+                        android:text="🌐  Official Website"
+                        android:textColor="#FFFFFF"
+                        android:textSize="@dimen/_10ssp"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/_6sdp"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
 
-    @Override
-    public void slideIn(AnimPlayer animPlayer) {
-        if (binding.centeredLogosContainer != null) animPlayer.apply(new AnimPlayer.Entry(binding.centeredLogosContainer, Animations.BounceInDown));
-        animPlayer.apply(new AnimPlayer.Entry(binding.playLayout, Animations.BounceInLeft));
-    }
+                <!-- CARD C: GAME VERSION DISPLAY -->
+                <LinearLayout
+                    android:id="@+id/versionInfoContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_glass_bg"
+                    android:padding="@dimen/_10sdp">
 
-    @Override
-    public void slideOut(AnimPlayer animPlayer) {
-        if (binding.centeredLogosContainer != null) animPlayer.apply(new AnimPlayer.Entry(binding.centeredLogosContainer, Animations.FadeOutUp));
-        animPlayer.apply(new AnimPlayer.Entry(binding.playLayout, Animations.FadeOutRight));
-    }
-}
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="VERSION STATUS"
+                        android:textColor="#7D7495"
+                        android:textSize="@dimen/_8ssp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="@dimen/_6sdp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_weight="1">
+                            <TextView
+                                android:id="@+id/versionInfo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="No versions installed"
+                                android:textColor="#E0DCDA"
+                                android:textSize="@dimen/_11ssp" />
+                        </LinearLayout>
+
+                        <ImageButton
+                            android:id="@+id/version"
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="@dimen/_24sdp"
+                            android:layout_marginEnd="@dimen/_4sdp"
+                            android:background="?android:attr/selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_folder"
+                            app:tint="#A09BB0"
+                            android:contentDescription="@null"/>
+
+                        <ImageButton
+                            android:id="@+id/edit_settings_button"
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="@dimen/_24sdp"
+                            android:background="?android:attr/selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_setting_launcher"
+                            app:tint="#A09BB0"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:contentDescription="@null"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- Hidden Legacy View References Layer -->
+        <View android:id="@+id/playButtonsLayout" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
+        <View android:id="@+id/managerProfileButton" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
+        <View android:id="@+id/aboutButton" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
+        <TextView android:id="@+id/aboutText" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
