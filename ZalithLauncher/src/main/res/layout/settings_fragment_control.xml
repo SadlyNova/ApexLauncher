@@ -15,7 +15,6 @@
         android:paddingHorizontal="@dimen/_10sdp"
         android:paddingVertical="@dimen/_10sdp">
 
-        <!-- HEADER BLOCK -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -24,17 +23,17 @@
             android:layout_marginBottom="@dimen/_14sdp"
             android:layout_marginStart="@dimen/_4sdp">
             <ImageView
-                android:layout_width="@dimen/_22sdp"
-                android:layout_height="@dimen/_22sdp"
-                android:src="@drawable/ic_menu_custom_controls"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:src="@android:drawable/ic_menu_preferences"
                 app:tint="#9D4EDD" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10sdp"
-                android:text="CONTROL SETTINGS"
+                android:text="CONTROL SETUP MATRIX"
                 android:textColor="#FFFFFF"
-                android:textSize="@dimen/_13ssp"
+                android:textSize="@dimen/_12ssp"
                 android:textStyle="bold"
                 android:letterSpacing="0.05" />
         </LinearLayout>
@@ -43,10 +42,8 @@
             android:id="@+id/custom_controls_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:orientation="vertical">
 
-            <!-- Disable Gestures -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/disableGestures_layout"
                 android:layout_width="match_parent"
@@ -85,7 +82,6 @@
                     android:layout_centerVertical="true" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Disable Double Tap -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/disableDoubleTap_layout"
                 android:layout_width="match_parent"
@@ -124,7 +120,6 @@
                     android:layout_centerVertical="true" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Long Press Delay Trigger -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/timeLongPressTrigger_layout"
                 android:layout_width="match_parent"
@@ -184,10 +179,8 @@
             android:id="@+id/controls_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:orientation="vertical">
 
-            <!-- Button Scale Layout -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/buttonscale_layout"
                 android:layout_width="match_parent"
@@ -242,7 +235,6 @@
                     tools:text="100%" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Button All Caps -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/buttonAllCaps_layout"
                 android:layout_width="match_parent"
@@ -286,10 +278,8 @@
             android:id="@+id/mouse_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:orientation="vertical">
 
-            <!-- Mouse Scale -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/mousescale_layout"
                 android:layout_width="match_parent"
@@ -344,7 +334,6 @@
                     tools:text="100%" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Mouse Speed -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/mousespeed_layout"
                 android:layout_width="match_parent"
@@ -399,7 +388,6 @@
                     tools:text="100%" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Mouse Start -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/mouse_start_layout"
                 android:layout_width="match_parent"
@@ -411,6 +399,9 @@
                     android:id="@+id/mouse_start_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:layout_toStartOf="@+id/mouse_start"
                     android:text="@string/setting_mouse_start_title"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold"
@@ -432,11 +423,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:checked="true" />
+                    android:layout_centerVertical="true" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Custom Mouse Layout -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/custom_mouse_layout"
                 android:layout_width="match_parent"
@@ -472,10 +461,8 @@
             android:id="@+id/enableGyro_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:orientation="vertical">
 
-            <!-- Enable Gyro -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/enableGyro_layout"
                 android:layout_width="match_parent"
@@ -514,7 +501,6 @@
                     android:layout_centerVertical="true" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Gyro Sensitivity -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/gyroSensitivity_layout"
                 android:layout_width="match_parent"
@@ -569,7 +555,6 @@
                     tools:text="1.0" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Gyro Sample Rate -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/gyroSampleRate_layout"
                 android:layout_width="match_parent"
@@ -624,7 +609,6 @@
                     tools:text="20 Hz" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Gyro Smoothing -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/gyroSmoothing_layout"
                 android:layout_width="match_parent"
@@ -660,11 +644,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:checked="true" />
+                    android:layout_centerVertical="true" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Gyro Invert X -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/gyroInvertX_layout"
                 android:layout_width="match_parent"
@@ -703,7 +685,6 @@
                     android:layout_centerVertical="true" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Gyro Invert Y -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/gyroInvertY_layout"
                 android:layout_width="match_parent"
@@ -747,10 +728,8 @@
             android:id="@+id/controller_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:orientation="vertical">
 
-            <!-- Change Controller Bindings -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/changeControllerBindings_layout"
                 android:layout_width="match_parent"
@@ -781,7 +760,6 @@
                     android:text="@string/setting_remap_controller_desc" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Reset Controller Bindings -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/resetControllerBindings_layout"
                 android:layout_width="match_parent"
@@ -812,14 +790,13 @@
                     android:text="@string/setting_wipe_controller_desc" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Gamepad Deadzone Scale -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/gamepad_deadzone_scale_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/card_glass_bg"
                 android:paddingBottom="@dimen/_10sdp"
-                android:layout_marginBottom="@dimen/_8sdp">
+                android:layout_marginBottom="@dimen/_10sdp">
                 <TextView
                     android:id="@+id/gamepad_deadzone_scale_title"
                     android:layout_width="wrap_content"
