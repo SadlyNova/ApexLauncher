@@ -15,7 +15,6 @@
         android:paddingHorizontal="@dimen/_10sdp"
         android:paddingVertical="@dimen/_10sdp">
 
-        <!-- HEADER BLOCK -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -24,17 +23,17 @@
             android:layout_marginBottom="@dimen/_14sdp"
             android:layout_marginStart="@dimen/_4sdp">
             <ImageView
-                android:layout_width="@dimen/_22sdp"
-                android:layout_height="@dimen/_22sdp"
-                android:src="@drawable/ic_setting_game"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:src="@android:drawable/ic_menu_compass"
                 app:tint="#9D4EDD" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10sdp"
-                android:text="GAME SETTINGS"
+                android:text="GAME TUNING DESK"
                 android:textColor="#FFFFFF"
-                android:textSize="@dimen/_13ssp"
+                android:textSize="@dimen/_12ssp"
                 android:textStyle="bold"
                 android:letterSpacing="0.05" />
         </LinearLayout>
@@ -43,10 +42,8 @@
             android:id="@+id/version_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:orientation="vertical">
 
-            <!-- Version Isolation -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/version_isolation_layout"
                 android:layout_width="match_parent"
@@ -85,7 +82,6 @@
                     android:layout_centerVertical="true" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Version Custom Info Editbox -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/versionCustomInfo_layout"
                 android:layout_width="match_parent"
@@ -130,10 +126,8 @@
             android:id="@+id/language_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:orientation="vertical">
 
-            <!-- Auto Language Setup -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/autoSetGameLanguage_layout"
                 android:layout_width="match_parent"
@@ -169,11 +163,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:checked="true" />
+                    android:layout_centerVertical="true" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Language Overridden -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/gameLanguageOverridden_layout"
                 android:layout_width="match_parent"
@@ -212,7 +204,6 @@
                     android:layout_centerVertical="true" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Language Selection List -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/setGameLanguage_layout"
                 android:layout_width="match_parent"
@@ -237,7 +228,8 @@
                     android:layout_below="@+id/setGameLanguage_title"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentEnd="true"
-                    android:textColor="#A09BB0"
+                    android:textColor="#9D4EDD"
+                    android:textStyle="bold"
                     android:textSize="@dimen/_9ssp"
                     android:layout_marginTop="@dimen/_2sdp"
                     android:text="@string/generic_default" />
@@ -248,10 +240,8 @@
             android:id="@+id/java_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:orientation="vertical">
 
-            <!-- Install Runtime -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/install_jre_layout"
                 android:layout_width="match_parent"
@@ -282,7 +272,6 @@
                     android:text="@string/setting_java_multirt_desc" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Select Runtime Mode -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/selectRuntimeMode_layout"
                 android:layout_width="match_parent"
@@ -323,7 +312,6 @@
                     android:text="@string/setting_java_select_runtime_ask_me" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Java Arguments EditBox -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/javaArgs_layout"
                 android:layout_width="match_parent"
@@ -363,7 +351,6 @@
                     android:paddingHorizontal="@dimen/_8sdp" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Memory Allocation SeekBar -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/allocation_layout"
                 android:layout_width="match_parent"
@@ -425,7 +412,6 @@
                     tools:text="1140 MB" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Java Sandbox -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/java_sandbox_layout"
                 android:layout_width="match_parent"
@@ -469,10 +455,8 @@
             android:id="@+id/game_menu_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:orientation="vertical">
 
-            <!-- Show Memory Toggle -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/gameMenuShowMemory_layout"
                 android:layout_width="match_parent"
@@ -511,7 +495,6 @@
                     android:layout_centerVertical="true" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Show FPS Toggle -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/gameMenuShowFPS_layout"
                 android:layout_width="match_parent"
@@ -550,7 +533,6 @@
                     android:layout_centerVertical="true" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Memory Custom Text Custom Edit Box -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/gameMenuMemoryText_layout"
                 android:layout_width="match_parent"
@@ -590,7 +572,6 @@
                     android:paddingHorizontal="@dimen/_8sdp" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Game Menu Alignment Location -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/gameMenuLocation_layout"
                 android:layout_width="match_parent"
@@ -615,13 +596,13 @@
                     android:layout_below="@+id/gameMenuLocation_title"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentEnd="true"
-                    android:textColor="#A09BB0"
+                    android:textColor="#9D4EDD"
+                    android:textStyle="bold"
                     android:textSize="@dimen/_9ssp"
                     android:layout_marginTop="@dimen/_2sdp"
                     android:text="@string/setting_game_menu_location_center" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Refresh Rate Seekbar -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/gameMenuInfoRefreshRate_layout"
                 android:layout_width="match_parent"
@@ -676,14 +657,13 @@
                     tools:text="1000 ms" />
             </com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout>
 
-            <!-- Alpha Opacity Seekbar Layout -->
             <com.movtery.zalithlauncher.ui.layout.AnimRelativeLayout
                 android:id="@+id/gameMenuAlpha_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/card_glass_bg"
                 android:paddingBottom="@dimen/_10sdp"
-                android:layout_marginBottom="@dimen/_12sdp">
+                android:layout_marginBottom="@dimen/_14sdp">
                 <TextView
                     android:id="@+id/gameMenuAlpha_title"
                     android:layout_width="wrap_content"
