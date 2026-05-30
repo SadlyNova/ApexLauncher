@@ -15,29 +15,6 @@
         android:paddingHorizontal="@dimen/_10sdp"
         android:paddingVertical="@dimen/_10sdp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="@dimen/_14sdp"
-            android:layout_marginStart="@dimen/_4sdp">
-            <ImageView
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:src="@android:drawable/ic_menu_compass"
-                app:tint="#9D4EDD" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10sdp"
-                android:text="GAME TUNING DESK"
-                android:textColor="#FFFFFF"
-                android:textSize="@dimen/_12ssp"
-                android:textStyle="bold"
-                android:letterSpacing="0.05" />
-        </LinearLayout>
-
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/version_category"
             android:layout_width="match_parent"
@@ -48,9 +25,7 @@
                 android:id="@+id/version_isolation_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/card_glass_bg"
-                android:padding="@dimen/_12sdp"
-                android:layout_marginBottom="@dimen/_8sdp">
+                android:padding="@dimen/_12sdp">
                 <TextView
                     android:id="@+id/version_isolation_title"
                     android:layout_width="wrap_content"
@@ -86,9 +61,7 @@
                 android:id="@+id/versionCustomInfo_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/card_glass_bg"
-                android:padding="@dimen/_12sdp"
-                android:layout_marginBottom="@dimen/_8sdp">
+                android:padding="@dimen/_12sdp">
                 <TextView
                     android:id="@+id/versionCustomInfo_title"
                     android:layout_width="wrap_content"
@@ -132,9 +105,7 @@
                 android:id="@+id/autoSetGameLanguage_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/card_glass_bg"
-                android:padding="@dimen/_12sdp"
-                android:layout_marginBottom="@dimen/_8sdp">
+                android:padding="@dimen/_12sdp">
                 <TextView
                     android:id="@+id/autoSetGameLanguage_title"
                     android:layout_width="wrap_content"
@@ -170,9 +141,7 @@
                 android:id="@+id/gameLanguageOverridden_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/card_glass_bg"
-                android:padding="@dimen/_12sdp"
-                android:layout_marginBottom="@dimen/_8sdp">
+                android:padding="@dimen/_12sdp">
                 <TextView
                     android:id="@+id/gameLanguageOverridden_title"
                     android:layout_width="wrap_content"
@@ -208,9 +177,7 @@
                 android:id="@+id/setGameLanguage_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/card_glass_bg"
-                android:padding="@dimen/_12sdp"
-                android:layout_marginBottom="@dimen/_8sdp">
+                android:padding="@dimen/_12sdp">
                 <TextView
                     android:id="@+id/setGameLanguage_title"
                     android:layout_width="wrap_content"
@@ -246,9 +213,7 @@
                 android:id="@+id/install_jre_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/card_glass_bg"
-                android:padding="@dimen/_12sdp"
-                android:layout_marginBottom="@dimen/_8sdp">
+                android:padding="@dimen/_12sdp">
                 <TextView
                     android:id="@+id/install_jre_title"
                     android:layout_width="wrap_content"
@@ -276,9 +241,7 @@
                 android:id="@+id/selectRuntimeMode_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/card_glass_bg"
-                android:padding="@dimen/_12sdp"
-                android:layout_marginBottom="@dimen/_8sdp">
+                android:padding="@dimen/_12sdp">
                 <TextView
                     android:id="@+id/selectRuntimeMode_title"
                     android:layout_width="wrap_content"
@@ -316,9 +279,7 @@
                 android:id="@+id/javaArgs_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/card_glass_bg"
-                android:padding="@dimen/_12sdp"
-                android:layout_marginBottom="@dimen/_8sdp">
+                android:padding="@dimen/_12sdp">
                 <TextView
                     android:id="@+id/javaArgs_title"
                     android:layout_width="wrap_content"
@@ -355,9 +316,7 @@
                 android:id="@+id/allocation_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/card_glass_bg"
-                android:paddingBottom="@dimen/_10sdp"
-                android:layout_marginBottom="@dimen/_8sdp">
+                android:paddingBottom="@dimen/_10sdp">
                 <TextView
                     android:id="@+id/allocation_title"
                     android:layout_width="wrap_content"
@@ -416,9 +375,7 @@
                 android:id="@+id/java_sandbox_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/card_glass_bg"
-                android:padding="@dimen/_12sdp"
-                android:layout_marginBottom="@dimen/_8sdp">
+                android:padding="@dimen/_12sdp">
                 <TextView
                     android:id="@+id/java_sandbox_title"
                     android:layout_width="wrap_content"
@@ -461,9 +418,7 @@
                 android:id="@+id/gameMenuShowMemory_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/card_glass_bg"
-                android:padding="@dimen/_12sdp"
-                android:layout_marginBottom="@dimen/_8sdp">
+                android:padding="@dimen/_12sdp">
                 <TextView
                     android:id="@+id/gameMenuShowMemory_title"
                     android:layout_width="wrap_content"
@@ -499,9 +454,7 @@
                 android:id="@+id/gameMenuShowFPS_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/card_glass_bg"
-                android:padding="@dimen/_12sdp"
-                android:layout_marginBottom="@dimen/_8sdp">
+                android:padding="@dimen/_12sdp">
                 <TextView
                     android:id="@+id/gameMenuShowFPS_title"
                     android:layout_width="wrap_content"
@@ -537,9 +490,7 @@
                 android:id="@+id/gameMenuMemoryText_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/card_glass_bg"
-                android:padding="@dimen/_12sdp"
-                android:layout_marginBottom="@dimen/_8sdp">
+                android:padding="@dimen/_12sdp">
                 <TextView
                     android:id="@+id/gameMenuMemoryText_title"
                     android:layout_width="wrap_content"
@@ -576,9 +527,7 @@
                 android:id="@+id/gameMenuLocation_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/card_glass_bg"
-                android:padding="@dimen/_12sdp"
-                android:layout_marginBottom="@dimen/_8sdp">
+                android:padding="@dimen/_12sdp">
                 <TextView
                     android:id="@+id/gameMenuLocation_title"
                     android:layout_width="wrap_content"
@@ -607,9 +556,7 @@
                 android:id="@+id/gameMenuInfoRefreshRate_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/card_glass_bg"
-                android:paddingBottom="@dimen/_10sdp"
-                android:layout_marginBottom="@dimen/_8sdp">
+                android:paddingBottom="@dimen/_10sdp">
                 <TextView
                     android:id="@+id/gameMenuInfoRefreshRate_title"
                     android:layout_width="wrap_content"
@@ -661,9 +608,7 @@
                 android:id="@+id/gameMenuAlpha_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/card_glass_bg"
-                android:paddingBottom="@dimen/_10sdp"
-                android:layout_marginBottom="@dimen/_14sdp">
+                android:paddingBottom="@dimen/_10sdp">
                 <TextView
                     android:id="@+id/gameMenuAlpha_title"
                     android:layout_width="wrap_content"
