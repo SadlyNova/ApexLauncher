@@ -32,12 +32,27 @@ public class LauncherPreferences {
         }
 
         reloadRuntime();
+        initCustomSkinPreferences();
     }
 
     public static void reloadRuntime() {
         if (!Settings.Manager.contains("defaultRuntime") && !MultiRTUtils.getRuntimes().isEmpty()) {
             //设置默认运行环境
             AllSettings.getDefaultRuntime().put(Jre.JRE_8.getJreName()).save();
+        }
+    }
+
+    /** 👑 FORCE INITIALIZE CUSTOM SKIN & CAPE KEY-VALUE TRAGGER MAPS */
+    private static void initCustomSkinPreferences() {
+        try {
+            if (!Settings.Manager.contains("custom_skin_path")) {
+                Settings.Manager.put("custom_skin_path", "");
+            }
+            if (!Settings.Manager.contains("custom_cape_path")) {
+                Settings.Manager.put("custom_cape_path", "");
+            }
+        } catch (Exception e) {
+            Logging.i("SKIN PREFS INIT", "Failed to force map local skin preferences strings data context.");
         }
     }
 
