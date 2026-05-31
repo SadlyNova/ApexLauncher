@@ -122,6 +122,15 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         View tabMods = rootLayout.findViewById(R.id.tab_mods);
         if (tabMods != null) tabMods.setOnClickListener(this);
 
+        // 👑 BIND CAPES & SKINS TAB CLICK HOOK
+        try {
+            int capesSkinsResId = rootLayout.getResources().getIdentifier("tab_capes_skins", "id", requireContext().getPackageName());
+            if (capesSkinsResId != 0) {
+                View tabCapesSkins = rootLayout.findViewById(capesSkinsResId);
+                if (tabCapesSkins != null) tabCapesSkins.setOnClickListener(this);
+            }
+        } catch (Exception ignored) {}
+
         // Top Horizontal Toolbars
         if (binding.customControlButton != null) binding.customControlButton.setOnClickListener(this);
         if (binding.openMainDirButton != null) binding.openMainDirButton.setOnClickListener(this);
@@ -174,6 +183,12 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         View tabSettings = rootLayout.findViewById(R.id.tab_settings);
         View tabMods = rootLayout.findViewById(R.id.tab_mods);
 
+        // Resolve Capes & Skins Resource ID dynamically for routing transaction
+        int capesSkinsResId = 0;
+        try {
+            capesSkinsResId = rootLayout.getResources().getIdentifier("tab_capes_skins", "id", requireContext().getPackageName());
+        } catch (Exception ignored) {}
+
         if (v == binding.playButton) {
             EventBus.getDefault().post(new LaunchGameEvent());
         } 
@@ -197,7 +212,23 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         } 
         else if (v == tabMods || v == binding.customControlButton || v == topGamingBtn) {
             switchDashboardFeature(new ControlButtonFragment());
-        } 
+        }
+        // 👑 ROUTE CAPES & SKINS VIEW INSIDE CORE DASHBOARD CONTAINER
+        else if (capesSkinsResId != 0 && v.getId() == capesSkinsResId) {
+            try {
+                // Instantiates and loads your premium customized layout file cleanly
+                Class<?> fragmentClass = Class.forName("com.movtery.zalithlauncher.ui.fragment.CapesSkinsFragment");
+                Fragment targetFragment = (Fragment) fragmentClass.newInstance();
+                switchDashboardFeature(targetFragment);
+            } catch (Exception e) {
+                // Safe runtime fallback if package path naming mapping differs
+                try {
+                    Class<?> fallbackClass = Class.forName("net.kdt.pojavlaunch.fragments.CapesSkinsFragment");
+                    Fragment fallbackFragment = (Fragment) fallbackClass.newInstance();
+                    switchDashboardFeature(fallbackFragment);
+                } catch (Exception ignored) {}
+            }
+        }
         else if (v == binding.openMainDirButton || v == topFolderBtn) {
             Bundle bundle = new Bundle();
             bundle.putString(FilesFragment.BUNDLE_LIST_PATH, PathManager.DIR_GAME_HOME);
@@ -215,12 +246,10 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
             }
         } 
         else if (v == binding.novaDiscord || v == binding.novaWebsite) {
-            // Remapped to open Discord invitation cleanly via Action Intents links
             android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://discord.gg/xFpfUufXg3"));
             startActivity(intent);
         } 
         else if (v == binding.novaGithub) {
-            // Remapped to directly route traffic towards custom official webpage mapping
             android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://github.com/SadlyNova/NovaLauncher-"));
             startActivity(intent);
         }
