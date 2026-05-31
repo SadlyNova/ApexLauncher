@@ -215,7 +215,7 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/_34sdp"
                 android:layout_weight="1"
-                android:layout_marginStart="@dimen/_4dp"
+                android:layout_marginStart="@dimen/_4sdp"
                 android:text="Apply Changes"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
