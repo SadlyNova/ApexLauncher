@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="background">#050B0A</color>
+    <color name="background">#0C0612</color>
     <color name="black_or_white">#FFFFFF</color>
     <color name="primary_text">#FFFFFF</color>
-    <color name="secondary_text">#8AB0AB</color>
+    <color name="secondary_text">#A594B8</color>
 
-    <color name="background_app">#050B0A</color>
-    <color name="background_app_error">#330B0B</color>
-    <color name="background_overlay">#80050B0A</color>
-    <color name="background_status_bar">#0D1A18</color>
+    <color name="background_app">#0C0612</color>
+    <color name="background_app_error">#3A0B18</color>
+    <color name="background_overlay">#800C0612</color>
+    <color name="background_status_bar">#140B1F</color>
     
-    <color name="windowBackground">#050B0A</color>
-    <color name="colorBackground">#050B0A</color>
-    <color name="colorSurface">#112421</color>
-    <color name="cardBackground">#193631</color>
+    <color name="windowBackground">#0C0612</color>
+    <color name="colorBackground">#0C0612</color>
+    <color name="colorSurface">#190E28</color>
+    <color name="cardBackground">#25153B</color>
 
-    <color name="background_menu_top">#0D1A18</color>
-    <color name="background_menu_top_error">#551414</color>
-    <color name="background_menu_element">#104F46</color>
-    <color name="background_ripple_effect">#4D17EAD9</color>
-    <color name="sidebar_background">#091211</color>
+    <color name="background_menu_top">#140B1F</color>
+    <color name="background_menu_top_error">#5C1226</color>
+    <color name="background_menu_element">#4A154B</color>
+    <color name="background_ripple_effect">#4DBC46AA</color>
+    <color name="sidebar_background">#11081A</color>
 
-    <color name="button_background">#193631</color>
-    <color name="button_background_selected">#104F46</color>
-    <color name="dialog_background">#0D1A18</color>
+    <color name="button_background">#25153B</color>
+    <color name="button_background_selected">#4A154B</color>
+    <color name="dialog_background">#140B1F</color>
 
-    <color name="menu_bar">#112421</color>
+    <color name="menu_bar">#190E28</color>
     <color name="menu_bar_text">#FFFFFF</color>
-    <color name="menu_overlay">#CC0D1A18</color>
-    <color name="menu_progress">#17EAD9</color>
+    <color name="menu_overlay">#CC1A0B2E</color>
+    <color name="menu_progress">#BC46AA</color>
 
-    <color name="background_card">#193631</color>
-    <color name="background_item">#CC112421</color>
-    <color name="background_item_selected">#E6104F46</color>
-    <color name="background_item_disabled">#4D330B0B</color>
+    <color name="background_card">#25153B</color>
+    <color name="background_item">#CC190E28</color>
+    <color name="background_item_selected">#E64A154B</color>
+    <color name="background_item_disabled">#4D3A0B18</color>
     <color name="background_sponsor_intermediate">#CCFFCB8B</color>
     <color name="background_sponsor_advanced">#CCFDA28A</color>
 
-    <color name="edit_box_fill">#091211</color>
-    <color name="edit_box_fill_selected">#142B27</color>
+    <color name="edit_box_fill">#11081A</color>
+    <color name="edit_box_fill_selected">#1F0F33</color>
 
-    <color name="mod_category_fill">#4D104F46</color>
-    <color name="text_background_fill">#330D1A18</color>
+    <color name="mod_category_fill">#4D4A154B</color>
+    <color name="text_background_fill">#33140B1F</color>
 
-    <color name="settings_category">#17EAD9</color>
-    <color name="favorite_color">#E63946</color>
+    <color name="settings_category">#BC46AA</color>
+    <color name="favorite_color">#FF2A6D</color>
     <color name="icon_color">#FFFFFF</color>
 </resources>
