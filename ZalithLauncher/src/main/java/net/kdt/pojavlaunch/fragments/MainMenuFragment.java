@@ -122,14 +122,9 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         View tabMods = rootLayout.findViewById(R.id.tab_mods);
         if (tabMods != null) tabMods.setOnClickListener(this);
 
-        // 👑 BIND CAPES & SKINS TAB CLICK HOOK DYNAMICALLY
-        try {
-            int capesSkinsResId = rootLayout.getResources().getIdentifier("tab_capes_skins", "id", requireContext().getPackageName());
-            if (capesSkinsResId != 0) {
-                View tabCapesSkins = rootLayout.findViewById(capesSkinsResId);
-                if (tabCapesSkins != null) tabCapesSkins.setOnClickListener(this);
-            }
-        } catch (Exception ignored) {}
+        // 👑 DIRECT HARD LINK BIND: Capes & Skins Tab Hook Registration
+        View tabCapesSkins = rootLayout.findViewById(R.id.tab_capes_skins);
+        if (tabCapesSkins != null) tabCapesSkins.setOnClickListener(this);
 
         // Top Horizontal Toolbars
         if (binding.customControlButton != null) binding.customControlButton.setOnClickListener(this);
@@ -157,7 +152,7 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         refreshCurrentVersion();
     }
 
-    // 👑 FORCED FRAGMENT MANAGER RESET ENGINE TO BREAK FREEZE ON LAYOUT REPLACEMENT
+    // 👑 FORCED FRAGMENT MANAGER INTERFACE REPLACEMENT ENGINE
     private void switchDashboardFeature(Fragment featureFragment) {
         if (binding != null) {
             try {
@@ -165,7 +160,7 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
                     binding.heroWelcomeArea.setVisibility(View.GONE);
                 }
 
-                // Force fully detach and clear any active/frozen view elements from the frame container
+                // Force fully detach any active/frozen view layouts inside container frame
                 androidx.fragment.app.FragmentManager fm = getChildFragmentManager();
                 Fragment activeFragment = fm.findFragmentById(R.id.dashboard_content_container);
                 if (activeFragment != null) {
@@ -177,14 +172,13 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
                     contentContainer.invalidate();
                 }
 
-                // Inject the fresh custom fragment viewport cleanly 
+                // Smooth inflate our custom workspace fragment UI layout view
                 fm.beginTransaction()
                     .replace(R.id.dashboard_content_container, featureFragment)
                     .setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commitAllowingStateLoss();
 
             } catch (Exception e) {
-                // Secondary absolute fail-safe transaction lane
                 try {
                     getChildFragmentManager().beginTransaction()
                         .replace(R.id.dashboard_content_container, featureFragment)
@@ -206,12 +200,7 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         View tabHome = rootLayout.findViewById(R.id.tab_home);
         View tabSettings = rootLayout.findViewById(R.id.tab_settings);
         View tabMods = rootLayout.findViewById(R.id.tab_mods);
-
-        // Fetch dynamic side menu custom tag item ID tracking
-        int capesSkinsResId = 0;
-        try {
-            capesSkinsResId = rootLayout.getResources().getIdentifier("tab_capes_skins", "id", requireContext().getPackageName());
-        } catch (Exception ignored) {}
+        View tabCapesSkins = rootLayout.findViewById(R.id.tab_capes_skins); // 👑 Clear mapping link
 
         if (v == binding.playButton) {
             EventBus.getDefault().post(new LaunchGameEvent());
@@ -236,21 +225,10 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         } 
         else if (v == tabMods || v == binding.customControlButton || v == topGamingBtn) {
             switchDashboardFeature(new ControlButtonFragment());
-        }
-        // 👑 ROUTE CAPES & SKINS ACTION CLICK THROUGH THE FORCE TRANSACTION CHANNELS
-        else if (capesSkinsResId != 0 && v.getId() == capesSkinsResId) {
-            try {
-                // Safely invokes the fresh plain UI fragment layout we instantiated
-                Class<?> fragmentClass = Class.forName("net.kdt.pojavlaunch.fragments.CapesSkinsFragment");
-                Fragment targetFragment = (Fragment) fragmentClass.newInstance();
-                switchDashboardFeature(targetFragment);
-            } catch (Exception e) {
-                try {
-                    Class<?> fallbackClass = Class.forName("com.movtery.zalithlauncher.ui.fragment.CapesSkinsFragment");
-                    Fragment fallbackFragment = (Fragment) fallbackClass.newInstance();
-                    switchDashboardFeature(fallbackFragment);
-                } catch (Exception ignored) {}
-            }
+        } 
+        // 👑 ABSOLUTE FIX: FORCED TRANSITION TRIGGER TO POPUP CAPES & SKINS WORKSPACE
+        else if (v == tabCapesSkins) {
+            switchDashboardFeature(new net.kdt.pojavlaunch.fragments.CapesSkinsFragment());
         }
         else if (v == binding.openMainDirButton || v == topFolderBtn) {
             Bundle bundle = new Bundle();
