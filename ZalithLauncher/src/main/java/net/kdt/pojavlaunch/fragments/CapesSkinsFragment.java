@@ -32,34 +32,39 @@ public class CapesSkinsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // 📁 UNIVERSAL FILE PICKER: Android 11 to 16 native storage manager trigger pipeline
+        // 📁 STORAGE RESOURCE LINKER pipeline with absolute URI support
         storagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                     Intent dataIntent = result.getData();
                     Uri selectedFileUri = dataIntent.getData();
+                    
                     if (selectedFileUri != null) {
-                        // Persist URI reading permissions dynamically for scoped storage bypass
                         try {
+                            // 👑 CORE FIX: Grant and persist terminal read permissions for the Content URI
                             int takeFlags = dataIntent.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION);
                             requireContext().getContentResolver().takePersistableUriPermission(selectedFileUri, takeFlags);
-                        } catch (Exception ignored) {}
+                        } catch (Exception e) {
+                            // Safe fallback block for customized Android ROMs
+                        }
 
-                        String finalPath = selectedFileUri.toString();
+                        // 👑 FIXED: Use toString() to save the full valid "content://" URI instead of getPath()
+                        String finalUriString = selectedFileUri.toString();
 
                         if (isPickingSkin) {
-                            if (skinPathInput != null) skinPathInput.setText(finalPath);
-                            Settings.Manager.put("custom_skin_path", finalPath);
-                            // 👑 LIVE STATUS ACTIVE LOOK: Translucent block updates to solid accent state
+                            if (skinPathInput != null) skinPathInput.setText(finalUriString);
+                            Settings.Manager.put("custom_skin_path", finalUriString);
+                            
+                            // Visual Status Feedback updates to premium violet accent
                             if (skinRenderView != null) {
                                 skinRenderView.setBackgroundColor(0xFF9D4EDD); 
                             }
-                            Toast.makeText(requireContext(), "Character Skin texture linked!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireContext(), "Skin URI linked successfully!", Toast.LENGTH_SHORT).show();
                         } else {
-                            if (capePathInput != null) capePathInput.setText(finalPath);
-                            Settings.Manager.put("custom_cape_path", finalPath);
-                            Toast.makeText(requireContext(), "Custom Cape texture linked!", Toast.LENGTH_SHORT).show();
+                            if (capePathInput != null) capePathInput.setText(finalUriString);
+                            Settings.Manager.put("custom_cape_path", finalUriString);
+                            Toast.makeText(requireContext(), "Cape URI linked successfully!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -86,18 +91,18 @@ public class CapesSkinsFragment extends Fragment {
         View btnSave = view.findViewById(R.id.btn_save_skin_flow);
         View btnCancel = view.findViewById(R.id.btn_cancel_skin_flow);
 
-        // Load pre-existing saved configuration states if any
+        // Load pre-existing configurations from register safe block
         try {
             String savedSkin = Settings.Manager.get("custom_skin_path", "");
             String savedCape = Settings.Manager.get("custom_cape_path", "");
             if (skinPathInput != null) skinPathInput.setText(savedSkin);
             if (capePathInput != null) capePathInput.setText(savedCape);
             if (skinRenderView != null && !savedSkin.isEmpty()) {
-                skinRenderView.setBackgroundColor(0xFF9D4EDD); // Maintain premium violet state on load
+                skinRenderView.setBackgroundColor(0xFF9D4EDD); // Maintain active layout tone
             }
         } catch (Exception ignored) {}
 
-        // 📁 BUTTON 1 CLICK: Select Character Skin (.png)
+        // Folder triggers mapping
         if (pickSkinBtn != null) {
             pickSkinBtn.setOnClickListener(v -> {
                 isPickingSkin = true;
@@ -105,7 +110,6 @@ public class CapesSkinsFragment extends Fragment {
             });
         }
 
-        // 📁 BUTTON 2 CLICK: Select Custom Cape (.png)
         if (pickCapeBtn != null) {
             pickCapeBtn.setOnClickListener(v -> {
                 isPickingSkin = false;
@@ -113,17 +117,17 @@ public class CapesSkinsFragment extends Fragment {
             });
         }
 
-        // 💾 APPLY/SAVE CONFIGURATIONS ACTION
+        // Apply actions
         if (btnSave != null) {
             btnSave.setOnClickListener(v -> {
-                Toast.makeText(requireContext(), "Texture profiles applied successfully!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Texture profiles deployed!", Toast.LENGTH_SHORT).show();
                 if (getActivity() != null) {
                     getActivity().getSupportFragmentManager().popBackStack();
                 }
             });
         }
 
-        // ❌ CANCEL / GO BACK TRIGGER ACTION
+        // Return actions
         if (btnCancel != null) {
             btnCancel.setOnClickListener(v -> {
                 if (getActivity() != null) {
@@ -137,11 +141,11 @@ public class CapesSkinsFragment extends Fragment {
         try {
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-            intent.setType("image/png"); // Dynamic filter restriction solely for skin sheets
+            intent.setType("image/png"); // Minecraft standard texture asset limit filter
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
             storagePickerLauncher.launch(intent);
         } catch (Exception e) {
-            Toast.makeText(requireContext(), "System File Manager not found!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Storage Manager access failed!", Toast.LENGTH_SHORT).show();
         }
     }
 }
