@@ -76,36 +76,6 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tab_home"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_32sdp"
-                    android:text="Home"
-                    android:textColor="#FFFFFF"
-                    android:textSize="@dimen/_11ssp"
-                    android:gravity="center_vertical"
-                    android:paddingStart="@dimen/_12sdp"
-                    android:drawableStart="@drawable/ic_folder"
-                    android:drawablePadding="@dimen/_10sdp"
-                    android:layout_marginBottom="@dimen/_4sdp"
-                    android:background="@drawable/button_background" />
-
-                <TextView
-                    android:id="@+id/tab_settings"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_32sdp"
-                    android:text="Version Management"
-                    android:textColor="#A09BB0"
-                    android:textSize="@dimen/_11ssp"
-                    android:gravity="center_vertical"
-                    android:paddingStart="@dimen/_12sdp"
-                    android:drawableStart="@drawable/ic_setting_launcher"
-                    android:drawablePadding="@dimen/_10sdp"
-                    android:layout_marginBottom="@dimen/_4sdp"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true"/>
-
-                <TextView
                     android:id="@+id/tab_mods"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_32sdp"
@@ -154,31 +124,15 @@
                     android:focusable="true"/>
 
                 <TextView
-                    android:id="@+id/share_logs_button"
+                    android:id="@+id/btn_override_share"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_32sdp"
-                    android:text="Share Logs"
+                    android:text="Mods"
                     android:textColor="#A09BB0"
                     android:textSize="@dimen/_11ssp"
                     android:gravity="center_vertical"
                     android:paddingStart="@dimen/_12sdp"
-                    android:drawableStart="@drawable/ic_share"
-                    android:drawablePadding="@dimen/_10sdp"
-                    android:layout_marginBottom="@dimen/_4sdp"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true"/>
-
-                <TextView
-                    android:id="@+id/nova_discord"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_32sdp"
-                    android:text="Community"
-                    android:textColor="#A09BB0"
-                    android:textSize="@dimen/_11ssp"
-                    android:gravity="center_vertical"
-                    android:paddingStart="@dimen/_12sdp"
-                    android:drawableStart="@drawable/ic_share"
+                    android:drawableStart="@drawable/ic_folder"
                     android:drawablePadding="@dimen/_10sdp"
                     android:layout_marginBottom="@dimen/_4sdp"
                     android:background="?android:attr/selectableItemBackground"
@@ -209,6 +163,10 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
+    <View android:id="@+id/tab_home" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints"/>
+    <View android:id="@+id/tab_settings" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints"/>
+    <View android:id="@+id/share_logs_button" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints"/>
+    <View android:id="@+id/nova_discord" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints"/>
     <View android:id="@+id/custom_control_button" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints"/>
     <LinearLayout android:id="@+id/centeredLogosContainer" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints"/>
     <ImageView android:id="@+id/sidebar_discord" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints"/>
