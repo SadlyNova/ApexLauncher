@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -28,7 +29,7 @@ public class CapesSkinsFragment extends Fragment {
 
     private EditText skinPathInput;
     private EditText capePathInput;
-    private View skinRenderView;
+    private ImageView skinRenderView; // 👑 OPTIMIZED: Casted to explicit ImageView
     private boolean isPickingSkin = true;
     private ActivityResultLauncher<Intent> storagePickerLauncher;
 
@@ -36,7 +37,7 @@ public class CapesSkinsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // 📁 ADVANCED STORAGE SYSTEM LINKER WITH LIVE STREAM RENDERER
+        // STORAGE RESOURCE LINKER with secure bitmap renderer
         storagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -63,7 +64,7 @@ public class CapesSkinsFragment extends Fragment {
                             if (skinPathInput != null) skinPathInput.setText(finalUriString);
                             Settings.Manager.put("custom_skin_path", finalUriString);
                             
-                            // 👑 LIVE PREVIEW: Load URI stream as dynamic bitmap background context cleanly
+                            // 👑 LIVE PREVIEW UPDATE: Directly call image draw canvas
                             renderSelectedImageToPreview(selectedFileUri);
                             Toast.makeText(requireContext(), "Skin URI registered successfully!", Toast.LENGTH_SHORT).show();
                         } else {
@@ -89,14 +90,14 @@ public class CapesSkinsFragment extends Fragment {
         
         skinPathInput = view.findViewById(R.id.skin_path_input);
         capePathInput = view.findViewById(R.id.cape_path_input);
-        skinRenderView = view.findViewById(R.id.skin_render_view);
+        skinRenderView = view.findViewById(R.id.skin_render_view); // 👑 Bind resource layout
         
         ImageButton pickSkinBtn = view.findViewById(R.id.btn_pick_skin);
         ImageButton pickCapeBtn = view.findViewById(R.id.btn_pick_cape);
         View btnSave = view.findViewById(R.id.btn_save_skin_flow);
         View btnCancel = view.findViewById(R.id.btn_cancel_skin_flow);
 
-        // Load pre-existing configurations from register safe block on startup
+        // Load pre-existing saved configurations on fragment startup
         try {
             String savedSkin = Settings.Manager.get("custom_skin_path", "");
             String savedCape = Settings.Manager.get("custom_cape_path", "");
@@ -140,18 +141,18 @@ public class CapesSkinsFragment extends Fragment {
         }
     }
 
-    // 👑 BITMAP RESOLVER STREAM MACHINE: Resolves Content URIs directly into sharp view pixels
+    // 👑 REFACTORED LIVE BITMAP DRAW ENGINE: Draws bitmap arrays onto ImageView directly
     private void renderSelectedImageToPreview(Uri imageUri) {
         if (skinRenderView == null) return;
         try (InputStream imageStream = requireContext().getContentResolver().openInputStream(imageUri)) {
             Bitmap selectedBitmap = BitmapFactory.decodeStream(imageStream);
             if (selectedBitmap != null) {
-                // Instantly inject the solved image sheet as view background bitmap drawable smoothly
-                skinRenderView.setBackground(new android.graphics.drawable.BitmapDrawable(getResources(), selectedBitmap));
+                // 👑 ABSOLUTE FIX: Inject raw bitmap pixels directly into the viewport layout canvas
+                skinRenderView.setImageBitmap(selectedBitmap);
             }
         } catch (Exception e) {
-            // Safe fallback accent color if texture stream takes fractions to calculate
-            skinRenderView.setBackgroundColor(0xFF9D4EDD); 
+            // Default flat layout color if image takes latency to calculate
+            skinRenderView.setImageResource(android.R.color.transparent);
         }
     }
 
