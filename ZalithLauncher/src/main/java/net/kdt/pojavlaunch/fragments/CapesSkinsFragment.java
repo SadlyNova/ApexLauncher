@@ -63,7 +63,7 @@ public class CapesSkinsFragment extends Fragment {
                             if (skinPathInput != null) skinPathInput.setText(finalUriString);
                             Settings.Manager.put("custom_skin_path", finalUriString);
                             
-                            // 👑 LIVE PREVIEW FIX: Load URI stream as dynamic bitmap background context
+                            // 👑 LIVE PREVIEW: Load URI stream as dynamic bitmap background context cleanly
                             renderSelectedImageToPreview(selectedFileUri);
                             Toast.makeText(requireContext(), "Skin URI registered successfully!", Toast.LENGTH_SHORT).show();
                         } else {
@@ -140,21 +140,17 @@ public class CapesSkinsFragment extends Fragment {
         }
     }
 
-    // 👑 BITMAP RESOLVER STREAM MACHINE: Resolves Content URIs directly into view pixels
+    // 👑 BITMAP RESOLVER STREAM MACHINE: Resolves Content URIs directly into sharp view pixels
     private void renderSelectedImageToPreview(Uri imageUri) {
         if (skinRenderView == null) return;
-        try {
-            InputStream imageStream = requireContext().getContentResolver().openInputStream(imageUri);
+        try (InputStream imageStream = requireContext().getContentResolver().openInputStream(imageUri)) {
             Bitmap selectedBitmap = BitmapFactory.decodeStream(imageStream);
             if (selectedBitmap != null) {
-                // Instantly inject the solved image sheet as view background bitmap drawable
+                // Instantly inject the solved image sheet as view background bitmap drawable smoothly
                 skinRenderView.setBackground(new android.graphics.drawable.BitmapDrawable(getResources(), selectedBitmap));
             }
-            if (imageStream != null) {
-                imageStream.close();
-            }
         } catch (Exception e) {
-            // Safe fallback color if permission fetching takes slightly longer time
+            // Safe fallback accent color if texture stream takes fractions to calculate
             skinRenderView.setBackgroundColor(0xFF9D4EDD); 
         }
     }
