@@ -91,7 +91,7 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
             ImageView topGamingBtn = activityRoot.findViewById(R.id.btn_override_gaming);
             ImageView topFolderBtn = activityRoot.findViewById(R.id.btn_override_folder);
             ImageView topJavaBtn = activityRoot.findViewById(R.id.btn_override_java);
-            ImageView topShareBtn = activityRoot.findViewById(R.id.btn_override_share);
+            ImageView topShareBtn = activityRoot.findViewById(R.id.btn_override_share); // 👑 FIXED: Standard ImageView mapping lock
             TextView topTitleView = activityRoot.findViewById(R.id.txt_override_title);
 
             if (topTitleView != null) {
@@ -122,7 +122,11 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         View tabMods = rootLayout.findViewById(R.id.tab_mods);
         if (tabMods != null) tabMods.setOnClickListener(this);
 
-        // 👑 DIRECT HARD LINK BIND: Capes & Skins Tab Hook Registration
+        // 👑 FIX: Mods Tab click hook link setup
+        View tabModsNew = rootLayout.findViewById(R.id.tab_mods_new);
+        if (tabModsNew != null) tabModsNew.setOnClickListener(this);
+
+        // Capes & Skins Tab Hook Registration
         View tabCapesSkins = rootLayout.findViewById(R.id.tab_capes_skins);
         if (tabCapesSkins != null) tabCapesSkins.setOnClickListener(this);
 
@@ -152,7 +156,7 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         refreshCurrentVersion();
     }
 
-    // 👑 FORCED FRAGMENT MANAGER INTERFACE REPLACEMENT ENGINE
+    // FORCED FRAGMENT MANAGER INTERFACE REPLACEMENT ENGINE
     private void switchDashboardFeature(Fragment featureFragment) {
         if (binding != null) {
             try {
@@ -160,7 +164,6 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
                     binding.heroWelcomeArea.setVisibility(View.GONE);
                 }
 
-                // Force fully detach any active/frozen view layouts inside container frame
                 androidx.fragment.app.FragmentManager fm = getChildFragmentManager();
                 Fragment activeFragment = fm.findFragmentById(R.id.dashboard_content_container);
                 if (activeFragment != null) {
@@ -172,7 +175,6 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
                     contentContainer.invalidate();
                 }
 
-                // Smooth inflate our custom workspace fragment UI layout view
                 fm.beginTransaction()
                     .replace(R.id.dashboard_content_container, featureFragment)
                     .setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
@@ -200,7 +202,8 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         View tabHome = rootLayout.findViewById(R.id.tab_home);
         View tabSettings = rootLayout.findViewById(R.id.tab_settings);
         View tabMods = rootLayout.findViewById(R.id.tab_mods);
-        View tabCapesSkins = rootLayout.findViewById(R.id.tab_capes_skins); // 👑 Clear mapping link
+        View tabModsNew = rootLayout.findViewById(R.id.tab_mods_new); // 👑 FIXED UNIQUE ID CAPTURE
+        View tabCapesSkins = rootLayout.findViewById(R.id.tab_capes_skins);
 
         if (v == binding.playButton) {
             EventBus.getDefault().post(new LaunchGameEvent());
@@ -226,7 +229,10 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         else if (v == tabMods || v == binding.customControlButton || v == topGamingBtn) {
             switchDashboardFeature(new ControlButtonFragment());
         } 
-        // 👑 ABSOLUTE FIX: FORCED TRANSITION TRIGGER TO POPUP CAPES & SKINS WORKSPACE
+        // 👑 NEW SIDEBAR MODS TRIGGER BUTTON HOOK FLOW
+        else if (v == tabModsNew || v == topShareBtn) {
+            ZHTools.shareLogs(requireActivity());
+        }
         else if (v == tabCapesSkins) {
             switchDashboardFeature(new net.kdt.pojavlaunch.fragments.CapesSkinsFragment());
         }
@@ -238,7 +244,7 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         else if (v == binding.installJarButton || v == topJavaBtn) {
             runInstallerWithConfirmation(false);
         } 
-        else if (v == binding.shareLogsButton || v == topShareBtn) {
+        else if (v == binding.shareLogsButton) {
             ZHTools.shareLogs(requireActivity());
         } 
         else if (v == binding.version) {
