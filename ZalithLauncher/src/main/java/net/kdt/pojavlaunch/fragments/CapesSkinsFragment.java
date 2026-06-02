@@ -23,6 +23,8 @@ import androidx.fragment.app.Fragment;
 import com.movtery.zalithlauncher.R;
 import com.movtery.zalithlauncher.setting.Settings;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 
 public class CapesSkinsFragment extends Fragment {
@@ -37,6 +39,7 @@ public class CapesSkinsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+        // 📁 INTERNAL CACHE LAYER STORAGE REGISTER
         storagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -45,30 +48,24 @@ public class CapesSkinsFragment extends Fragment {
                     Uri selectedFileUri = dataIntent.getData();
                     
                     if (selectedFileUri != null) {
-                        try {
-                            final int takeFlags = dataIntent.getFlags() 
-                                    & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                            requireContext().getContentResolver().takePersistableUriPermission(selectedFileUri, takeFlags);
-                        } catch (Exception e) {
-                            try {
-                                requireContext().getContentResolver().takePersistableUriPermission(
-                                    selectedFileUri, Intent.FLAG_GRANT_READ_URI_PERMISSION
-                                );
-                            } catch (Exception ignored) {}
-                        }
+                        // 👑 BEYOND SCOPED STORAGE: Save image stream into private absolute cache block
+                        String savedLocalPath = copyFileToInternalCache(selectedFileUri, isPickingSkin ? "custom_skin.png" : "custom_cape.png");
 
-                        String finalUriString = selectedFileUri.toString();
-
-                        if (isPickingSkin) {
-                            if (skinPathInput != null) skinPathInput.setText(finalUriString);
-                            Settings.Manager.put("custom_skin_path", finalUriString);
-                            
-                            renderSelectedImageToPreview(selectedFileUri);
-                            Toast.makeText(requireContext(), "Skin URI registered successfully!", Toast.LENGTH_SHORT).show();
+                        if (savedLocalPath != null) {
+                            if (isPickingSkin) {
+                                if (skinPathInput != null) skinPathInput.setText(savedLocalPath);
+                                Settings.Manager.put("custom_skin_path", savedLocalPath);
+                                
+                                // Instantly trigger render canvas from our secure cache directory
+                                renderCacheImageToPreview(savedLocalPath);
+                                Toast.makeText(requireContext(), "Character Skin applied successfully!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                if (capePathInput != null) capePathInput.setText(savedLocalPath);
+                                Settings.Manager.put("custom_cape_path", savedLocalPath);
+                                Toast.makeText(requireContext(), "Custom Cape applied successfully!", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            if (capePathInput != null) capePathInput.setText(finalUriString);
-                            Settings.Manager.put("custom_cape_path", finalUriString);
-                            Toast.makeText(requireContext(), "Cape URI registered successfully!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireContext(), "Failed to cache texture asset file!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -95,22 +92,21 @@ public class CapesSkinsFragment extends Fragment {
         View btnSave = view.findViewById(R.id.btn_save_skin_flow);
         View btnCancel = view.findViewById(R.id.btn_cancel_skin_flow);
 
-        // 👑 STABLE AUTO-RELOAD MATRIX: Solves the Scoped Storage hand-shake timing window
+        // 👑 AUTO-LOAD MECHANISM: Reads direct non-restricted absolute files on fragment wake up
         if (view != null) {
             view.postDelayed(() -> {
                 try {
-                    String savedSkin = Settings.Manager.get("custom_skin_path", "");
-                    String savedCape = Settings.Manager.get("custom_cape_path", "");
+                    String savedSkinPath = Settings.Manager.get("custom_skin_path", "");
+                    String savedCapePath = Settings.Manager.get("custom_cape_path", "");
                     
-                    if (skinPathInput != null) skinPathInput.setText(savedSkin);
-                    if (capePathInput != null) capePathInput.setText(savedCape);
+                    if (skinPathInput != null) skinPathInput.setText(savedSkinPath);
+                    if (capePathInput != null) capePathInput.setText(savedCapePath);
                     
-                    if (!savedSkin.isEmpty()) {
-                        // 👑 CORE PARSING FIX: Direct load via safe decoded parsing block
-                        renderSelectedImageToPreview(Uri.parse(Uri.decode(savedSkin)));
+                    if (!savedSkinPath.isEmpty()) {
+                        renderCacheImageToPreview(savedSkinPath);
                     }
                 } catch (Exception ignored) {}
-            }, 300); // 300ms async lock
+            }, 150); // Fast 150ms direct stream loading
         }
 
         if (pickSkinBtn != null) {
@@ -129,7 +125,7 @@ public class CapesSkinsFragment extends Fragment {
 
         if (btnSave != null) {
             btnSave.setOnClickListener(v -> {
-                Toast.makeText(requireContext(), "Texture profiles successfully deployed!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Texture profiles applied successfully!", Toast.LENGTH_SHORT).show();
                 if (getActivity() != null) {
                     getActivity().getSupportFragmentManager().popBackStack();
                 }
@@ -145,30 +141,45 @@ public class CapesSkinsFragment extends Fragment {
         }
     }
 
-    // 👑 ABSOLUTE URI CONTENT RESOLVER ENGINE
-    private void renderSelectedImageToPreview(Uri imageUri) {
-        if (skinRenderView == null || imageUri == null) return;
-        
-        // Safe check to resolve standard string-encoded data pools
-        Uri cleanUri = imageUri;
-        if (imageUri.toString().startsWith("/")) {
-            cleanUri = Uri.parse("content://" + imageUri.toString());
-        }
-
-        try (InputStream imageStream = requireContext().getContentResolver().openInputStream(cleanUri)) {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inScaled = false; // 👑 CRISP GRAPHICS: Prevents Android from compressing tiny Minecraft asset sheets
-            
-            Bitmap selectedBitmap = BitmapFactory.decodeStream(imageStream, null, options);
-            if (selectedBitmap != null) {
-                skinRenderView.setImageBitmap(selectedBitmap);
-                skinRenderView.invalidate();
-                skinRenderView.requestLayout();
+    // 👑 BITMAP CACHE PIPELINE ENGINE: Copies content providers streams to absolute file paths
+    private String copyFileToInternalCache(Uri sourceUri, String outputName) {
+        try {
+            File cacheFile = new File(requireContext().getCacheDir(), outputName);
+            try (InputStream inputStream = requireContext().getContentResolver().openInputStream(sourceUri);
+                 FileOutputStream outputStream = new FileOutputStream(cacheFile)) {
+                
+                byte[] dataBuffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(dataBuffer)) != -1) {
+                    outputStream.write(dataBuffer, 0, bytesRead);
+                }
+                return cacheFile.getAbsolutePath(); // Returns non-restricted raw local path
             }
         } catch (Exception e) {
-            // Purple accent tint if stream resolver faces thread lock latency
-            skinRenderView.setBackgroundColor(0x339D4EDD);
+            return null;
         }
+    }
+
+    // 👑 UNRESTRICTED PREVIEW RENDER ENGINE: Draws high-definition pixelated textures without permission lag
+    private void renderCacheImageToPreview(String absoluteFilePath) {
+        if (skinRenderView == null || absoluteFilePath == null || absoluteFilePath.isEmpty()) return;
+        try {
+            File textureFile = new File(absoluteFilePath);
+            if (textureFile.exists()) {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inScaled = false; // Ensures pixel perfect rendering crisp grid
+                Bitmap cachedBitmap = BitmapFactory.decodeFile(textureFile.getAbsolutePath(), options);
+                
+                if (cachedBitmap != null) {
+                    skinRenderView.setImageBitmap(cachedBitmap);
+                    skinRenderView.invalidate();
+                    skinRenderView.requestLayout();
+                    return;
+                }
+            }
+        } catch (Exception ignored) {}
+        // Fallback tint layout state if path file parsing meets internal delays
+        skinRenderView.setBackgroundColor(0x339D4EDD);
     }
 
     private void triggerSystemFilePicker() {
