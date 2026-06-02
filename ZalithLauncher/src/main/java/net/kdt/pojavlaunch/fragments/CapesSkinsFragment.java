@@ -37,7 +37,6 @@ public class CapesSkinsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // STORAGE RESOURCE LINKER with secure bitmap renderer
         storagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -64,7 +63,6 @@ public class CapesSkinsFragment extends Fragment {
                             if (skinPathInput != null) skinPathInput.setText(finalUriString);
                             Settings.Manager.put("custom_skin_path", finalUriString);
                             
-                            // Live Preview render machine trigger
                             renderSelectedImageToPreview(selectedFileUri);
                             Toast.makeText(requireContext(), "Skin URI registered successfully!", Toast.LENGTH_SHORT).show();
                         } else {
@@ -97,7 +95,7 @@ public class CapesSkinsFragment extends Fragment {
         View btnSave = view.findViewById(R.id.btn_save_skin_flow);
         View btnCancel = view.findViewById(R.id.btn_cancel_skin_flow);
 
-        // 👑 ASYNCHRONOUS AUTO-LOAD ENGINE: Delay rendering slightly for system storage providers to wake up safely
+        // 👑 STABLE AUTO-RELOAD MATRIX: Solves the Scoped Storage hand-shake timing window
         if (view != null) {
             view.postDelayed(() -> {
                 try {
@@ -108,10 +106,11 @@ public class CapesSkinsFragment extends Fragment {
                     if (capePathInput != null) capePathInput.setText(savedCape);
                     
                     if (!savedSkin.isEmpty()) {
-                        renderSelectedImageToPreview(Uri.parse(savedSkin));
+                        // 👑 CORE PARSING FIX: Direct load via safe decoded parsing block
+                        renderSelectedImageToPreview(Uri.parse(Uri.decode(savedSkin)));
                     }
                 } catch (Exception ignored) {}
-            }, 250); // Safe 250ms hardware hand-shake interval
+            }, 300); // 300ms async lock
         }
 
         if (pickSkinBtn != null) {
@@ -146,22 +145,29 @@ public class CapesSkinsFragment extends Fragment {
         }
     }
 
-    // LIVE BITMAP DRAW ENGINE WITH FORCED VIEW INVALIDATION MATRIX
+    // 👑 ABSOLUTE URI CONTENT RESOLVER ENGINE
     private void renderSelectedImageToPreview(Uri imageUri) {
-        if (skinRenderView == null) return;
-        try (InputStream imageStream = requireContext().getContentResolver().openInputStream(imageUri)) {
-            Bitmap selectedBitmap = BitmapFactory.decodeStream(imageStream);
+        if (skinRenderView == null || imageUri == null) return;
+        
+        // Safe check to resolve standard string-encoded data pools
+        Uri cleanUri = imageUri;
+        if (imageUri.toString().startsWith("/")) {
+            cleanUri = Uri.parse("content://" + imageUri.toString());
+        }
+
+        try (InputStream imageStream = requireContext().getContentResolver().openInputStream(cleanUri)) {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inScaled = false; // 👑 CRISP GRAPHICS: Prevents Android from compressing tiny Minecraft asset sheets
+            
+            Bitmap selectedBitmap = BitmapFactory.decodeStream(imageStream, null, options);
             if (selectedBitmap != null) {
-                // Draw pixels layout explicitly
                 skinRenderView.setImageBitmap(selectedBitmap);
-                
-                // 👑 FORCE REFRESH SIGNAL: Compels the Android hardware layer to re-draw layout pixels immediately
                 skinRenderView.invalidate();
                 skinRenderView.requestLayout();
             }
         } catch (Exception e) {
-            // Soft reset fallback
-            skinRenderView.setImageResource(android.R.color.transparent);
+            // Purple accent tint if stream resolver faces thread lock latency
+            skinRenderView.setBackgroundColor(0x339D4EDD);
         }
     }
 
