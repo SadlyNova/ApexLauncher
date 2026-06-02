@@ -2,6 +2,8 @@ package net.kdt.pojavlaunch.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,6 +22,8 @@ import androidx.fragment.app.Fragment;
 import com.movtery.zalithlauncher.R;
 import com.movtery.zalithlauncher.setting.Settings;
 
+import java.io.InputStream;
+
 public class CapesSkinsFragment extends Fragment {
 
     private EditText skinPathInput;
@@ -32,7 +36,7 @@ public class CapesSkinsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // 📁 STORAGE RESOURCE LINKER pipeline with absolute URI support
+        // 📁 ADVANCED STORAGE SYSTEM LINKER WITH LIVE STREAM RENDERER
         storagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -42,29 +46,30 @@ public class CapesSkinsFragment extends Fragment {
                     
                     if (selectedFileUri != null) {
                         try {
-                            // 👑 CORE FIX: Grant and persist terminal read permissions for the Content URI
-                            int takeFlags = dataIntent.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            final int takeFlags = dataIntent.getFlags() 
+                                    & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                             requireContext().getContentResolver().takePersistableUriPermission(selectedFileUri, takeFlags);
                         } catch (Exception e) {
-                            // Safe fallback block for customized Android ROMs
+                            try {
+                                requireContext().getContentResolver().takePersistableUriPermission(
+                                    selectedFileUri, Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                );
+                            } catch (Exception ignored) {}
                         }
 
-                        // 👑 FIXED: Use toString() to save the full valid "content://" URI instead of getPath()
                         String finalUriString = selectedFileUri.toString();
 
                         if (isPickingSkin) {
                             if (skinPathInput != null) skinPathInput.setText(finalUriString);
                             Settings.Manager.put("custom_skin_path", finalUriString);
                             
-                            // Visual Status Feedback updates to premium violet accent
-                            if (skinRenderView != null) {
-                                skinRenderView.setBackgroundColor(0xFF9D4EDD); 
-                            }
-                            Toast.makeText(requireContext(), "Skin URI linked successfully!", Toast.LENGTH_SHORT).show();
+                            // 👑 LIVE PREVIEW FIX: Load URI stream as dynamic bitmap background context
+                            renderSelectedImageToPreview(selectedFileUri);
+                            Toast.makeText(requireContext(), "Skin URI registered successfully!", Toast.LENGTH_SHORT).show();
                         } else {
                             if (capePathInput != null) capePathInput.setText(finalUriString);
                             Settings.Manager.put("custom_cape_path", finalUriString);
-                            Toast.makeText(requireContext(), "Cape URI linked successfully!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireContext(), "Cape URI registered successfully!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -91,18 +96,18 @@ public class CapesSkinsFragment extends Fragment {
         View btnSave = view.findViewById(R.id.btn_save_skin_flow);
         View btnCancel = view.findViewById(R.id.btn_cancel_skin_flow);
 
-        // Load pre-existing configurations from register safe block
+        // Load pre-existing configurations from register safe block on startup
         try {
             String savedSkin = Settings.Manager.get("custom_skin_path", "");
             String savedCape = Settings.Manager.get("custom_cape_path", "");
             if (skinPathInput != null) skinPathInput.setText(savedSkin);
             if (capePathInput != null) capePathInput.setText(savedCape);
-            if (skinRenderView != null && !savedSkin.isEmpty()) {
-                skinRenderView.setBackgroundColor(0xFF9D4EDD); // Maintain active layout tone
+            
+            if (!savedSkin.isEmpty()) {
+                renderSelectedImageToPreview(Uri.parse(savedSkin));
             }
         } catch (Exception ignored) {}
 
-        // Folder triggers mapping
         if (pickSkinBtn != null) {
             pickSkinBtn.setOnClickListener(v -> {
                 isPickingSkin = true;
@@ -117,17 +122,15 @@ public class CapesSkinsFragment extends Fragment {
             });
         }
 
-        // Apply actions
         if (btnSave != null) {
             btnSave.setOnClickListener(v -> {
-                Toast.makeText(requireContext(), "Texture profiles deployed!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Texture profiles successfully deployed!", Toast.LENGTH_SHORT).show();
                 if (getActivity() != null) {
                     getActivity().getSupportFragmentManager().popBackStack();
                 }
             });
         }
 
-        // Return actions
         if (btnCancel != null) {
             btnCancel.setOnClickListener(v -> {
                 if (getActivity() != null) {
@@ -137,12 +140,35 @@ public class CapesSkinsFragment extends Fragment {
         }
     }
 
+    // 👑 BITMAP RESOLVER STREAM MACHINE: Resolves Content URIs directly into view pixels
+    private void renderSelectedImageToPreview(Uri imageUri) {
+        if (skinRenderView == null) return;
+        try {
+            InputStream imageStream = requireContext().getContentResolver().openInputStream(imageUri);
+            Bitmap selectedBitmap = BitmapFactory.decodeStream(imageStream);
+            if (selectedBitmap != null) {
+                // Instantly inject the solved image sheet as view background bitmap drawable
+                skinRenderView.setBackground(new android.graphics.drawable.BitmapDrawable(getResources(), selectedBitmap));
+            }
+            if (imageStream != null) {
+                imageStream.close();
+            }
+        } catch (Exception e) {
+            // Safe fallback color if permission fetching takes slightly longer time
+            skinRenderView.setBackgroundColor(0xFF9D4EDD); 
+        }
+    }
+
     private void triggerSystemFilePicker() {
         try {
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-            intent.setType("image/png"); // Minecraft standard texture asset limit filter
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+            intent.setType("image/png"); 
+            
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION 
+                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION 
+                    | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+            
             storagePickerLauncher.launch(intent);
         } catch (Exception e) {
             Toast.makeText(requireContext(), "Storage Manager access failed!", Toast.LENGTH_SHORT).show();
