@@ -29,7 +29,7 @@ public class CapesSkinsFragment extends Fragment {
 
     private EditText skinPathInput;
     private EditText capePathInput;
-    private ImageView skinRenderView; // 👑 OPTIMIZED: Casted to explicit ImageView
+    private ImageView skinRenderView; 
     private boolean isPickingSkin = true;
     private ActivityResultLauncher<Intent> storagePickerLauncher;
 
@@ -37,7 +37,6 @@ public class CapesSkinsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // STORAGE RESOURCE LINKER with secure bitmap renderer
         storagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -64,7 +63,6 @@ public class CapesSkinsFragment extends Fragment {
                             if (skinPathInput != null) skinPathInput.setText(finalUriString);
                             Settings.Manager.put("custom_skin_path", finalUriString);
                             
-                            // 👑 LIVE PREVIEW UPDATE: Directly call image draw canvas
                             renderSelectedImageToPreview(selectedFileUri);
                             Toast.makeText(requireContext(), "Skin URI registered successfully!", Toast.LENGTH_SHORT).show();
                         } else {
@@ -90,14 +88,13 @@ public class CapesSkinsFragment extends Fragment {
         
         skinPathInput = view.findViewById(R.id.skin_path_input);
         capePathInput = view.findViewById(R.id.cape_path_input);
-        skinRenderView = view.findViewById(R.id.skin_render_view); // 👑 Bind resource layout
+        skinRenderView = view.findViewById(R.id.skin_render_view);
         
         ImageButton pickSkinBtn = view.findViewById(R.id.btn_pick_skin);
         ImageButton pickCapeBtn = view.findViewById(R.id.btn_pick_cape);
         View btnSave = view.findViewById(R.id.btn_save_skin_flow);
         View btnCancel = view.findViewById(R.id.btn_cancel_skin_flow);
 
-        // Load pre-existing saved configurations on fragment startup
         try {
             String savedSkin = Settings.Manager.get("custom_skin_path", "");
             String savedCape = Settings.Manager.get("custom_cape_path", "");
@@ -141,17 +138,15 @@ public class CapesSkinsFragment extends Fragment {
         }
     }
 
-    // 👑 REFACTORED LIVE BITMAP DRAW ENGINE: Draws bitmap arrays onto ImageView directly
     private void renderSelectedImageToPreview(Uri imageUri) {
         if (skinRenderView == null) return;
         try (InputStream imageStream = requireContext().getContentResolver().openInputStream(imageUri)) {
             Bitmap selectedBitmap = BitmapFactory.decodeStream(imageStream);
             if (selectedBitmap != null) {
-                // 👑 ABSOLUTE FIX: Inject raw bitmap pixels directly into the viewport layout canvas
+                // 👑 INJECT DIRECTLY: Sets image source array onto standard hardware viewport canvas
                 skinRenderView.setImageBitmap(selectedBitmap);
             }
         } catch (Exception e) {
-            // Default flat layout color if image takes latency to calculate
             skinRenderView.setImageResource(android.R.color.transparent);
         }
     }
