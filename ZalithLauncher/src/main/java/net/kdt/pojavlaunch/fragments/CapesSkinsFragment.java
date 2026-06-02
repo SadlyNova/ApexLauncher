@@ -37,6 +37,7 @@ public class CapesSkinsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+        // STORAGE RESOURCE LINKER with secure bitmap renderer
         storagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -63,6 +64,7 @@ public class CapesSkinsFragment extends Fragment {
                             if (skinPathInput != null) skinPathInput.setText(finalUriString);
                             Settings.Manager.put("custom_skin_path", finalUriString);
                             
+                            // Live Preview render machine trigger
                             renderSelectedImageToPreview(selectedFileUri);
                             Toast.makeText(requireContext(), "Skin URI registered successfully!", Toast.LENGTH_SHORT).show();
                         } else {
@@ -95,16 +97,22 @@ public class CapesSkinsFragment extends Fragment {
         View btnSave = view.findViewById(R.id.btn_save_skin_flow);
         View btnCancel = view.findViewById(R.id.btn_cancel_skin_flow);
 
-        try {
-            String savedSkin = Settings.Manager.get("custom_skin_path", "");
-            String savedCape = Settings.Manager.get("custom_cape_path", "");
-            if (skinPathInput != null) skinPathInput.setText(savedSkin);
-            if (capePathInput != null) capePathInput.setText(savedCape);
-            
-            if (!savedSkin.isEmpty()) {
-                renderSelectedImageToPreview(Uri.parse(savedSkin));
-            }
-        } catch (Exception ignored) {}
+        // 👑 ASYNCHRONOUS AUTO-LOAD ENGINE: Delay rendering slightly for system storage providers to wake up safely
+        if (view != null) {
+            view.postDelayed(() -> {
+                try {
+                    String savedSkin = Settings.Manager.get("custom_skin_path", "");
+                    String savedCape = Settings.Manager.get("custom_cape_path", "");
+                    
+                    if (skinPathInput != null) skinPathInput.setText(savedSkin);
+                    if (capePathInput != null) capePathInput.setText(savedCape);
+                    
+                    if (!savedSkin.isEmpty()) {
+                        renderSelectedImageToPreview(Uri.parse(savedSkin));
+                    }
+                } catch (Exception ignored) {}
+            }, 250); // Safe 250ms hardware hand-shake interval
+        }
 
         if (pickSkinBtn != null) {
             pickSkinBtn.setOnClickListener(v -> {
@@ -138,15 +146,21 @@ public class CapesSkinsFragment extends Fragment {
         }
     }
 
+    // LIVE BITMAP DRAW ENGINE WITH FORCED VIEW INVALIDATION MATRIX
     private void renderSelectedImageToPreview(Uri imageUri) {
         if (skinRenderView == null) return;
         try (InputStream imageStream = requireContext().getContentResolver().openInputStream(imageUri)) {
             Bitmap selectedBitmap = BitmapFactory.decodeStream(imageStream);
             if (selectedBitmap != null) {
-                // 👑 INJECT DIRECTLY: Sets image source array onto standard hardware viewport canvas
+                // Draw pixels layout explicitly
                 skinRenderView.setImageBitmap(selectedBitmap);
+                
+                // 👑 FORCE REFRESH SIGNAL: Compels the Android hardware layer to re-draw layout pixels immediately
+                skinRenderView.invalidate();
+                skinRenderView.requestLayout();
             }
         } catch (Exception e) {
+            // Soft reset fallback
             skinRenderView.setImageResource(android.R.color.transparent);
         }
     }
