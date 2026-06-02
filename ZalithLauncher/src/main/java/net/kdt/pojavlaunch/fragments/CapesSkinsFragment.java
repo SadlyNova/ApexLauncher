@@ -1,6 +1,7 @@
 package net.kdt.pojavlaunch.fragments;
 
-import android.content.Context;
+import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,15 +12,13 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.movtery.zalithlauncher.R;
 import com.movtery.zalithlauncher.setting.Settings;
-import net.kdt.pojavlaunch.contracts.OpenDocumentWithExtension;
-
-import java.io.File;
 
 public class CapesSkinsFragment extends Fragment {
 
@@ -27,39 +26,45 @@ public class CapesSkinsFragment extends Fragment {
     private EditText capePathInput;
     private View skinRenderView;
     private boolean isPickingSkin = true;
-    private ActivityResultLauncher<Any> openDocumentLauncher;
+    private ActivityResultLauncher<Intent> storagePickerLauncher;
 
     @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        // 📁 FIXED: Registered cleanly using Pojav's native document contract layout picker engine
-        openDocumentLauncher = registerForActivityResult(new OpenDocumentWithExtension("png", true), uris -> {
-            if (uris != null && !uris.isEmpty()) {
-                Uri selectedUri = uris.get(0);
-                if (selectedUri != null) {
-                    String filePath = selectedUri.getPath();
-                    if (filePath != null) {
-                        // Clean legacy path prefixes if any from android system providers
-                        if (filePath.contains(":") && filePath.split(":").length > 1) {
-                            filePath = filePath.split(":")[1];
-                        }
-                        
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        
+        // 📁 UNIVERSAL FILE PICKER: Android 11 to 16 native storage manager trigger pipeline
+        storagePickerLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    Intent dataIntent = result.getData();
+                    Uri selectedFileUri = dataIntent.getData();
+                    if (selectedFileUri != null) {
+                        // Persist URI reading permissions dynamically for scoped storage bypass
+                        try {
+                            int takeFlags = dataIntent.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            requireContext().getContentResolver().takePersistableUriPermission(selectedFileUri, takeFlags);
+                        } catch (Exception ignored) {}
+
+                        String finalPath = selectedFileUri.toString();
+
                         if (isPickingSkin) {
-                            if (skinPathInput != null) skinPathInput.setText(filePath);
-                            Settings.Manager.put("custom_skin_path", filePath);
-                            // 👑 LIVE PREVIEW UPDATE: Instantly change color matrix state to notify texture linkage
+                            if (skinPathInput != null) skinPathInput.setText(finalPath);
+                            Settings.Manager.put("custom_skin_path", finalPath);
+                            // 👑 LIVE STATUS ACTIVE LOOK: Translucent block updates to solid accent state
                             if (skinRenderView != null) {
                                 skinRenderView.setBackgroundColor(0xFF9D4EDD); 
                             }
+                            Toast.makeText(requireContext(), "Character Skin texture linked!", Toast.LENGTH_SHORT).show();
                         } else {
-                            if (capePathInput != null) capePathInput.setText(filePath);
-                            Settings.Manager.put("custom_cape_path", filePath);
+                            if (capePathInput != null) capePathInput.setText(finalPath);
+                            Settings.Manager.put("custom_cape_path", finalPath);
+                            Toast.makeText(requireContext(), "Custom Cape texture linked!", Toast.LENGTH_SHORT).show();
                         }
-                        Toast.makeText(requireContext(), "Texture linked successfully!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
-        });
+        );
     }
 
     @Nullable
@@ -81,58 +86,62 @@ public class CapesSkinsFragment extends Fragment {
         View btnSave = view.findViewById(R.id.btn_save_skin_flow);
         View btnCancel = view.findViewById(R.id.btn_cancel_skin_flow);
 
-        // Load pre-existing configuration mapping keys if any
+        // Load pre-existing saved configuration states if any
         try {
             String savedSkin = Settings.Manager.get("custom_skin_path", "");
             String savedCape = Settings.Manager.get("custom_cape_path", "");
             if (skinPathInput != null) skinPathInput.setText(savedSkin);
             if (capePathInput != null) capePathInput.setText(savedCape);
             if (skinRenderView != null && !savedSkin.isEmpty()) {
-                skinRenderView.setBackgroundColor(0xFF9D4EDD); // Hold active premium purple look
+                skinRenderView.setBackgroundColor(0xFF9D4EDD); // Maintain premium violet state on load
             }
         } catch (Exception ignored) {}
 
-        // 📁 TRIGGER 1: Select character skin texture sheet (.png)
+        // 📁 BUTTON 1 CLICK: Select Character Skin (.png)
         if (pickSkinBtn != null) {
             pickSkinBtn.setOnClickListener(v -> {
                 isPickingSkin = true;
-                if (openDocumentLauncher != null) {
-                    openDocumentLauncher.launch(".png");
-                } else {
-                    Toast.makeText(requireContext(), "Storage picker initializing, try again!", Toast.LENGTH_SHORT).show();
-                }
+                triggerSystemFilePicker();
             });
         }
 
-        // 📁 TRIGGER 2: Select cape design asset (.png)
+        // 📁 BUTTON 2 CLICK: Select Custom Cape (.png)
         if (pickCapeBtn != null) {
             pickCapeBtn.setOnClickListener(v -> {
                 isPickingSkin = false;
-                if (openDocumentLauncher != null) {
-                    openDocumentLauncher.launch(".png");
-                } else {
-                    Toast.makeText(requireContext(), "Storage picker initializing, try again!", Toast.LENGTH_SHORT).show();
-                }
+                triggerSystemFilePicker();
             });
         }
 
-        // SAVE CONTROL CONFIGURATION FLOW
+        // 💾 APPLY/SAVE CONFIGURATIONS ACTION
         if (btnSave != null) {
             btnSave.setOnClickListener(v -> {
-                Toast.makeText(requireContext(), "Configurations saved to preferences register!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Texture profiles applied successfully!", Toast.LENGTH_SHORT).show();
                 if (getActivity() != null) {
-                    getActivity().onBackPressed();
+                    getActivity().getSupportFragmentManager().popBackStack();
                 }
             });
         }
 
-        // CANCEL & BACK PRESS ROUTE
+        // ❌ CANCEL / GO BACK TRIGGER ACTION
         if (btnCancel != null) {
             btnCancel.setOnClickListener(v -> {
                 if (getActivity() != null) {
-                    getActivity().onBackPressed();
+                    getActivity().getSupportFragmentManager().popBackStack();
                 }
             });
+        }
+    }
+
+    private void triggerSystemFilePicker() {
+        try {
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("image/png"); // Dynamic filter restriction solely for skin sheets
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+            storagePickerLauncher.launch(intent);
+        } catch (Exception e) {
+            Toast.makeText(requireContext(), "System File Manager not found!", Toast.LENGTH_SHORT).show();
         }
     }
 }
