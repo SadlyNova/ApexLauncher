@@ -56,7 +56,7 @@ public class CapesSkinsFragment extends Fragment {
                                 if (skinPathInput != null) skinPathInput.setText(savedLocalPath);
                                 Settings.Manager.put("custom_skin_path", savedLocalPath);
                                 
-                                // Instantly trigger render canvas from our secure cache directory
+                                // Instantly trigger crisp render canvas from our secure cache directory
                                 renderCacheImageToPreview(savedLocalPath);
                                 Toast.makeText(requireContext(), "Character Skin applied successfully!", Toast.LENGTH_SHORT).show();
                             } else {
@@ -160,24 +160,32 @@ public class CapesSkinsFragment extends Fragment {
         }
     }
 
-    // 👑 UNRESTRICTED PREVIEW RENDER ENGINE: Draws high-definition pixelated textures without permission lag
+    // 👑 UNRESTRICTED CRISP PREVIEW RENDER ENGINE
     private void renderCacheImageToPreview(String absoluteFilePath) {
         if (skinRenderView == null || absoluteFilePath == null || absoluteFilePath.isEmpty()) return;
         try {
             File textureFile = new File(absoluteFilePath);
             if (textureFile.exists()) {
                 BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inScaled = false; // Ensures pixel perfect rendering crisp grid
+                options.inScaled = false; // Prevent auto-scaling artifacts
                 Bitmap cachedBitmap = BitmapFactory.decodeFile(textureFile.getAbsolutePath(), options);
                 
                 if (cachedBitmap != null) {
-                    skinRenderView.setImageBitmap(cachedBitmap);
+                    // 👑 PIXEL-PERFECT UPSCALING: Enlarge 64x64 tiny image by 15x
+                    // The 'false' filter flag ensures the pixel art stays razor sharp instead of getting blurred!
+                    int enlargedWidth = cachedBitmap.getWidth() * 15;
+                    int enlargedHeight = cachedBitmap.getHeight() * 15;
+                    
+                    Bitmap crispBitmap = Bitmap.createScaledBitmap(cachedBitmap, enlargedWidth, enlargedHeight, false);
+                    
+                    skinRenderView.setImageBitmap(crispBitmap);
                     skinRenderView.invalidate();
                     skinRenderView.requestLayout();
                     return;
                 }
             }
         } catch (Exception ignored) {}
+        
         // Fallback tint layout state if path file parsing meets internal delays
         skinRenderView.setBackgroundColor(0x339D4EDD);
     }
