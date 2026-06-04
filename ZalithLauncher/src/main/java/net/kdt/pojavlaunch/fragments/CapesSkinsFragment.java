@@ -40,7 +40,6 @@ public class CapesSkinsFragment extends Fragment {
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private Runnable autoLoadRunnable;
 
-    // 👑 SECURE PREFERENCES HELPER: Replaces the faulty Settings.Manager
     private void savePref(String key, String value) {
         if (getContext() != null) {
             SharedPreferences prefs = getContext().getSharedPreferences("ApexSkinsConfig", Context.MODE_PRIVATE);
@@ -73,12 +72,12 @@ public class CapesSkinsFragment extends Fragment {
                         if (savedLocalPath != null) {
                             if (isPickingSkin) {
                                 if (skinPathInput != null) skinPathInput.setText(savedLocalPath);
-                                savePref("custom_skin_path", savedLocalPath); // 👑 FIXED
+                                savePref("custom_skin_path", savedLocalPath); 
                                 renderCacheImageToPreview(savedLocalPath);
                                 Toast.makeText(requireContext(), "Skin updated successfully!", Toast.LENGTH_SHORT).show();
                             } else {
                                 if (capePathInput != null) capePathInput.setText(savedLocalPath);
-                                savePref("custom_cape_path", savedLocalPath); // 👑 FIXED
+                                savePref("custom_cape_path", savedLocalPath); 
                                 Toast.makeText(requireContext(), "Cape updated successfully!", Toast.LENGTH_SHORT).show();
                             }
                         } else {
@@ -112,7 +111,6 @@ public class CapesSkinsFragment extends Fragment {
         autoLoadRunnable = () -> {
             if (!isAdded() || getContext() == null) return;
             try {
-                // 👑 FIXED: Standard retrieval
                 String savedSkinPath = getPref("custom_skin_path");
                 String savedCapePath = getPref("custom_cape_path");
                 
@@ -140,11 +138,12 @@ public class CapesSkinsFragment extends Fragment {
             });
         }
 
+        // 👑 FIXED: Safe Navigation to prevent black screen
         if (btnSave != null) {
             btnSave.setOnClickListener(v -> {
                 Toast.makeText(requireContext(), "Configurations applied!", Toast.LENGTH_SHORT).show();
                 if (getActivity() != null) {
-                    getActivity().getSupportFragmentManager().popBackStack();
+                    getActivity().onBackPressed(); 
                 }
             });
         }
@@ -152,9 +151,57 @@ public class CapesSkinsFragment extends Fragment {
         if (btnCancel != null) {
             btnCancel.setOnClickListener(v -> {
                 if (getActivity() != null) {
-                    getActivity().getSupportFragmentManager().popBackStack();
+                    getActivity().onBackPressed();
                 }
             });
+        }
+    }
+
+    private Bitmap buildFrontAvatar(Bitmap skin) {
+        if (skin == null || skin.getWidth() < 64 || skin.getHeight() < 32) return skin;
+        try {
+            boolean is64x64 = skin.getHeight() >= 64;
+            Bitmap avatar = Bitmap.createBitmap(16, 32, Bitmap.Config.ARGB_8888);
+            android.graphics.Canvas canvas = new android.graphics.Canvas(avatar);
+            android.graphics.Paint paint = new android.graphics.Paint();
+            paint.setAntiAlias(false);
+            paint.setFilterBitmap(false);
+
+            canvas.drawBitmap(skin, new android.graphics.Rect(8, 8, 16, 16), new android.graphics.Rect(4, 0, 12, 8), paint);
+            canvas.drawBitmap(skin, new android.graphics.Rect(40, 8, 48, 16), new android.graphics.Rect(4, 0, 12, 8), paint);
+
+            canvas.drawBitmap(skin, new android.graphics.Rect(20, 20, 28, 32), new android.graphics.Rect(4, 8, 12, 20), paint);
+            if (is64x64) canvas.drawBitmap(skin, new android.graphics.Rect(20, 36, 28, 48), new android.graphics.Rect(4, 8, 12, 20), paint);
+
+            canvas.drawBitmap(skin, new android.graphics.Rect(44, 20, 48, 32), new android.graphics.Rect(0, 8, 4, 20), paint);
+            if (is64x64) canvas.drawBitmap(skin, new android.graphics.Rect(44, 36, 48, 48), new android.graphics.Rect(0, 8, 4, 20), paint);
+
+            canvas.drawBitmap(skin, new android.graphics.Rect(4, 20, 8, 32), new android.graphics.Rect(4, 20, 8, 32), paint);
+            if (is64x64) canvas.drawBitmap(skin, new android.graphics.Rect(4, 36, 8, 48), new android.graphics.Rect(4, 20, 8, 32), paint);
+
+            if (is64x64) {
+                canvas.drawBitmap(skin, new android.graphics.Rect(36, 52, 40, 64), new android.graphics.Rect(12, 8, 16, 20), paint);
+                canvas.drawBitmap(skin, new android.graphics.Rect(52, 52, 56, 64), new android.graphics.Rect(12, 8, 16, 20), paint);
+            } else {
+                android.graphics.Matrix mirror = new android.graphics.Matrix();
+                mirror.preScale(-1, 1);
+                Bitmap rArm = Bitmap.createBitmap(skin, 44, 20, 4, 12, mirror, false);
+                canvas.drawBitmap(rArm, 12, 8, paint);
+            }
+
+            if (is64x64) {
+                canvas.drawBitmap(skin, new android.graphics.Rect(20, 52, 24, 64), new android.graphics.Rect(8, 20, 12, 32), paint);
+                canvas.drawBitmap(skin, new android.graphics.Rect(4, 52, 8, 64), new android.graphics.Rect(8, 20, 12, 32), paint);
+            } else {
+                android.graphics.Matrix mirror = new android.graphics.Matrix();
+                mirror.preScale(-1, 1);
+                Bitmap rLeg = Bitmap.createBitmap(skin, 4, 20, 4, 12, mirror, false);
+                canvas.drawBitmap(rLeg, 8, 20, paint);
+            }
+
+            return avatar;
+        } catch (Exception e) {
+            return skin; 
         }
     }
 
@@ -187,11 +234,13 @@ public class CapesSkinsFragment extends Fragment {
                 Bitmap cachedBitmap = BitmapFactory.decodeFile(textureFile.getAbsolutePath(), options);
                 
                 if (cachedBitmap != null) {
-                    int enlargedWidth = cachedBitmap.getWidth() * 15;
-                    int enlargedHeight = cachedBitmap.getHeight() * 15;
+                    Bitmap avatarBitmap = buildFrontAvatar(cachedBitmap);
+
+                    int enlargedWidth = avatarBitmap.getWidth() * 15;
+                    int enlargedHeight = avatarBitmap.getHeight() * 15;
                     
                     if (enlargedWidth > 0 && enlargedHeight > 0 && enlargedWidth < 4000) {
-                        Bitmap crispBitmap = Bitmap.createScaledBitmap(cachedBitmap, enlargedWidth, enlargedHeight, false);
+                        Bitmap crispBitmap = Bitmap.createScaledBitmap(avatarBitmap, enlargedWidth, enlargedHeight, false);
                         if (crispBitmap != null) {
                             skinRenderView.setImageBitmap(crispBitmap);
                             skinRenderView.invalidate();
