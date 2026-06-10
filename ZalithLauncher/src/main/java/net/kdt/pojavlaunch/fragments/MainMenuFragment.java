@@ -220,10 +220,12 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
                 TaskExecutors.runInUIThread(() -> Toast.makeText(requireContext(), R.string.version_manager_task_in_progress, Toast.LENGTH_SHORT).show());
             }
         } 
-        else if (v == tabMods || v == binding.customControlButton || v == topGamingBtn) {
+        // 👑 REDIRECTED: "tabMods" triggers Share Logs now instead of Custom Controls card
+        else if (v == binding.customControlButton || v == topGamingBtn) {
             switchDashboardFeature(new ControlButtonFragment());
         } 
-        else if (v == tabModsNew || v == topShareBtn) {
+        // 👑 LOGS ENGINE ACTION LINK: Now both old tabMods (Logs) & new share tabs safely extract text reports
+        else if (v == tabMods || v == tabModsNew || v == topShareBtn) {
             ZHTools.shareLogs(requireActivity());
         }
         else if (v == binding.openMainDirButton || v == topFolderBtn) {
