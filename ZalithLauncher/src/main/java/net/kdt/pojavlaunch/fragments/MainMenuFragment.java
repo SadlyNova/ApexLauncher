@@ -91,7 +91,7 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
             ImageView topGamingBtn = activityRoot.findViewById(R.id.btn_override_gaming);
             ImageView topFolderBtn = activityRoot.findViewById(R.id.btn_override_folder);
             ImageView topJavaBtn = activityRoot.findViewById(R.id.btn_override_java);
-            ImageView topShareBtn = activityRoot.findViewById(R.id.btn_override_share); // 👑 FIXED: Standard ImageView mapping lock
+            ImageView topShareBtn = activityRoot.findViewById(R.id.btn_override_share); 
             TextView topTitleView = activityRoot.findViewById(R.id.txt_override_title);
 
             if (topTitleView != null) {
@@ -122,13 +122,8 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         View tabMods = rootLayout.findViewById(R.id.tab_mods);
         if (tabMods != null) tabMods.setOnClickListener(this);
 
-        // 👑 FIX: Mods Tab click hook link setup
         View tabModsNew = rootLayout.findViewById(R.id.tab_mods_new);
         if (tabModsNew != null) tabModsNew.setOnClickListener(this);
-
-        // Capes & Skins Tab Hook Registration
-        View tabCapesSkins = rootLayout.findViewById(R.id.tab_capes_skins);
-        if (tabCapesSkins != null) tabCapesSkins.setOnClickListener(this);
 
         // Top Horizontal Toolbars
         if (binding.customControlButton != null) binding.customControlButton.setOnClickListener(this);
@@ -202,8 +197,7 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         View tabHome = rootLayout.findViewById(R.id.tab_home);
         View tabSettings = rootLayout.findViewById(R.id.tab_settings);
         View tabMods = rootLayout.findViewById(R.id.tab_mods);
-        View tabModsNew = rootLayout.findViewById(R.id.tab_mods_new); // 👑 FIXED UNIQUE ID CAPTURE
-        View tabCapesSkins = rootLayout.findViewById(R.id.tab_capes_skins);
+        View tabModsNew = rootLayout.findViewById(R.id.tab_mods_new); 
 
         if (v == binding.playButton) {
             EventBus.getDefault().post(new LaunchGameEvent());
@@ -229,12 +223,8 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         else if (v == tabMods || v == binding.customControlButton || v == topGamingBtn) {
             switchDashboardFeature(new ControlButtonFragment());
         } 
-        // 👑 NEW SIDEBAR MODS TRIGGER BUTTON HOOK FLOW
         else if (v == tabModsNew || v == topShareBtn) {
             ZHTools.shareLogs(requireActivity());
-        }
-        else if (v == tabCapesSkins) {
-            switchDashboardFeature(new net.kdt.pojavlaunch.fragments.CapesSkinsFragment());
         }
         else if (v == binding.openMainDirButton || v == topFolderBtn) {
             Bundle bundle = new Bundle();
