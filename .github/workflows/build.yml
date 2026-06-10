@@ -1,4 +1,4 @@
-name: Build Apex Launcher APK
+name: 1.0
 
 on:
   workflow_dispatch:
