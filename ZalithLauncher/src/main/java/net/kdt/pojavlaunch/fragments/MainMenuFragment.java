@@ -111,7 +111,6 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
             if (topShareBtn != null) topShareBtn.setOnClickListener(this);
         }
 
-        // Left Sidebar Tab Hooks Bindings
         View rootLayout = binding.getRoot();
         View tabHome = rootLayout.findViewById(R.id.tab_home);
         if (tabHome != null) tabHome.setOnClickListener(this);
@@ -125,7 +124,6 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         View tabModsNew = rootLayout.findViewById(R.id.tab_mods_new);
         if (tabModsNew != null) tabModsNew.setOnClickListener(this);
 
-        // Top Horizontal Toolbars
         if (binding.customControlButton != null) binding.customControlButton.setOnClickListener(this);
         if (binding.openMainDirButton != null) binding.openMainDirButton.setOnClickListener(this);
         if (binding.installJarButton != null) {
@@ -137,7 +135,6 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         }
         if (binding.shareLogsButton != null) binding.shareLogsButton.setOnClickListener(this);
 
-        // Dashboard Elements Clicks setup
         binding.version.setOnClickListener(this);
         if (binding.editSettingsButton != null) binding.editSettingsButton.setOnClickListener(this);
         if (binding.novaDiscord != null) binding.novaDiscord.setOnClickListener(this);
@@ -151,7 +148,6 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         refreshCurrentVersion();
     }
 
-    // FORCED FRAGMENT MANAGER INTERFACE REPLACEMENT ENGINE
     private void switchDashboardFeature(Fragment featureFragment) {
         if (binding != null) {
             try {
@@ -185,6 +181,36 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         }
     }
 
+    // 👑 THE AUTO-FIX ENGINE: Removes incompatible mods & resets bad sodium config silently
+    private void autoFixUserMods() {
+        try {
+            // 1. Remove dangerous mods that break Chunk Rendering on Adreno
+            java.io.File modsDir = new java.io.File(PathManager.DIR_GAME_HOME + "/mods");
+            if (modsDir.exists() && modsDir.isDirectory()) {
+                java.io.File[] files = modsDir.listFiles();
+                if (files != null) {
+                    for (java.io.File file : files) {
+                        String name = file.getName().toLowerCase();
+                        if (name.contains("moreculling") || 
+                            name.contains("entityculling") || 
+                            name.contains("iris") || 
+                            name.contains("cullleaves")) {
+                            file.delete(); 
+                        }
+                    }
+                }
+            }
+
+            // 2. Clear broken Sodium config to prevent persistent mapping crash
+            java.io.File sodiumConfig = new java.io.File(PathManager.DIR_GAME_HOME + "/config/sodium-options.json");
+            if (sodiumConfig.exists()) {
+                sodiumConfig.delete(); 
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); 
+        }
+    }
+
     @Override
     public void onClick(View v) {
         View activityRoot = requireActivity().findViewById(android.R.id.content);
@@ -200,6 +226,7 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         View tabModsNew = rootLayout.findViewById(R.id.tab_mods_new); 
 
         if (v == binding.playButton) {
+            autoFixUserMods(); // 🚀 TRIGGER MAGIC BEFORE LAUNCH
             EventBus.getDefault().post(new LaunchGameEvent());
         } 
         else if (v == tabHome) {
@@ -220,11 +247,9 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
                 TaskExecutors.runInUIThread(() -> Toast.makeText(requireContext(), R.string.version_manager_task_in_progress, Toast.LENGTH_SHORT).show());
             }
         } 
-        // 👑 REDIRECTED: "tabMods" triggers Share Logs now instead of Custom Controls card
         else if (v == binding.customControlButton || v == topGamingBtn) {
             switchDashboardFeature(new ControlButtonFragment());
         } 
-        // 👑 LOGS ENGINE ACTION LINK: Now both old tabMods (Logs) & new share tabs safely extract text reports
         else if (v == tabMods || v == tabModsNew || v == topShareBtn) {
             ZHTools.shareLogs(requireActivity());
         }
@@ -316,4 +341,4 @@ public class MainMenuFragment extends FragmentWithAnim implements View.OnClickLi
         if (binding.centeredLogosContainer != null) animPlayer.apply(new AnimPlayer.Entry(binding.centeredLogosContainer, Animations.FadeOutUp));
         animPlayer.apply(new AnimPlayer.Entry(binding.playLayout, Animations.FadeOutRight));
     }
-}
+            }
